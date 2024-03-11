@@ -12,8 +12,6 @@ namespace TESTAPP.common.component
 {
     internal static class Dynamic
     {
-
-
         public static void DynamicInsert<V>(Form form, V control, FlowLayoutPanel pannel, string name ="", string text="", int width = 40,int height = 60) where V : Control
         {
             control.Name = $"{name}";
@@ -22,8 +20,8 @@ namespace TESTAPP.common.component
             control.Text = $"{text}";
             form.Controls.Add(control);
             pannel.Controls.Add(control);
-
         }
+
         public static void DynamicLabelInsert(Form form, Label control, FlowLayoutPanel pannel, string name = "", string text = "", int width = 40, int height = 60) 
         {
             control.TextAlign = ContentAlignment.MiddleCenter;
@@ -42,6 +40,14 @@ namespace TESTAPP.common.component
             if (form.Controls.Find(name, true).FirstOrDefault() is T control)
             {
                 return control.Text;
+            }
+            return null;
+        }
+        public static string GetTxtAmountPretty(Form form, string name)
+        {
+            if (form.Controls.Find(name, true).FirstOrDefault() is TextBox control)
+            {
+                return control.Text.Replace(",", "");
             }
             return null;
         }
@@ -65,8 +71,16 @@ namespace TESTAPP.common.component
         }
         public static void SetEnumToCombo<V>(ComboBox control) where V : Enum
         {
+            // 콤보 박스에다가 ENUM값을 넣어주는 로직
             String[] values = typeof(V).GetEnumNames();
             foreach (String value in values) { control.Items.Add(value); }
+        }
+
+        public static void OpenNewForm<T>() where T : Form, new()
+        {
+            T newform = new T();
+            newform.StartPosition = FormStartPosition.CenterScreen;
+            newform.ShowDialog();
         }
 
 

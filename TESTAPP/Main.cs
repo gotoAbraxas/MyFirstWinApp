@@ -100,12 +100,7 @@ namespace TESTAPP
             grid_accountLog.DataSource = dt;
         }
 
-        private void btAddAcount_Click(object sender, EventArgs e)
-        {
-            AddAcount addAccount = new AddAcount();
-            addAccount.StartPosition = FormStartPosition.CenterScreen;
-            addAccount.ShowDialog();
-        }
+
 
 
         private void bt_Refresh_Click(object sender, EventArgs e)
@@ -170,9 +165,14 @@ namespace TESTAPP
             DynamicInsert<CheckBox>(this, new CheckBox(), layout, $"{ch_Condition}{ConditionControler.Count}", "항상 적용", 100, 30);
             ConditionControler.Add(layout);
         }
-
-        // 이건 다이나믹 쪽에 두는게 나을듯.
-
+        private void btAddAcount_Click(object sender, EventArgs e)
+        {
+            OpenNewForm<AddAcount>();
+        }
+        private void bt_AddAccountLog_Click(object sender, EventArgs e)
+        {
+            OpenNewForm<AddAccountLog>();
+        }
 
     }
 }
