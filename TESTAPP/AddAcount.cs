@@ -22,6 +22,21 @@ namespace TESTAPP
             cb_AccountType.Items.Add("기타"); // 이 정보값을 어떻게 세팅할것이냐 의 문제가 있음
 
             SetSettleType();
+
+            Init();
+        }
+
+
+        public void Init()
+        {
+            CheckingPreferent();
+        }
+
+        private void CheckingPreferent()
+        {
+            lb_Preferent.Visible = false;
+            lb_Preferent_limit.Visible = false;
+            txt_Preferent.Visible = false;
         }
 
         private void AddAcount_Load(object sender, EventArgs e)
@@ -82,6 +97,29 @@ namespace TESTAPP
 
         }
 
+        private void ch_CheckPreferent_CheckedChanged(object sender, EventArgs e)
+        {
+            SetPreferentBox(sender);
+        }
 
+        private void SetPreferentBox(object sender)
+        {
+            CheckBox box = (CheckBox)sender;
+
+            if (box.Checked)
+            {
+                lb_Preferent.Visible = true;
+                lb_Preferent_limit.Visible = true;
+                txt_Preferent.Visible = true;
+            }
+            else
+            {
+
+                lb_Preferent.Visible = false;
+                lb_Preferent_limit.Visible = false;
+                txt_Preferent.Visible = false;
+
+            }
+        }
     }
 }

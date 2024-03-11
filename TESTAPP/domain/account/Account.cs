@@ -54,10 +54,12 @@ namespace TESTAPP.domain.account
             {
                 return GetProfitLogic(logs, timeCondion);
             }
+            /*
             else
             {
                 MessageBox.Show("계좌에 존재하는 금액보다 더 많은 금액을 출금하려고함");
             }
+            */
 
         }
 

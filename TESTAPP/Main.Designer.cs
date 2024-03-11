@@ -35,6 +35,7 @@ namespace TESTAPP
             this.accountTab = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.calProfitTab = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.bt_addCondition = new System.Windows.Forms.Button();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tranHis = new System.Windows.Forms.TabPage();
@@ -42,7 +43,6 @@ namespace TESTAPP
             this.btAddAcount = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.accountTab.SuspendLayout();
             this.calProfitTab.SuspendLayout();
             this.tranHis.SuspendLayout();
@@ -55,7 +55,7 @@ namespace TESTAPP
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 1, 0, 1);
-            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(956, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -64,10 +64,10 @@ namespace TESTAPP
             this.accountTab.Controls.Add(this.tabPage1);
             this.accountTab.Controls.Add(this.calProfitTab);
             this.accountTab.Controls.Add(this.tranHis);
-            this.accountTab.Location = new System.Drawing.Point(87, 64);
+            this.accountTab.Location = new System.Drawing.Point(36, 55);
             this.accountTab.Name = "accountTab";
             this.accountTab.SelectedIndex = 0;
-            this.accountTab.Size = new System.Drawing.Size(701, 374);
+            this.accountTab.Size = new System.Drawing.Size(888, 476);
             this.accountTab.TabIndex = 2;
             this.accountTab.Click += new System.EventHandler(this.tabControl1_Click);
             // 
@@ -75,8 +75,8 @@ namespace TESTAPP
             // 
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage1.Size = new System.Drawing.Size(693, 348);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(880, 450);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -88,11 +88,21 @@ namespace TESTAPP
             this.calProfitTab.Controls.Add(this.flowLayoutPanel);
             this.calProfitTab.Location = new System.Drawing.Point(4, 22);
             this.calProfitTab.Name = "calProfitTab";
-            this.calProfitTab.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.calProfitTab.Padding = new System.Windows.Forms.Padding(3);
             this.calProfitTab.Size = new System.Drawing.Size(693, 348);
             this.calProfitTab.TabIndex = 1;
             this.calProfitTab.Text = "이자 계산해보기";
             this.calProfitTab.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(243, 113);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // bt_addCondition
             // 
@@ -117,7 +127,7 @@ namespace TESTAPP
             this.tranHis.Controls.Add(this.grid_accountLog);
             this.tranHis.Location = new System.Drawing.Point(4, 22);
             this.tranHis.Name = "tranHis";
-            this.tranHis.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tranHis.Padding = new System.Windows.Forms.Padding(3);
             this.tranHis.Size = new System.Drawing.Size(693, 348);
             this.tranHis.TabIndex = 2;
             this.tranHis.Text = "거래내역";
@@ -167,21 +177,11 @@ namespace TESTAPP
             this.label1.TabIndex = 5;
             this.label1.Text = "계좌 선택하기";
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(243, 113);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(956, 555);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.btAddAcount);
