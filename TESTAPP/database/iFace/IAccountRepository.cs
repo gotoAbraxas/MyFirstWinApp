@@ -11,8 +11,8 @@ namespace TESTAPP.database.iFace
     {
 
 
-        Account GetAccount(Guid userCode, Guid AccountCode);
-        Dictionary<Guid,Account> GetAllAccounts(Guid userCode);
+        Account GetAccountById(long userCode, long AccountCode);
+        Dictionary<long, Account> GetAllAccountsById(long userCode);
 
         void SaveAccount(Account account); 
    

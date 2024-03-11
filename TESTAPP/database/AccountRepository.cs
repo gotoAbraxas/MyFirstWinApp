@@ -30,11 +30,11 @@ namespace TESTAPP.database
         #endregion
 
         #region "속성"
-        public static Dictionary<Guid, Account> Accounts = new Dictionary<Guid, Account>();
+        public static Dictionary<long, Account> Accounts = new Dictionary<long, Account>();
         #endregion
 
         #region "메서드"
-        public Account GetAccount(Guid userCode, Guid accountCode)
+        public Account GetAccountById(long userCode, long accountCode)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace TESTAPP.database
             }
         }
 
-        public Dictionary<Guid,Account> GetAllAccounts(Guid userCode)
+        public Dictionary<long, Account> GetAllAccountsById(long userCode)
         {
 
             try 
@@ -60,7 +60,7 @@ namespace TESTAPP.database
             catch (ArgumentException e)
             {
                 MessageBox.Show("인수 전달이 안되었을 때.");
-                return new Dictionary<Guid, Account>();
+                return new Dictionary<long, Account>();
             }
         }
 
