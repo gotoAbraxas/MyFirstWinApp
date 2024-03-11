@@ -66,7 +66,10 @@ namespace TESTAPP.database
 
         public void SaveAccount(Account account)
         {
-            Accounts.Add(account.AccountId,account);
+            lock (this)
+            {
+                Accounts.Add(account.AccountId, account);
+            }
         }
 
         #endregion
