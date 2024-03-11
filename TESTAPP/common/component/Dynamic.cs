@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,10 +20,21 @@ namespace TESTAPP.common.component
             control.Parent = form;
             control.Size = new Size(width, height);
             control.Text = $"{text}";
-
             form.Controls.Add(control);
             pannel.Controls.Add(control);
 
+        }
+        public static void DynamicLabelInsert(Form form, Label control, FlowLayoutPanel pannel, string name = "", string text = "", int width = 40, int height = 60) 
+        {
+            control.TextAlign = ContentAlignment.MiddleCenter;
+            DynamicInsert<Label>(form, control, pannel, name, text, width, height);
+        }
+
+        public static void DynamicAmountInsert(Form form, TextBox control, FlowLayoutPanel pannel, string name = "", string text = "", int width = 40, int height = 60)
+        {
+            control.TextAlign = HorizontalAlignment.Right;
+            control.TextChanged += (sender, e) => SetTxtAmountPretty(form, name);
+            DynamicInsert<TextBox>(form, control, pannel, name, text, width, height);
         }
 
         public static string GetControlValue<T>(Form form, string name) where T : Control
@@ -32,6 +44,29 @@ namespace TESTAPP.common.component
                 return control.Text;
             }
             return null;
+        }
+        public static void SetTxtAmountPretty(Form form, string name)
+        {
+            // 금액 1,000,000 이렇게 찍어주는 로직
+            if (form.Controls.Find(name, true).FirstOrDefault() is TextBox control)
+            {
+                if (decimal.TryParse(control.Text, out decimal result))
+                {
+                    control.Text = string.Format("{0:#,##0}", result);
+                    control.SelectionStart = control.TextLength;
+                    control.SelectionLength = 0;
+                }
+                else
+                {
+                    control.Text = "0";
+                }
+
+            }
+        }
+        public static void SetEnumToCombo<V>(ComboBox control) where V : Enum
+        {
+            String[] values = typeof(V).GetEnumNames();
+            foreach (String value in values) { control.Items.Add(value); }
         }
 
 

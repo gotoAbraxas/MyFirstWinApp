@@ -22,9 +22,20 @@ namespace TESTAPP.domain.account
         개월,
         년
     }
-    internal abstract class Account : IAccount
+    internal class Account : IAccount
     {
-        public int Id { get; set; } // 나중에 guid
+        #region "생성자"
+
+        public Account() { }
+
+        #endregion
+
+        #region "속성"
+        public long AccountId { get; set; } // 나중에 guid
+
+        public long UserCode { get; set; } // 유저 코드 식별자.
+
+        public string Name { get; set; } // 계좌 이름
         public decimal Interest {  get; set; } // 이율
         public List<AccountLog> Log { get; set; } = new List<AccountLog>(); // 거래 기록
         public SettleType SettleType { get; set; } // 정산 타입
@@ -33,8 +44,8 @@ namespace TESTAPP.domain.account
 
         public decimal? UpperLimitWellInterest { get; set; } = null; // 우대금리 최대 금액 기본 null
 
+        #endregion
 
-        public Account() { }
 
         public void AddLog(AccountLog log)
         {

@@ -49,9 +49,10 @@
             this.ch_CheckPreferent = new System.Windows.Forms.CheckBox();
             this.txt_Preferent = new System.Windows.Forms.TextBox();
             this.lb_Preferent_limit = new System.Windows.Forms.Label();
-            this.lb_InterestPeriod = new System.Windows.Forms.Label();
-            this.txt_InterestPeriod = new System.Windows.Forms.TextBox();
-            this.cb_InterestPeriod = new System.Windows.Forms.ComboBox();
+            this.lb_SettlePeriod = new System.Windows.Forms.Label();
+            this.txt_SettlePeriod = new System.Windows.Forms.TextBox();
+            this.cb_SettlePeriod = new System.Windows.Forms.ComboBox();
+            this.cb_AddCondition = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // bt_AddAcount_save
@@ -62,7 +63,7 @@
             this.bt_AddAcount_save.TabIndex = 0;
             this.bt_AddAcount_save.Text = "저장하기";
             this.bt_AddAcount_save.UseVisualStyleBackColor = true;
-            this.bt_AddAcount_save.Click += new System.EventHandler(this.button1_Click);
+            this.bt_AddAcount_save.Click += new System.EventHandler(this.bt_AddAcount_save_Click);
             // 
             // bt_AddAcount_cancel
             // 
@@ -78,7 +79,7 @@
             // 
             this.cb_AccountType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_AccountType.FormattingEnabled = true;
-            this.cb_AccountType.Location = new System.Drawing.Point(100, 17);
+            this.cb_AccountType.Location = new System.Drawing.Point(113, 17);
             this.cb_AccountType.Name = "cb_AccountType";
             this.cb_AccountType.Size = new System.Drawing.Size(75, 20);
             this.cb_AccountType.TabIndex = 2;
@@ -96,7 +97,7 @@
             // txt_AccountType
             // 
             this.txt_AccountType.Enabled = false;
-            this.txt_AccountType.Location = new System.Drawing.Point(182, 16);
+            this.txt_AccountType.Location = new System.Drawing.Point(195, 16);
             this.txt_AccountType.Name = "txt_AccountType";
             this.txt_AccountType.Size = new System.Drawing.Size(76, 21);
             this.txt_AccountType.TabIndex = 4;
@@ -104,7 +105,7 @@
             // 
             // txt_AccountName
             // 
-            this.txt_AccountName.Location = new System.Drawing.Point(100, 53);
+            this.txt_AccountName.Location = new System.Drawing.Point(113, 53);
             this.txt_AccountName.Name = "txt_AccountName";
             this.txt_AccountName.Size = new System.Drawing.Size(99, 21);
             this.txt_AccountName.TabIndex = 5;
@@ -129,7 +130,7 @@
             // 
             // txt_AccountNumber
             // 
-            this.txt_AccountNumber.Location = new System.Drawing.Point(100, 85);
+            this.txt_AccountNumber.Location = new System.Drawing.Point(113, 85);
             this.txt_AccountNumber.Name = "txt_AccountNumber";
             this.txt_AccountNumber.Size = new System.Drawing.Size(144, 21);
             this.txt_AccountNumber.TabIndex = 8;
@@ -137,34 +138,33 @@
             // lb_Interest
             // 
             this.lb_Interest.AutoSize = true;
-            this.lb_Interest.Location = new System.Drawing.Point(11, 124);
+            this.lb_Interest.Location = new System.Drawing.Point(11, 122);
             this.lb_Interest.Name = "lb_Interest";
-            this.lb_Interest.Size = new System.Drawing.Size(57, 12);
+            this.lb_Interest.Size = new System.Drawing.Size(83, 24);
             this.lb_Interest.TabIndex = 9;
-            this.lb_Interest.Text = "기본 이율";
+            this.lb_Interest.Text = "기본 이율 \r\n( 기대 수익률)";
             // 
             // txt_Interest
             // 
-            this.txt_Interest.Location = new System.Drawing.Point(101, 120);
+            this.txt_Interest.Location = new System.Drawing.Point(114, 118);
             this.txt_Interest.Name = "txt_Interest";
-            this.txt_Interest.Size = new System.Drawing.Size(144, 21);
+            this.txt_Interest.Size = new System.Drawing.Size(75, 21);
             this.txt_Interest.TabIndex = 10;
             // 
             // lb_SettleType
             // 
             this.lb_SettleType.AutoSize = true;
-            this.lb_SettleType.Location = new System.Drawing.Point(11, 151);
+            this.lb_SettleType.Location = new System.Drawing.Point(11, 157);
             this.lb_SettleType.Name = "lb_SettleType";
             this.lb_SettleType.Size = new System.Drawing.Size(57, 12);
             this.lb_SettleType.TabIndex = 11;
             this.lb_SettleType.Text = "적용 방식";
-            this.lb_SettleType.Click += new System.EventHandler(this.label1_Click);
             // 
             // cb_SettleType
             // 
             this.cb_SettleType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_SettleType.FormattingEnabled = true;
-            this.cb_SettleType.Location = new System.Drawing.Point(101, 147);
+            this.cb_SettleType.Location = new System.Drawing.Point(114, 153);
             this.cb_SettleType.Name = "cb_SettleType";
             this.cb_SettleType.Size = new System.Drawing.Size(75, 20);
             this.cb_SettleType.TabIndex = 12;
@@ -172,23 +172,23 @@
             // lb_InterestCondition
             // 
             this.lb_InterestCondition.AutoSize = true;
-            this.lb_InterestCondition.Location = new System.Drawing.Point(574, 34);
+            this.lb_InterestCondition.Location = new System.Drawing.Point(550, 32);
             this.lb_InterestCondition.Name = "lb_InterestCondition";
-            this.lb_InterestCondition.Size = new System.Drawing.Size(57, 12);
+            this.lb_InterestCondition.Size = new System.Drawing.Size(85, 12);
             this.lb_InterestCondition.TabIndex = 13;
-            this.lb_InterestCondition.Text = "우대 조건";
+            this.lb_InterestCondition.Text = "우대 금리 조건";
             // 
             // flp_Condition
             // 
             this.flp_Condition.AutoScroll = true;
-            this.flp_Condition.Location = new System.Drawing.Point(573, 56);
+            this.flp_Condition.Location = new System.Drawing.Point(424, 56);
             this.flp_Condition.Name = "flp_Condition";
-            this.flp_Condition.Size = new System.Drawing.Size(323, 330);
+            this.flp_Condition.Size = new System.Drawing.Size(472, 330);
             this.flp_Condition.TabIndex = 14;
             // 
             // bt_AddCondition
             // 
-            this.bt_AddCondition.Location = new System.Drawing.Point(642, 29);
+            this.bt_AddCondition.Location = new System.Drawing.Point(732, 29);
             this.bt_AddCondition.Name = "bt_AddCondition";
             this.bt_AddCondition.Size = new System.Drawing.Size(43, 19);
             this.bt_AddCondition.TabIndex = 15;
@@ -199,7 +199,7 @@
             // ut_Interest
             // 
             this.ut_Interest.AutoSize = true;
-            this.ut_Interest.Location = new System.Drawing.Point(251, 125);
+            this.ut_Interest.Location = new System.Drawing.Point(195, 123);
             this.ut_Interest.Name = "ut_Interest";
             this.ut_Interest.Size = new System.Drawing.Size(15, 12);
             this.ut_Interest.TabIndex = 16;
@@ -227,55 +227,65 @@
             // 
             // txt_Preferent
             // 
-            this.txt_Preferent.Location = new System.Drawing.Point(98, 253);
+            this.txt_Preferent.Location = new System.Drawing.Point(111, 253);
             this.txt_Preferent.Name = "txt_Preferent";
             this.txt_Preferent.Size = new System.Drawing.Size(144, 21);
             this.txt_Preferent.TabIndex = 19;
+            this.txt_Preferent.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txt_Preferent.TextChanged += new System.EventHandler(this.txt_Preferent_TextChanged);
             // 
             // lb_Preferent_limit
             // 
             this.lb_Preferent_limit.AutoSize = true;
-            this.lb_Preferent_limit.Location = new System.Drawing.Point(248, 256);
+            this.lb_Preferent_limit.Location = new System.Drawing.Point(261, 256);
             this.lb_Preferent_limit.Name = "lb_Preferent_limit";
             this.lb_Preferent_limit.Size = new System.Drawing.Size(45, 12);
             this.lb_Preferent_limit.TabIndex = 20;
             this.lb_Preferent_limit.Text = "원 까지";
             // 
-            // lb_InterestPeriod
+            // lb_SettlePeriod
             // 
-            this.lb_InterestPeriod.AutoSize = true;
-            this.lb_InterestPeriod.Location = new System.Drawing.Point(11, 200);
-            this.lb_InterestPeriod.Name = "lb_InterestPeriod";
-            this.lb_InterestPeriod.Size = new System.Drawing.Size(85, 12);
-            this.lb_InterestPeriod.TabIndex = 21;
-            this.lb_InterestPeriod.Text = "이자 정산 주기";
+            this.lb_SettlePeriod.AutoSize = true;
+            this.lb_SettlePeriod.Location = new System.Drawing.Point(11, 200);
+            this.lb_SettlePeriod.Name = "lb_SettlePeriod";
+            this.lb_SettlePeriod.Size = new System.Drawing.Size(85, 12);
+            this.lb_SettlePeriod.TabIndex = 21;
+            this.lb_SettlePeriod.Text = "이자 정산 주기";
             // 
-            // txt_InterestPeriod
+            // txt_SettlePeriod
             // 
-            this.txt_InterestPeriod.Enabled = false;
-            this.txt_InterestPeriod.Location = new System.Drawing.Point(98, 197);
-            this.txt_InterestPeriod.Name = "txt_InterestPeriod";
-            this.txt_InterestPeriod.Size = new System.Drawing.Size(77, 21);
-            this.txt_InterestPeriod.TabIndex = 22;
-            this.txt_InterestPeriod.Visible = false;
+            this.txt_SettlePeriod.Location = new System.Drawing.Point(111, 197);
+            this.txt_SettlePeriod.Name = "txt_SettlePeriod";
+            this.txt_SettlePeriod.Size = new System.Drawing.Size(77, 21);
+            this.txt_SettlePeriod.TabIndex = 22;
             // 
-            // cb_InterestPeriod
+            // cb_SettlePeriod
             // 
-            this.cb_InterestPeriod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cb_InterestPeriod.FormattingEnabled = true;
-            this.cb_InterestPeriod.Location = new System.Drawing.Point(183, 197);
-            this.cb_InterestPeriod.Name = "cb_InterestPeriod";
-            this.cb_InterestPeriod.Size = new System.Drawing.Size(59, 20);
-            this.cb_InterestPeriod.TabIndex = 23;
+            this.cb_SettlePeriod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_SettlePeriod.FormattingEnabled = true;
+            this.cb_SettlePeriod.Location = new System.Drawing.Point(196, 197);
+            this.cb_SettlePeriod.Name = "cb_SettlePeriod";
+            this.cb_SettlePeriod.Size = new System.Drawing.Size(59, 20);
+            this.cb_SettlePeriod.TabIndex = 23;
+            // 
+            // cb_AddCondition
+            // 
+            this.cb_AddCondition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_AddCondition.FormattingEnabled = true;
+            this.cb_AddCondition.Location = new System.Drawing.Point(641, 29);
+            this.cb_AddCondition.Name = "cb_AddCondition";
+            this.cb_AddCondition.Size = new System.Drawing.Size(75, 20);
+            this.cb_AddCondition.TabIndex = 24;
             // 
             // AddAcount
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(955, 527);
-            this.Controls.Add(this.cb_InterestPeriod);
-            this.Controls.Add(this.txt_InterestPeriod);
-            this.Controls.Add(this.lb_InterestPeriod);
+            this.Controls.Add(this.cb_AddCondition);
+            this.Controls.Add(this.cb_SettlePeriod);
+            this.Controls.Add(this.txt_SettlePeriod);
+            this.Controls.Add(this.lb_SettlePeriod);
             this.Controls.Add(this.lb_Preferent_limit);
             this.Controls.Add(this.txt_Preferent);
             this.Controls.Add(this.ch_CheckPreferent);
@@ -328,8 +338,9 @@
         private System.Windows.Forms.CheckBox ch_CheckPreferent;
         private System.Windows.Forms.TextBox txt_Preferent;
         private System.Windows.Forms.Label lb_Preferent_limit;
-        private System.Windows.Forms.Label lb_InterestPeriod;
-        private System.Windows.Forms.TextBox txt_InterestPeriod;
-        private System.Windows.Forms.ComboBox cb_InterestPeriod;
+        private System.Windows.Forms.Label lb_SettlePeriod;
+        private System.Windows.Forms.TextBox txt_SettlePeriod;
+        private System.Windows.Forms.ComboBox cb_SettlePeriod;
+        private System.Windows.Forms.ComboBox cb_AddCondition;
     }
 }
