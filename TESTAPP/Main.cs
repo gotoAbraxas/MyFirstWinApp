@@ -17,30 +17,30 @@ namespace TESTAPP
 {
     public partial class Main : Form
     {
-
-        private Account account;
-
         private AccountService accountService;
 
         List<Control> ConditionControler = new List<Control>();
 
-        private static string ch_Condition = "ch_Condition";
-        private static string txt_Condition = "txt_Condition";
-        private static string bt_Condition = "bt_Condition";
+        private readonly string txt_Condition = "txt_Condition";
+        private readonly string ch_Condition = "ch_Condition";
+        private readonly string bt_Condition = "bt_Condition";
         public Main()
         {
             InitializeComponent();
 
-
-
-            // 내 계좌 리스트를 알아야함.
-
-
-            comboBox1.Items.Add("ddd");
+            accountService = new AccountService(); // 나중에 di로 설정 가능하려나.
 
         }
 
         private void Init()
+        {
+
+            SelectAccounts();
+
+            JustTest();
+        }
+
+        private void JustTest()
         {
             MessageBox.Show("초기화");
             var a = test();
@@ -58,6 +58,22 @@ namespace TESTAPP
 
             grid_accountLog.DataSource = dt;
         }
+
+        #region "계좌 선택 항목"
+        private void SelectAccounts()
+        { // 이걸 계좌 추가하면 한번 더 실행하긴해야하는데, 그런 트리거가 있을지 의문
+            cb_SelectAccount.Items.Clear();
+
+            Dictionary<long,Account>  accounts = accountService.GetAcountsById(1L);
+
+            foreach ( Account account in accounts.Values)
+            {
+                cb_SelectAccount.Items.Add(account.Name);
+            }
+            ViewAccount();
+        }
+
+        #endregion
 
         private Dictionary<int, string> test()
         {
@@ -83,19 +99,21 @@ namespace TESTAPP
 
             grid_accountLog.DataSource = dt;
         }
-        private void tabControl1_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void btAddAcount_Click(object sender, EventArgs e)
         {
-            AddAcount a = new AddAcount();
-            a.StartPosition = FormStartPosition.CenterScreen;
-            a.ShowDialog();
+            AddAcount addAccount = new AddAcount();
+            addAccount.StartPosition = FormStartPosition.CenterScreen;
+            addAccount.ShowDialog();
         }
 
-        private void tabPage_3_Onclick(object sender, EventArgs e)
+
+        private void bt_Refresh_Click(object sender, EventArgs e)
+        {
+            SelectAccounts();
+        }
+
+        private void tranHis_Onclick(object sender, EventArgs e)
         {
 
 
@@ -103,10 +121,28 @@ namespace TESTAPP
 
         }
 
+        private void accountTab_OnClick(object sender, EventArgs e)
+        {
+            ViewAccount();
+
+        }
+
+        private void ViewAccount()
+        {
+            if (cb_SelectAccount.Text.Equals(""))
+            {
+            }
+            else
+            {
+            }
+        }
+
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int a = comboBox1.SelectedIndex;
-
+            string name = cb_SelectAccount.SelectedText;
+     
+                ViewAccount();
+       
         }
 
         private void button1_Click(object sender, EventArgs e)

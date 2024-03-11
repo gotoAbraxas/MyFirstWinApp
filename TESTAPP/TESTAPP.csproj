@@ -63,6 +63,8 @@
   <ItemGroup>
     <Compile Include="account\service\AccountService.cs" />
     <Compile Include="common\component\Dynamic.cs" />
+    <Compile Include="database\AccountRepository.cs" />
+    <Compile Include="database\iFace\IAccountRepository.cs" />
     <Compile Include="domain\account\Account.cs" />
     <Compile Include="domain\account\iFace\IAccount.cs" />
     <Compile Include="domain\account\sub\AccountLog.cs" />
@@ -123,5 +125,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

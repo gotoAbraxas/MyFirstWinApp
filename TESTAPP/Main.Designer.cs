@@ -33,7 +33,7 @@ namespace TESTAPP
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.accountTab = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.myAccountTab = new System.Windows.Forms.TabPage();
             this.calProfitTab = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
             this.bt_addCondition = new System.Windows.Forms.Button();
@@ -41,8 +41,9 @@ namespace TESTAPP
             this.tranHis = new System.Windows.Forms.TabPage();
             this.grid_accountLog = new System.Windows.Forms.DataGridView();
             this.btAddAcount = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.cb_SelectAccount = new System.Windows.Forms.ComboBox();
+            this.lb_SelectAccount = new System.Windows.Forms.Label();
+            this.bt_Refresh = new System.Windows.Forms.Button();
             this.accountTab.SuspendLayout();
             this.calProfitTab.SuspendLayout();
             this.tranHis.SuspendLayout();
@@ -61,7 +62,7 @@ namespace TESTAPP
             // 
             // accountTab
             // 
-            this.accountTab.Controls.Add(this.tabPage1);
+            this.accountTab.Controls.Add(this.myAccountTab);
             this.accountTab.Controls.Add(this.calProfitTab);
             this.accountTab.Controls.Add(this.tranHis);
             this.accountTab.Location = new System.Drawing.Point(36, 55);
@@ -69,17 +70,17 @@ namespace TESTAPP
             this.accountTab.SelectedIndex = 0;
             this.accountTab.Size = new System.Drawing.Size(888, 476);
             this.accountTab.TabIndex = 2;
-            this.accountTab.Click += new System.EventHandler(this.tabControl1_Click);
             // 
-            // tabPage1
+            // myAccountTab
             // 
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(880, 450);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.myAccountTab.Location = new System.Drawing.Point(4, 22);
+            this.myAccountTab.Name = "myAccountTab";
+            this.myAccountTab.Padding = new System.Windows.Forms.Padding(3);
+            this.myAccountTab.Size = new System.Drawing.Size(880, 450);
+            this.myAccountTab.TabIndex = 0;
+            this.myAccountTab.Text = "내 계좌";
+            this.myAccountTab.UseVisualStyleBackColor = true;
+            this.myAccountTab.Enter += new System.EventHandler(this.accountTab_OnClick);
             // 
             // calProfitTab
             // 
@@ -89,7 +90,7 @@ namespace TESTAPP
             this.calProfitTab.Location = new System.Drawing.Point(4, 22);
             this.calProfitTab.Name = "calProfitTab";
             this.calProfitTab.Padding = new System.Windows.Forms.Padding(3);
-            this.calProfitTab.Size = new System.Drawing.Size(693, 348);
+            this.calProfitTab.Size = new System.Drawing.Size(880, 450);
             this.calProfitTab.TabIndex = 1;
             this.calProfitTab.Text = "이자 계산해보기";
             this.calProfitTab.UseVisualStyleBackColor = true;
@@ -128,11 +129,11 @@ namespace TESTAPP
             this.tranHis.Location = new System.Drawing.Point(4, 22);
             this.tranHis.Name = "tranHis";
             this.tranHis.Padding = new System.Windows.Forms.Padding(3);
-            this.tranHis.Size = new System.Drawing.Size(693, 348);
+            this.tranHis.Size = new System.Drawing.Size(880, 450);
             this.tranHis.TabIndex = 2;
             this.tranHis.Text = "거래내역";
             this.tranHis.UseVisualStyleBackColor = true;
-            this.tranHis.Enter += new System.EventHandler(this.tabPage_3_Onclick);
+            this.tranHis.Enter += new System.EventHandler(this.tranHis_Onclick);
             // 
             // grid_accountLog
             // 
@@ -148,7 +149,7 @@ namespace TESTAPP
             // 
             // btAddAcount
             // 
-            this.btAddAcount.Location = new System.Drawing.Point(241, 13);
+            this.btAddAcount.Location = new System.Drawing.Point(261, 13);
             this.btAddAcount.Name = "btAddAcount";
             this.btAddAcount.Size = new System.Drawing.Size(100, 20);
             this.btAddAcount.TabIndex = 3;
@@ -156,34 +157,43 @@ namespace TESTAPP
             this.btAddAcount.UseVisualStyleBackColor = true;
             this.btAddAcount.Click += new System.EventHandler(this.btAddAcount_Click);
             // 
-            // comboBox1
+            // cb_SelectAccount
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "3"});
-            this.comboBox1.Location = new System.Drawing.Point(101, 14);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(120, 20);
-            this.comboBox1.TabIndex = 4;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.cb_SelectAccount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_SelectAccount.FormattingEnabled = true;
+            this.cb_SelectAccount.Location = new System.Drawing.Point(101, 14);
+            this.cb_SelectAccount.Name = "cb_SelectAccount";
+            this.cb_SelectAccount.Size = new System.Drawing.Size(120, 20);
+            this.cb_SelectAccount.TabIndex = 4;
+            this.cb_SelectAccount.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // label1
+            // lb_SelectAccount
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 19);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 12);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "계좌 선택하기";
+            this.lb_SelectAccount.AutoSize = true;
+            this.lb_SelectAccount.Location = new System.Drawing.Point(13, 19);
+            this.lb_SelectAccount.Name = "lb_SelectAccount";
+            this.lb_SelectAccount.Size = new System.Drawing.Size(81, 12);
+            this.lb_SelectAccount.TabIndex = 5;
+            this.lb_SelectAccount.Text = "계좌 선택하기";
+            // 
+            // bt_Refresh
+            // 
+            this.bt_Refresh.Location = new System.Drawing.Point(228, 15);
+            this.bt_Refresh.Name = "bt_Refresh";
+            this.bt_Refresh.Size = new System.Drawing.Size(19, 18);
+            this.bt_Refresh.TabIndex = 6;
+            this.bt_Refresh.Text = "R";
+            this.bt_Refresh.UseVisualStyleBackColor = true;
+            this.bt_Refresh.Click += new System.EventHandler(this.bt_Refresh_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(956, 555);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.bt_Refresh);
+            this.Controls.Add(this.lb_SelectAccount);
+            this.Controls.Add(this.cb_SelectAccount);
             this.Controls.Add(this.btAddAcount);
             this.Controls.Add(this.accountTab);
             this.Controls.Add(this.menuStrip1);
@@ -202,16 +212,17 @@ namespace TESTAPP
         #endregion
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.TabControl accountTab;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage myAccountTab;
         private System.Windows.Forms.TabPage calProfitTab;
         private System.Windows.Forms.TabPage tranHis;
         private System.Windows.Forms.DataGridView grid_accountLog;
         private System.Windows.Forms.Button btAddAcount;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cb_SelectAccount;
+        private System.Windows.Forms.Label lb_SelectAccount;
         private System.Windows.Forms.Button bt_addCondition;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button bt_Refresh;
     }
 }
 
