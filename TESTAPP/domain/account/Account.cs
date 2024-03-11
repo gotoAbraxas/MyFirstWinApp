@@ -38,6 +38,9 @@ namespace TESTAPP.domain.account
         public string Name { get; set; } // 계좌 이름
         public decimal Interest {  get; set; } // 이율
         public List<AccountLog> Log { get; set; } = new List<AccountLog>(); // 거래 기록
+
+        public List<AmountCondition> amountConditions { get; set; }
+        public List<PeriodCondition> periodConditions { get; set; }
         public SettleType SettleType { get; set; } // 정산 타입
         public int SettlePeriod { get; set; } // 정산 주기
         public SettlePeriodType SettlePeriodType { get; set; } // 정산 단위

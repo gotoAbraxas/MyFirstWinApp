@@ -35,14 +35,13 @@ namespace TESTAPP
         private void Init()
         {
 
-            SelectAccounts();
 
             JustTest();
         }
 
         private void JustTest()
         {
-            MessageBox.Show("초기화");
+            //MessageBox.Show("초기화");
             var a = test();
 
 
