@@ -151,6 +151,13 @@ namespace TESTAPP
 
         #endregion
 
+        #region "우대 이자 금액 Pretty"
+        private void txt_Preferent_TextChanged(object sender, EventArgs e)
+        {
+            SetTxtAmountPretty(this, (sender as TextBox).Name);
+        }
+        #endregion
+
         #region "우대 이율 조건 설정
         private void SetAddCondition()
         {
@@ -169,6 +176,7 @@ namespace TESTAPP
                     AddAmountCondition();
                     break;
                 case AddConditionType.기간:
+                    AddPeriodCondion();
                     break;
                 case AddConditionType.기타:
                     break;
@@ -183,7 +191,7 @@ namespace TESTAPP
         {
             FlowLayoutPanel layout = new FlowLayoutPanel();
 
-            DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, width: flp_Condition.Width - 10, height: 40);
+            DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, width: flp_Condition.Width - 10, height: 35);
 
             DynamicLabelInsert(this, new Label(), layout, "", $"{ConditionControler.Count}", 20, 30);
             DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition_st}{ConditionControler.Count}", "", 130, 30);
@@ -191,6 +199,23 @@ namespace TESTAPP
             DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition_ed}{ConditionControler.Count}", "", 130, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "원 ", 30, 30);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}","", 35, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "%", 10, 30);
+            ConditionControler.Add(layout);
+        }
+
+        private void AddPeriodCondion()
+        {
+            FlowLayoutPanel layout = new FlowLayoutPanel();
+            DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, width: flp_Condition.Width - 10, height: 35);
+
+            DynamicLabelInsert(this, new Label(), layout, "", $"{ConditionControler.Count}", 20, 30);
+            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_st}{ConditionControler.Count}", "", 35, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "개월", 40, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", " ~ ", 20, 30);
+            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_ed}{ConditionControler.Count}", "", 35, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "개월", 40, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "+", 10, 30);
+            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", "", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 10, 30);
             ConditionControler.Add(layout);
         }
@@ -254,10 +279,7 @@ namespace TESTAPP
             }
         }
 
-        private void txt_Preferent_TextChanged(object sender, EventArgs e)
-        {
-            SetTxtAmountPretty(this,(sender as TextBox).Name);
-        }
+
 
     }
 }

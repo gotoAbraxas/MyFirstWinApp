@@ -44,6 +44,7 @@ namespace TESTAPP
             this.cb_SelectAccount = new System.Windows.Forms.ComboBox();
             this.lb_SelectAccount = new System.Windows.Forms.Label();
             this.bt_Refresh = new System.Windows.Forms.Button();
+            this.bt_AddAccountLog = new System.Windows.Forms.Button();
             this.accountTab.SuspendLayout();
             this.calProfitTab.SuspendLayout();
             this.tranHis.SuspendLayout();
@@ -125,6 +126,7 @@ namespace TESTAPP
             // 
             // tranHis
             // 
+            this.tranHis.Controls.Add(this.bt_AddAccountLog);
             this.tranHis.Controls.Add(this.grid_accountLog);
             this.tranHis.Location = new System.Drawing.Point(4, 22);
             this.tranHis.Name = "tranHis";
@@ -140,11 +142,11 @@ namespace TESTAPP
             this.grid_accountLog.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.grid_accountLog.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.grid_accountLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grid_accountLog.Location = new System.Drawing.Point(67, 17);
+            this.grid_accountLog.Location = new System.Drawing.Point(43, 33);
             this.grid_accountLog.Name = "grid_accountLog";
             this.grid_accountLog.RowHeadersWidth = 62;
             this.grid_accountLog.RowTemplate.Height = 23;
-            this.grid_accountLog.Size = new System.Drawing.Size(578, 316);
+            this.grid_accountLog.Size = new System.Drawing.Size(578, 382);
             this.grid_accountLog.TabIndex = 2;
             // 
             // btAddAcount
@@ -186,6 +188,16 @@ namespace TESTAPP
             this.bt_Refresh.UseVisualStyleBackColor = true;
             this.bt_Refresh.Click += new System.EventHandler(this.bt_Refresh_Click);
             // 
+            // bt_AddAccountLog
+            // 
+            this.bt_AddAccountLog.Location = new System.Drawing.Point(655, 39);
+            this.bt_AddAccountLog.Name = "bt_AddAccountLog";
+            this.bt_AddAccountLog.Size = new System.Drawing.Size(103, 26);
+            this.bt_AddAccountLog.TabIndex = 3;
+            this.bt_AddAccountLog.Text = "내역 추가하기";
+            this.bt_AddAccountLog.UseVisualStyleBackColor = true;
+            this.bt_AddAccountLog.Click += new System.EventHandler(this.bt_AddAccountLog_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -223,6 +235,7 @@ namespace TESTAPP
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button bt_Refresh;
+        private System.Windows.Forms.Button bt_AddAccountLog;
     }
 }
 
