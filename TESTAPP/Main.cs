@@ -185,7 +185,6 @@ namespace TESTAPP
             AddAcount addAcount = new AddAcount();
 
             addAcount.FormClosed += WhenAddAcountClosed;
-            // 이게 순서가 맞아야 하는 프로그래밍인데 맞나 싶음.
             OpenNewForm<AddAcount>(addAcount);
         }
 
@@ -227,7 +226,7 @@ namespace TESTAPP
 
         private void bt_Calculate_Click(object sender, EventArgs e)
         {
-            DateTime until = dateTimePicker1.Value;
+            DateTime until = dt_To.Value;
             Account account = GetSelectedAccount();
             if(account is null) 
             {
@@ -242,6 +241,16 @@ namespace TESTAPP
             account.GetResult(ref amount,ref  resultinterest,ref resultAmount, DateTime.Now, until);
 
             MessageBox.Show($"쌓인 이자 {resultinterest} 최종 금액 {resultAmount}");
+        }
+
+        private void dt_From_ValueChanged(object sender, EventArgs e)
+        {
+            if (dt_From.Value.CompareTo(dt_To.Value) >= 0)
+            {
+                MessageBox.Show("시작기간은 끝 기간을 넘어설 수 없습니다.");
+                dt_From.Value = DateTime.Now;
+            }
+            
         }
     }
 }

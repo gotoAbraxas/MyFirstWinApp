@@ -34,6 +34,8 @@ namespace TESTAPP
             this.accountTab = new System.Windows.Forms.TabControl();
             this.myAccountTab = new System.Windows.Forms.TabPage();
             this.calProfitTab = new System.Windows.Forms.TabPage();
+            this.dt_To = new System.Windows.Forms.DateTimePicker();
+            this.bt_Calculate = new System.Windows.Forms.Button();
             this.bt_addCondition = new System.Windows.Forms.Button();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tranHis = new System.Windows.Forms.TabPage();
@@ -47,8 +49,7 @@ namespace TESTAPP
             this.cb_SelectAccount = new System.Windows.Forms.ComboBox();
             this.lb_SelectAccount = new System.Windows.Forms.Label();
             this.bt_Refresh = new System.Windows.Forms.Button();
-            this.bt_Calculate = new System.Windows.Forms.Button();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.dt_From = new System.Windows.Forms.DateTimePicker();
             this.accountTab.SuspendLayout();
             this.calProfitTab.SuspendLayout();
             this.tranHis.SuspendLayout();
@@ -79,7 +80,8 @@ namespace TESTAPP
             // 
             // calProfitTab
             // 
-            this.calProfitTab.Controls.Add(this.dateTimePicker1);
+            this.calProfitTab.Controls.Add(this.dt_From);
+            this.calProfitTab.Controls.Add(this.dt_To);
             this.calProfitTab.Controls.Add(this.bt_Calculate);
             this.calProfitTab.Controls.Add(this.bt_addCondition);
             this.calProfitTab.Controls.Add(this.flowLayoutPanel);
@@ -90,6 +92,23 @@ namespace TESTAPP
             this.calProfitTab.TabIndex = 1;
             this.calProfitTab.Text = "이자 계산해보기";
             this.calProfitTab.UseVisualStyleBackColor = true;
+            // 
+            // dt_To
+            // 
+            this.dt_To.Location = new System.Drawing.Point(231, 161);
+            this.dt_To.Name = "dt_To";
+            this.dt_To.Size = new System.Drawing.Size(114, 21);
+            this.dt_To.TabIndex = 8;
+            // 
+            // bt_Calculate
+            // 
+            this.bt_Calculate.Location = new System.Drawing.Point(349, 368);
+            this.bt_Calculate.Name = "bt_Calculate";
+            this.bt_Calculate.Size = new System.Drawing.Size(101, 37);
+            this.bt_Calculate.TabIndex = 7;
+            this.bt_Calculate.Text = "계산 !";
+            this.bt_Calculate.UseVisualStyleBackColor = true;
+            this.bt_Calculate.Click += new System.EventHandler(this.bt_Calculate_Click);
             // 
             // bt_addCondition
             // 
@@ -226,22 +245,13 @@ namespace TESTAPP
             this.bt_Refresh.UseVisualStyleBackColor = true;
             this.bt_Refresh.Click += new System.EventHandler(this.bt_Refresh_Click);
             // 
-            // bt_Calculate
+            // dt_From
             // 
-            this.bt_Calculate.Location = new System.Drawing.Point(349, 368);
-            this.bt_Calculate.Name = "bt_Calculate";
-            this.bt_Calculate.Size = new System.Drawing.Size(101, 37);
-            this.bt_Calculate.TabIndex = 7;
-            this.bt_Calculate.Text = "계산 !";
-            this.bt_Calculate.UseVisualStyleBackColor = true;
-            this.bt_Calculate.Click += new System.EventHandler(this.bt_Calculate_Click);
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(164, 62);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(114, 21);
-            this.dateTimePicker1.TabIndex = 8;
+            this.dt_From.Location = new System.Drawing.Point(32, 161);
+            this.dt_From.Name = "dt_From";
+            this.dt_From.Size = new System.Drawing.Size(114, 21);
+            this.dt_From.TabIndex = 9;
+            this.dt_From.ValueChanged += new System.EventHandler(this.dt_From_ValueChanged);
             // 
             // Main
             // 
@@ -284,7 +294,8 @@ namespace TESTAPP
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txt_Amount;
         private System.Windows.Forms.Button bt_Calculate;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.DateTimePicker dt_To;
+        private System.Windows.Forms.DateTimePicker dt_From;
     }
 }
 
