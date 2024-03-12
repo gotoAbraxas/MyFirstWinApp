@@ -76,11 +76,22 @@ namespace TESTAPP.common.component
             foreach (String value in values) { control.Items.Add(value); }
         }
 
+
+        // 개선하고싶은데 실력부족...
         public static void OpenNewForm<T>() where T : Form, new()
         {
-            T newform = new T();
-            newform.StartPosition = FormStartPosition.CenterScreen;
+            T newform = new T
+            {
+                StartPosition = FormStartPosition.CenterScreen,
+            };
             newform.ShowDialog();
+        }
+
+        public static void OpenNewForm<T>(T form) where T : Form, new()
+        {
+
+            form.StartPosition = FormStartPosition.CenterScreen;
+            form.ShowDialog();
         }
 
 
