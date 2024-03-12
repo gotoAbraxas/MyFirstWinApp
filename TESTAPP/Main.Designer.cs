@@ -31,35 +31,27 @@ namespace TESTAPP
         /// </summary>
         private void InitializeComponent()
         {
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.accountTab = new System.Windows.Forms.TabControl();
             this.myAccountTab = new System.Windows.Forms.TabPage();
             this.calProfitTab = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
             this.bt_addCondition = new System.Windows.Forms.Button();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tranHis = new System.Windows.Forms.TabPage();
+            this.lb_Amount = new System.Windows.Forms.Label();
+            this.bt_Refresh_log = new System.Windows.Forms.Button();
+            this.bt_AddAccountLog = new System.Windows.Forms.Button();
             this.grid_accountLog = new System.Windows.Forms.DataGridView();
-            this.btAddAcount = new System.Windows.Forms.Button();
+            this.bt_AddAcount = new System.Windows.Forms.Button();
             this.cb_SelectAccount = new System.Windows.Forms.ComboBox();
             this.lb_SelectAccount = new System.Windows.Forms.Label();
             this.bt_Refresh = new System.Windows.Forms.Button();
-            this.bt_AddAccountLog = new System.Windows.Forms.Button();
+            this.txt_Amount = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.accountTab.SuspendLayout();
             this.calProfitTab.SuspendLayout();
             this.tranHis.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid_accountLog)).BeginInit();
             this.SuspendLayout();
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 1, 0, 1);
-            this.menuStrip1.Size = new System.Drawing.Size(956, 24);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
             // 
             // accountTab
             // 
@@ -85,7 +77,6 @@ namespace TESTAPP
             // 
             // calProfitTab
             // 
-            this.calProfitTab.Controls.Add(this.button1);
             this.calProfitTab.Controls.Add(this.bt_addCondition);
             this.calProfitTab.Controls.Add(this.flowLayoutPanel);
             this.calProfitTab.Location = new System.Drawing.Point(4, 22);
@@ -95,16 +86,6 @@ namespace TESTAPP
             this.calProfitTab.TabIndex = 1;
             this.calProfitTab.Text = "이자 계산해보기";
             this.calProfitTab.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(243, 113);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // bt_addCondition
             // 
@@ -126,6 +107,10 @@ namespace TESTAPP
             // 
             // tranHis
             // 
+            this.tranHis.Controls.Add(this.label1);
+            this.tranHis.Controls.Add(this.txt_Amount);
+            this.tranHis.Controls.Add(this.lb_Amount);
+            this.tranHis.Controls.Add(this.bt_Refresh_log);
             this.tranHis.Controls.Add(this.bt_AddAccountLog);
             this.tranHis.Controls.Add(this.grid_accountLog);
             this.tranHis.Location = new System.Drawing.Point(4, 22);
@@ -137,8 +122,39 @@ namespace TESTAPP
             this.tranHis.UseVisualStyleBackColor = true;
             this.tranHis.Enter += new System.EventHandler(this.tranHis_Onclick);
             // 
+            // lb_Amount
+            // 
+            this.lb_Amount.AutoSize = true;
+            this.lb_Amount.Location = new System.Drawing.Point(653, 356);
+            this.lb_Amount.Name = "lb_Amount";
+            this.lb_Amount.Size = new System.Drawing.Size(57, 12);
+            this.lb_Amount.TabIndex = 8;
+            this.lb_Amount.Text = "현재 잔액";
+            // 
+            // bt_Refresh_log
+            // 
+            this.bt_Refresh_log.Location = new System.Drawing.Point(655, 71);
+            this.bt_Refresh_log.Name = "bt_Refresh_log";
+            this.bt_Refresh_log.Size = new System.Drawing.Size(19, 18);
+            this.bt_Refresh_log.TabIndex = 7;
+            this.bt_Refresh_log.Text = "R";
+            this.bt_Refresh_log.UseVisualStyleBackColor = true;
+            this.bt_Refresh_log.Click += new System.EventHandler(this.bt_Refresh_log_Click);
+            // 
+            // bt_AddAccountLog
+            // 
+            this.bt_AddAccountLog.Location = new System.Drawing.Point(655, 39);
+            this.bt_AddAccountLog.Name = "bt_AddAccountLog";
+            this.bt_AddAccountLog.Size = new System.Drawing.Size(103, 26);
+            this.bt_AddAccountLog.TabIndex = 3;
+            this.bt_AddAccountLog.Text = "내역 추가하기";
+            this.bt_AddAccountLog.UseVisualStyleBackColor = true;
+            this.bt_AddAccountLog.Click += new System.EventHandler(this.bt_AddAccountLog_Click);
+            // 
             // grid_accountLog
             // 
+            this.grid_accountLog.AllowUserToAddRows = false;
+            this.grid_accountLog.AllowUserToDeleteRows = false;
             this.grid_accountLog.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.grid_accountLog.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.grid_accountLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -149,15 +165,15 @@ namespace TESTAPP
             this.grid_accountLog.Size = new System.Drawing.Size(578, 382);
             this.grid_accountLog.TabIndex = 2;
             // 
-            // btAddAcount
+            // bt_AddAcount
             // 
-            this.btAddAcount.Location = new System.Drawing.Point(261, 13);
-            this.btAddAcount.Name = "btAddAcount";
-            this.btAddAcount.Size = new System.Drawing.Size(100, 20);
-            this.btAddAcount.TabIndex = 3;
-            this.btAddAcount.Text = "계좌 추가하기";
-            this.btAddAcount.UseVisualStyleBackColor = true;
-            this.btAddAcount.Click += new System.EventHandler(this.btAddAcount_Click);
+            this.bt_AddAcount.Location = new System.Drawing.Point(820, 15);
+            this.bt_AddAcount.Name = "bt_AddAcount";
+            this.bt_AddAcount.Size = new System.Drawing.Size(100, 20);
+            this.bt_AddAcount.TabIndex = 3;
+            this.bt_AddAcount.Text = "계좌 추가하기";
+            this.bt_AddAcount.UseVisualStyleBackColor = true;
+            this.bt_AddAcount.Click += new System.EventHandler(this.bt_AddAcount_Click);
             // 
             // cb_SelectAccount
             // 
@@ -165,9 +181,9 @@ namespace TESTAPP
             this.cb_SelectAccount.FormattingEnabled = true;
             this.cb_SelectAccount.Location = new System.Drawing.Point(101, 14);
             this.cb_SelectAccount.Name = "cb_SelectAccount";
-            this.cb_SelectAccount.Size = new System.Drawing.Size(120, 20);
+            this.cb_SelectAccount.Size = new System.Drawing.Size(217, 20);
             this.cb_SelectAccount.TabIndex = 4;
-            this.cb_SelectAccount.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.cb_SelectAccount.SelectedIndexChanged += new System.EventHandler(this.cb_SelectAccount_SelectedIndexChanged);
             // 
             // lb_SelectAccount
             // 
@@ -180,7 +196,7 @@ namespace TESTAPP
             // 
             // bt_Refresh
             // 
-            this.bt_Refresh.Location = new System.Drawing.Point(228, 15);
+            this.bt_Refresh.Location = new System.Drawing.Point(328, 15);
             this.bt_Refresh.Name = "bt_Refresh";
             this.bt_Refresh.Size = new System.Drawing.Size(19, 18);
             this.bt_Refresh.TabIndex = 6;
@@ -188,15 +204,23 @@ namespace TESTAPP
             this.bt_Refresh.UseVisualStyleBackColor = true;
             this.bt_Refresh.Click += new System.EventHandler(this.bt_Refresh_Click);
             // 
-            // bt_AddAccountLog
+            // txt_Amount
             // 
-            this.bt_AddAccountLog.Location = new System.Drawing.Point(655, 39);
-            this.bt_AddAccountLog.Name = "bt_AddAccountLog";
-            this.bt_AddAccountLog.Size = new System.Drawing.Size(103, 26);
-            this.bt_AddAccountLog.TabIndex = 3;
-            this.bt_AddAccountLog.Text = "내역 추가하기";
-            this.bt_AddAccountLog.UseVisualStyleBackColor = true;
-            this.bt_AddAccountLog.Click += new System.EventHandler(this.bt_AddAccountLog_Click);
+            this.txt_Amount.Location = new System.Drawing.Point(634, 383);
+            this.txt_Amount.Name = "txt_Amount";
+            this.txt_Amount.ReadOnly = true;
+            this.txt_Amount.Size = new System.Drawing.Size(157, 21);
+            this.txt_Amount.TabIndex = 9;
+            this.txt_Amount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(797, 388);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(17, 12);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "원";
             // 
             // Main
             // 
@@ -206,15 +230,15 @@ namespace TESTAPP
             this.Controls.Add(this.bt_Refresh);
             this.Controls.Add(this.lb_SelectAccount);
             this.Controls.Add(this.cb_SelectAccount);
-            this.Controls.Add(this.btAddAcount);
+            this.Controls.Add(this.bt_AddAcount);
             this.Controls.Add(this.accountTab);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Main";
             this.Text = "Main";
+            this.Load += new System.EventHandler(this.Main_Load);
             this.accountTab.ResumeLayout(false);
             this.calProfitTab.ResumeLayout(false);
             this.tranHis.ResumeLayout(false);
+            this.tranHis.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid_accountLog)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -222,20 +246,22 @@ namespace TESTAPP
         }
 
         #endregion
-        private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.TabControl accountTab;
         private System.Windows.Forms.TabPage myAccountTab;
         private System.Windows.Forms.TabPage calProfitTab;
         private System.Windows.Forms.TabPage tranHis;
         private System.Windows.Forms.DataGridView grid_accountLog;
-        private System.Windows.Forms.Button btAddAcount;
+        private System.Windows.Forms.Button bt_AddAcount;
         private System.Windows.Forms.ComboBox cb_SelectAccount;
         private System.Windows.Forms.Label lb_SelectAccount;
         private System.Windows.Forms.Button bt_addCondition;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button bt_Refresh;
         private System.Windows.Forms.Button bt_AddAccountLog;
+        private System.Windows.Forms.Button bt_Refresh_log;
+        private System.Windows.Forms.Label lb_Amount;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txt_Amount;
     }
 }
 

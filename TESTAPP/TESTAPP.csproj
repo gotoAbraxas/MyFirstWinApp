@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="account\service\AccountLogService.cs" />
     <Compile Include="account\service\AccountService.cs" />
     <Compile Include="common\component\Dynamic.cs" />
     <Compile Include="database\AccountRepository.cs" />
@@ -93,6 +94,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AddAccountLog.resx">
+      <DependentUpon>AddAccountLog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
