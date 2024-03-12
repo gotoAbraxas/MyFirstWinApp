@@ -6,25 +6,13 @@ using System.Threading.Tasks;
 
 namespace TESTAPP.domain.account.sub
 {
-
-    enum ConditionType
-    { 금액,
-      기간,
-      기타
-    }
-    internal class InterestCondition<T>
+    internal class AmountCondition
     {
-
-        public ConditionType ConditionType { get; set; }
-
         public decimal StartValue { get; set; }
         public decimal EndValue { get; set; }
         public decimal ChangedValue { get; set; }
         public bool isAlwaysApplyed { get; set; }
 
         public string Description { get; set; }
-        public InterestCondition()
-        {
-        }
     }
 }

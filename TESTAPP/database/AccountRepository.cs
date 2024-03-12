@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TESTAPP.database.iFace;
 using TESTAPP.domain.account;
+using TESTAPP.domain.account.sub;
 
 namespace TESTAPP.database
 {
@@ -42,7 +43,7 @@ namespace TESTAPP.database
             }
             catch (ArgumentNullException e)
             {
-                MessageBox.Show("인수 전달이 안되었을 때.");
+                MessageBox.Show("유저코드와 계좌코드가 전달이 안되었을 때.");
                 return new Account();
             }
         }
@@ -54,12 +55,12 @@ namespace TESTAPP.database
             { 
                 return Accounts
                 .Where(account => account.Value.UserCode == userCode)
-                .ToDictionary(account => account.Value.UserCode, account => account.Value);
+                .ToDictionary(account => account.Value.AccountId, account => account.Value);
     
             }
             catch (ArgumentException e)
             {
-                MessageBox.Show("인수 전달이 안되었을 때.");
+                MessageBox.Show("유저코드가 전달이 안되었을 때.");
                 return new Dictionary<long, Account>();
             }
         }

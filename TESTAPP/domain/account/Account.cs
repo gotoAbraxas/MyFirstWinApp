@@ -33,13 +33,19 @@ namespace TESTAPP.domain.account
         #region "속성"
         public long AccountId { get; set; } // 나중에 guid
 
-        public long UserCode { get; set; } // 유저 코드 식별자.
-
+        public long UserCode { get; set; } // 유저 코드 식별자
         public string Name { get; set; } // 계좌 이름
+        public string Name_AccountId { get; set; } // 최종 식별 코드
         public decimal Interest {  get; set; } // 이율
+        public decimal Amount { get; set; } = 0; // 통장잔액
         public List<AccountLog> Log { get; set; } = new List<AccountLog>(); // 거래 기록
+
+        public List<AmountCondition> amountConditions { get; set; }
+        public List<PeriodCondition> periodConditions { get; set; }
         public SettleType SettleType { get; set; } // 정산 타입
         public int SettlePeriod { get; set; } // 정산 주기
+
+        
         public SettlePeriodType SettlePeriodType { get; set; } // 정산 단위
 
         public decimal? UpperLimitWellInterest { get; set; } = null; // 우대금리 최대 금액 기본 null
@@ -105,11 +111,6 @@ namespace TESTAPP.domain.account
 
             }
         }
-
-
-
-
-
 
     }
 }

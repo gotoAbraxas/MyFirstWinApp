@@ -68,8 +68,10 @@
     <Compile Include="domain\account\Account.cs" />
     <Compile Include="domain\account\iFace\IAccount.cs" />
     <Compile Include="domain\account\sub\AccountLog.cs" />
+    <Compile Include="domain\account\sub\AmountCondition.cs" />
     <Compile Include="domain\account\sub\InterestCondition.cs" />
     <Compile Include="domain\account\sub\InterestLog.cs" />
+    <Compile Include="domain\account\sub\PeriodCondition.cs" />
     <Compile Include="domain\account\sub\VirtualLog.cs" />
     <Compile Include="AddAccountLog.cs">
       <SubType>Form</SubType>
