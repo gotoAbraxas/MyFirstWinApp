@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 using TESTAPP.database;
 using TESTAPP.database.iFace;
 using TESTAPP.domain.account;
+using TESTAPP.domain.account.sub;
 
 namespace TESTAPP.account.service
 {
@@ -27,9 +29,17 @@ namespace TESTAPP.account.service
         #endregion
 
         #region "메서드"
-        public void SelectAccountById(long userCode, long accountCode) // 해당키를 갖고 계좌를 넣어버리기.
+        public Account SelectAccountById(long userCode, long accountCode) // 해당키를 갖고 계좌를 넣어버리기.
         {
+
+            try { 
             SelectedAccount = repository.GetAccountById(userCode, accountCode);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("해당 계좌가 존재하지 않습니다.");
+            }
+            return SelectedAccount;
         }
        
         public void AddAcount(Account account) // 이건 완전 다른걸 넣어야할 수 있음.
@@ -40,6 +50,33 @@ namespace TESTAPP.account.service
         public Dictionary<long, Account> GetAcountsById(long userCode)
         { 
             return repository.GetAllAccountsById(userCode);
+        }
+
+        public void Deposit(long userCode, long accountCode,decimal amount,AccountLog log)
+        {
+            Account tmp = SelectAccountById(userCode, accountCode);
+
+            tmp.AddLog(log);
+            tmp.Amount += amount;
+
+        }
+
+        public void Withdraw(long userCode, long accountCode, decimal amount, AccountLog log)
+        {
+            Account tmp = SelectAccountById(userCode, accountCode);
+
+            if(tmp.Amount > amount) 
+            {
+                tmp.AddLog(log);
+                tmp.Amount -= amount;
+
+            }
+            else
+            {
+                MessageBox.Show("잔액이 부족합니다.");
+            }
+
+            
         }
 
         #endregion
