@@ -256,11 +256,13 @@ namespace TESTAPP
 
             SetConditionValues(ref periodConditions, ref amountConditions);
 
+            //이거 전부 생성자 밖으로 추출 하면 좋음
             account = new Account()
             {
                 Name = txt_AccountName.Text,
                 AccountId = long.Parse(txt_AccountNumber.Text),
-                Interest = decimal.Parse(txt_Interest.Text),
+                Name_AccountId = $"{txt_AccountName.Text}_{txt_AccountNumber.Text}",
+                Interest = decimal.Parse(txt_Interest.Text) / 100,
                 SettlePeriod = int.Parse(txt_SettlePeriod.Text),
                 SettlePeriodType = GetEnumValue<SettlePeriodType>(cb_SettlePeriod.Text),
                 SettleType = GetEnumValue<SettleType>(cb_SettleType.Text),
@@ -269,7 +271,6 @@ namespace TESTAPP
                 amountConditions = amountConditions,
                 periodConditions = periodConditions, // 이 둘은 나중에 또 따로 관리
             };
-
         }
         private void SetConditionValues(ref List<PeriodCondition> periodConditions, ref List<AmountCondition> amountConditions)
         {
@@ -300,7 +301,7 @@ namespace TESTAPP
                 {
                     StartValue = startValue,
                     EndValue = endValue,
-                    ChangedValue = interestValue,
+                    ChangedValue = interestValue / 100,
                 };
                 periodConditions.Add(condition);
             }
@@ -318,7 +319,7 @@ namespace TESTAPP
                 {
                     StartValue = startValue,
                     EndValue = endValue,
-                    ChangedValue = interestValue,
+                    ChangedValue = interestValue / 100,
                 };
                 amountConditions.Add(condition);
             }
