@@ -11,7 +11,7 @@ namespace TESTAPP.domain.account.sub
     {
         입금,
         출금,
-        이율변경
+        //이율변경
     }
     internal class AccountLog
     {
@@ -19,7 +19,8 @@ namespace TESTAPP.domain.account.sub
     
        public AccountLogType AccountLogType { get; set; }
 
-        public decimal interest { get; set; }
+       public decimal Amount { get; set; }
+       public DateTime DateTime { get; set; }
        public  string Description { get; set; }
     }
 }
