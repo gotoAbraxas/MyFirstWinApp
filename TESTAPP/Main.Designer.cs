@@ -37,6 +37,8 @@ namespace TESTAPP
             this.bt_addCondition = new System.Windows.Forms.Button();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tranHis = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txt_Amount = new System.Windows.Forms.TextBox();
             this.lb_Amount = new System.Windows.Forms.Label();
             this.bt_Refresh_log = new System.Windows.Forms.Button();
             this.bt_AddAccountLog = new System.Windows.Forms.Button();
@@ -45,8 +47,8 @@ namespace TESTAPP
             this.cb_SelectAccount = new System.Windows.Forms.ComboBox();
             this.lb_SelectAccount = new System.Windows.Forms.Label();
             this.bt_Refresh = new System.Windows.Forms.Button();
-            this.txt_Amount = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.bt_Calculate = new System.Windows.Forms.Button();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.accountTab.SuspendLayout();
             this.calProfitTab.SuspendLayout();
             this.tranHis.SuspendLayout();
@@ -77,6 +79,8 @@ namespace TESTAPP
             // 
             // calProfitTab
             // 
+            this.calProfitTab.Controls.Add(this.dateTimePicker1);
+            this.calProfitTab.Controls.Add(this.bt_Calculate);
             this.calProfitTab.Controls.Add(this.bt_addCondition);
             this.calProfitTab.Controls.Add(this.flowLayoutPanel);
             this.calProfitTab.Location = new System.Drawing.Point(4, 22);
@@ -89,7 +93,7 @@ namespace TESTAPP
             // 
             // bt_addCondition
             // 
-            this.bt_addCondition.Location = new System.Drawing.Point(374, 22);
+            this.bt_addCondition.Location = new System.Drawing.Point(509, 23);
             this.bt_addCondition.Name = "bt_addCondition";
             this.bt_addCondition.Size = new System.Drawing.Size(96, 23);
             this.bt_addCondition.TabIndex = 6;
@@ -100,7 +104,7 @@ namespace TESTAPP
             // flowLayoutPanel
             // 
             this.flowLayoutPanel.AutoScroll = true;
-            this.flowLayoutPanel.Location = new System.Drawing.Point(374, 61);
+            this.flowLayoutPanel.Location = new System.Drawing.Point(509, 62);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
             this.flowLayoutPanel.Size = new System.Drawing.Size(294, 247);
             this.flowLayoutPanel.TabIndex = 1;
@@ -121,6 +125,24 @@ namespace TESTAPP
             this.tranHis.Text = "거래내역";
             this.tranHis.UseVisualStyleBackColor = true;
             this.tranHis.Enter += new System.EventHandler(this.tranHis_Onclick);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(797, 388);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(17, 12);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "원";
+            // 
+            // txt_Amount
+            // 
+            this.txt_Amount.Location = new System.Drawing.Point(634, 383);
+            this.txt_Amount.Name = "txt_Amount";
+            this.txt_Amount.ReadOnly = true;
+            this.txt_Amount.Size = new System.Drawing.Size(157, 21);
+            this.txt_Amount.TabIndex = 9;
+            this.txt_Amount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lb_Amount
             // 
@@ -204,23 +226,22 @@ namespace TESTAPP
             this.bt_Refresh.UseVisualStyleBackColor = true;
             this.bt_Refresh.Click += new System.EventHandler(this.bt_Refresh_Click);
             // 
-            // txt_Amount
+            // bt_Calculate
             // 
-            this.txt_Amount.Location = new System.Drawing.Point(634, 383);
-            this.txt_Amount.Name = "txt_Amount";
-            this.txt_Amount.ReadOnly = true;
-            this.txt_Amount.Size = new System.Drawing.Size(157, 21);
-            this.txt_Amount.TabIndex = 9;
-            this.txt_Amount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.bt_Calculate.Location = new System.Drawing.Point(349, 368);
+            this.bt_Calculate.Name = "bt_Calculate";
+            this.bt_Calculate.Size = new System.Drawing.Size(101, 37);
+            this.bt_Calculate.TabIndex = 7;
+            this.bt_Calculate.Text = "계산 !";
+            this.bt_Calculate.UseVisualStyleBackColor = true;
+            this.bt_Calculate.Click += new System.EventHandler(this.bt_Calculate_Click);
             // 
-            // label1
+            // dateTimePicker1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(797, 388);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(17, 12);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "원";
+            this.dateTimePicker1.Location = new System.Drawing.Point(164, 62);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(114, 21);
+            this.dateTimePicker1.TabIndex = 8;
             // 
             // Main
             // 
@@ -262,6 +283,8 @@ namespace TESTAPP
         private System.Windows.Forms.Label lb_Amount;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txt_Amount;
+        private System.Windows.Forms.Button bt_Calculate;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
     }
 }
 

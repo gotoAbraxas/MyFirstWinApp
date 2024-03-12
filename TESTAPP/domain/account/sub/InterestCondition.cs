@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TESTAPP.domain.account.sub
 {
-
+     // 미사용
     enum ConditionType
     { 금액,
       기간,
