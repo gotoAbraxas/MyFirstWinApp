@@ -47,31 +47,31 @@ namespace TESTAPP
         #endregion
 
         #region "거래내역 세팅 메소드"
+
         private void AccountLogSetting()
         {
             DataTable dt = AccountLogInit();
+            grid_accountLog.DataSource = dt;
+        }
+        private void AccountLogSetting(Account account)
+        {
+            DataTable dt = AccountLogInit();
 
-            Account account = GetSelectedAccount();
+            txt_Amount.Text = string.Format("{0:#,##0}", account.Amount);
 
-            if (account != null)
+            var sortedLogs = account.Log.OrderBy(log => log.DateTime).ToList(); // 정렬
+
+            foreach (AccountLog item in sortedLogs)
             {
-                txt_Amount.Text = string.Format("{0:#,##0}", account.Amount);
-
-                var sortedLogs = account.Log.OrderBy(log => log.DateTime).ToList(); // 정렬
-
-                foreach (AccountLog item in sortedLogs)
-                {
-                    dt.Rows.Add("sample", item.AccountLogType, item.Amount, item.DateTime);
-                }
+                dt.Rows.Add("sample", item.AccountLogType, item.Amount, item.DateTime);
             }
+ 
             grid_accountLog.DataSource = dt;
 
 
         }
         private DataTable AccountLogInit()
         {
-
-
             DataTable dt = new DataTable();
 
             dt.Columns.Add("id", typeof(string));
@@ -112,7 +112,11 @@ namespace TESTAPP
         }
         private void bt_Refresh_log_Click(object sender, EventArgs e)
         {
-            AccountLogSetting();
+            Account ac = GetSelectedAccount();
+
+            if (ac is null) return;
+
+            AccountLogSetting(ac);
         }
 
         #endregion
@@ -120,11 +124,23 @@ namespace TESTAPP
         // 일단 임시
         private void tranHis_Onclick(object sender, EventArgs e)
         {
-            AccountLogSetting(); // 데이터를 세팅
+            Account ac = GetSelectedAccount();
+
+            if (ac is null) return;
+            AccountLogSetting(ac); // 데이터를 세팅
 
         }
         private void accountTab_OnClick(object sender, EventArgs e)
         {
+        }
+
+        private void accountTab_Enter(object sender, EventArgs e)
+        {
+            Account ac = GetSelectedAccount();
+
+            if(ac is null) return;
+
+            SetCalProfitTabValue(ac);
         }
 
         //
@@ -133,7 +149,11 @@ namespace TESTAPP
 
         private void cb_SelectAccount_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AccountLogSetting();
+            Account ac = GetSelectedAccount();
+            if (ac is null) return;
+
+            AccountLogSetting(ac);
+            SetCalProfitTabValue(ac);
         }
 
         #endregion
@@ -191,7 +211,17 @@ namespace TESTAPP
         private void WhenAddAcountClosed(object sender, EventArgs e)
         {
             SelectAccounts();
-            AccountLogSetting();
+
+            Account ac = GetSelectedAccount();
+
+            if (ac is null)
+            {
+                AccountLogSetting();
+            }
+            else
+            {
+                AccountLogSetting(ac);
+            }
         }
 
         #endregion
@@ -219,10 +249,21 @@ namespace TESTAPP
         }
         private void WhenAddAccountLogClosed(object sender, EventArgs e)
         {
-            AccountLogSetting();
+            Account ac = GetSelectedAccount();
+            AccountLogSetting(ac);
         }
 
         #endregion
+
+
+
+        private void SetCalProfitTabValue(Account account)
+        {
+            txt_CalProfitTab_Interest.Text = $"{(account.Interest * 100)}%";
+            txt_CalProfitTab_InterestType.Text = $"{account.SettleType}";
+            txt_CalProfitTab_InterestPeriod.Text = $"{account.SettlePeriod}{account.SettlePeriodType}";
+            txt_CalProfitTab_Amount.Text = account.Amount.ToString();
+        }
 
         private void bt_Calculate_Click(object sender, EventArgs e)
         {
@@ -245,12 +286,25 @@ namespace TESTAPP
 
         private void dt_From_ValueChanged(object sender, EventArgs e)
         {
-            if (dt_From.Value.CompareTo(dt_To.Value) >= 0)
+            ValidateDateTime(sender);
+        }
+
+        private void dt_To_ValueChanged(object sender, EventArgs e)
+        {
+            ValidateDateTime(sender);
+        }
+
+        private void ValidateDateTime(object sender)
+        {
+            var dtp = sender as DateTimePicker;
+
+            if (dt_From.Value.Date.CompareTo(dt_To.Value.Date) > 0)
             {
                 MessageBox.Show("시작기간은 끝 기간을 넘어설 수 없습니다.");
-                dt_From.Value = DateTime.Now;
+                dtp.Value = DateTime.Now;
             }
-            
         }
+
+
     }
 }
