@@ -222,8 +222,26 @@ namespace TESTAPP
         {
             AccountLogSetting();
         }
+
         #endregion
 
+        private void bt_Calculate_Click(object sender, EventArgs e)
+        {
+            DateTime until = dateTimePicker1.Value;
+            Account account = GetSelectedAccount();
+            if(account is null) 
+            {
+                MessageBox.Show("계좌를 먼저 선택해주세요.");
+                return;
+            }
 
+            decimal amount = account.Amount;
+            decimal resultinterest = account.Interest;
+            decimal resultAmount = 0;
+            // 이 작업을 서비스에 정의 ? 아니면 ..
+            account.GetResult(ref amount,ref  resultinterest,ref resultAmount, DateTime.Now, until);
+
+            MessageBox.Show($"쌓인 이자 {resultinterest} 최종 금액 {resultAmount}");
+        }
     }
 }

@@ -267,7 +267,8 @@ namespace TESTAPP
                 SettlePeriodType = GetEnumValue<SettlePeriodType>(cb_SettlePeriod.Text),
                 SettleType = GetEnumValue<SettleType>(cb_SettleType.Text),
                 UserCode = 1L, // 임시로 이렇게 할 예정,
-                UpperLimitWellInterest = ch_CheckPreferent.Checked ? (decimal?)decimal.Parse(txt_Preferent.Text.Replace(",","")) : null,
+                checkUpperLimitWellInterest = ch_CheckPreferent.Checked && decimal.Parse(txt_Preferent.Text.Replace(",", "")) > 0,
+                UpperLimitWellInterest = decimal.Parse(txt_Preferent.Text.Replace(",","")),
                 amountConditions = amountConditions,
                 periodConditions = periodConditions, // 이 둘은 나중에 또 따로 관리
             };
