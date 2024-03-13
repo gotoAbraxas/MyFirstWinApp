@@ -168,7 +168,7 @@ namespace TESTAPP
 
         private void bt_AddCondition_Click(object sender, EventArgs e)
         {
-           AddConditionType type = (AddConditionType)cb_AddCondition.SelectedIndex;
+           AddConditionType type = (AddConditionType)cb_AddCondition.SelectedItem ;
 
             switch (type)
             {
@@ -181,7 +181,7 @@ namespace TESTAPP
                 case AddConditionType.기타:
                     break;
                 default:
-                    MessageBox.Show("타입을 선택 바랍니다.");
+                    MessageBox.Show("금액 및 기간 타입을 선택 바랍니다.");
                     break;
             }
         }
@@ -256,7 +256,8 @@ namespace TESTAPP
 
             SetConditionValues(ref periodConditions, ref amountConditions);
 
-            //이거 전부 생성자 밖으로 추출 하면 좋음
+            
+            //여기는 나중에 개선 한번 해야할듯 .. 
             account = new Account()
             {
                 Name = txt_AccountName.Text,
@@ -264,14 +265,15 @@ namespace TESTAPP
                 Name_AccountId = $"{txt_AccountName.Text}_{txt_AccountNumber.Text}",
                 Interest = decimal.Parse(txt_Interest.Text) / 100,
                 SettlePeriod = int.Parse(txt_SettlePeriod.Text),
-                SettlePeriodType = GetEnumValue<SettlePeriodType>(cb_SettlePeriod.Text),
-                SettleType = GetEnumValue<SettleType>(cb_SettleType.Text),
+                SettlePeriodType = (SettlePeriodType)cb_SettlePeriod.SelectedItem, 
+                SettleType = (SettleType)cb_SettleType.SelectedItem,
                 UserCode = 1L, // 임시로 이렇게 할 예정,
                 checkUpperLimitWellInterest = ch_CheckPreferent.Checked && decimal.Parse(txt_Preferent.Text.Replace(",", "")) > 0,
-                UpperLimitWellInterest = decimal.Parse(txt_Preferent.Text.Replace(",","")),
+                UpperLimitWellInterest = ch_CheckPreferent.Checked ? decimal.Parse(txt_Preferent.Text.Replace(",","")) : 0,
                 amountConditions = amountConditions,
                 periodConditions = periodConditions, // 이 둘은 나중에 또 따로 관리
             };
+            
         }
         private void SetConditionValues(ref List<PeriodCondition> periodConditions, ref List<AmountCondition> amountConditions)
         {

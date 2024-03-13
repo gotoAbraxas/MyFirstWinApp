@@ -251,6 +251,7 @@ namespace TESTAPP
         {
             Account ac = GetSelectedAccount();
             AccountLogSetting(ac);
+            SetCalProfitTabValue(ac);
         }
 
         #endregion
@@ -267,7 +268,9 @@ namespace TESTAPP
 
         private void bt_Calculate_Click(object sender, EventArgs e)
         {
-            DateTime until = dt_To.Value;
+            DateTime now = DateTime.Now.Date;
+            DateTime from = dt_From.Value.Date;
+            DateTime until = dt_To.Value.Date;
             Account account = GetSelectedAccount();
             if(account is null) 
             {
@@ -279,9 +282,26 @@ namespace TESTAPP
             decimal resultinterest = account.Interest;
             decimal resultAmount = 0;
             // 이 작업을 서비스에 정의 ? 아니면 ..
-            account.GetResult(ref amount,ref  resultinterest,ref resultAmount, DateTime.Now, until);
+            //날짜 갭 차이에 대한 원금 변화 반영, 근데 이것도 비즈니스 로직으로 본다면.. 내부로 옮기고 서비스를 타는게 나을듯
+ 
+            if (amount > 0 && account.SettleType == SettleType.복리 && from.CompareTo(now) > 0)
+            {
+                decimal vResultInterest = account.Interest;
+                decimal vResultAmount = 0;
 
-            MessageBox.Show($"쌓인 이자 {resultinterest} 최종 금액 {resultAmount}");
+                account.GetResult(ref amount, ref vResultInterest, ref vResultAmount, DateTime.Now.Date, from);
+            }
+
+            if(amount > 0) { 
+
+            account.GetResult(ref amount,ref  resultinterest,ref resultAmount, from, until);
+
+            MessageBox.Show($"쌓인 이자 {Math.Round(resultinterest, 0)} 최종 금액 {Math.Round(resultAmount, 0)}");
+            }
+            else
+            {
+                MessageBox.Show($"통장에 돈이 없습니다.");
+            }
         }
 
         private void dt_From_ValueChanged(object sender, EventArgs e)
@@ -301,6 +321,12 @@ namespace TESTAPP
             if (dt_From.Value.Date.CompareTo(dt_To.Value.Date) > 0)
             {
                 MessageBox.Show("시작기간은 끝 기간을 넘어설 수 없습니다.");
+                dtp.Value = DateTime.Now;
+            }
+
+            if(DateTime.Now.Date.CompareTo(dt_From.Value.Date) > 0)
+            {
+                MessageBox.Show("기간은 오늘 이후로만 선택 가능합니다.");
                 dtp.Value = DateTime.Now;
             }
         }
