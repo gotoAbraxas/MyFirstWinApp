@@ -42,6 +42,14 @@ namespace TESTAPP.common.component
         }
         #endregion
 
+        public static void DynamicCheckBox(Form form, CheckBox checkBox, FlowLayoutPanel pannel,bool value, string name = "", string text = "", int width = 40, int height = 60)
+        {
+
+            checkBox.Checked = value;
+            //checkBox.CheckedChanged += (sender, e) => value = checkBox.Checked;
+            DynamicInsert<CheckBox>(form, checkBox, pannel, name, text, width, height);
+        }
+
         #region "이름으로 Text 값을 가져옴"
         public static string GetControlValue<T>(Form form, string name) where T : Control
         {
