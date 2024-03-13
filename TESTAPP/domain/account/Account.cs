@@ -9,6 +9,8 @@ using TESTAPP.domain.account.sub;
 
 namespace TESTAPP.domain.account
 {
+    // 이건 나중에 써볼 수 있을듯
+    delegate void CalulatorInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end);
 
     enum SettleType
     {
@@ -62,14 +64,17 @@ namespace TESTAPP.domain.account
 
         public void GetResult(ref decimal amount,ref decimal resultInterest,ref decimal resultAmount, DateTime start, DateTime end)
         {
+
             if (SettleType == SettleType.단리)
             {
+
                 SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start,end);
             }
             else if(SettleType == SettleType.복리)
             {
                 CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start,end);
             }
+
         }
 
 
@@ -148,7 +153,7 @@ namespace TESTAPP.domain.account
 
             decimal result = 0;
             List<decimal> resultPeriodConditions = periodConditions
-                                    .Where((condition) => start.CompareTo(now.AddMonths(condition.StartValue)) > 0)
+                                    .Where((condition) => start.CompareTo(now.AddMonths(condition.StartValue)) > 0 && condition.Applyed)
                                     .Select((condition) => condition.ChangedValue).ToList();
 
             foreach (decimal item in resultPeriodConditions)
@@ -164,7 +169,7 @@ namespace TESTAPP.domain.account
             decimal result = 0;
 
             List<decimal> resultAmountConditions = amountConditions
-                         .Where((condition) => condition.StartValue < tmp)
+                         .Where((condition) => condition.StartValue < tmp && condition.Applyed)
                          .Select((condition) => condition.ChangedValue).ToList();
 
             foreach (decimal item in resultAmountConditions)

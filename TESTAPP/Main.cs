@@ -273,8 +273,14 @@ namespace TESTAPP
         private decimal MaxInterest(Account account)
         {
 
-           decimal pc = account.periodConditions.Select((condition) => condition.ChangedValue).Sum();
-           decimal ac = account.amountConditions.Select((condition) => condition.ChangedValue).Sum();
+           decimal pc = account.periodConditions
+                .Where((condition) => condition.Applyed)
+                .Select((condition) => condition.ChangedValue)
+                .Sum();
+           decimal ac = account.amountConditions
+                .Where((condition) => condition.Applyed)
+                .Select((condition) => condition.ChangedValue)
+                .Sum();
 
             return pc + ac;
         }
@@ -345,8 +351,31 @@ namespace TESTAPP
                 dtp.Value = DateTime.Now;
             }
         }
+
         #endregion
 
+        private void bt_CalProfitTab_Available_Click(object sender, EventArgs e)
+        {
+            Account ac = GetSelectedAccount();
 
+            if(ac is null)
+            {
+                MessageBox.Show("계좌를 먼저 선택해 주십시오");
+                return;
+            }
+
+            AccountCondition accountCondition = new AccountCondition();
+
+            accountCondition.FormClosed += WhenAccountConditionClosed;
+            accountCondition.Usercode = 1L;
+            accountCondition.AccountId = ac.AccountId;
+
+            OpenNewForm<AccountCondition>(accountCondition);
+        }
+
+        private void WhenAccountConditionClosed(object sender, EventArgs e)
+        {
+
+        }
     }
 }
