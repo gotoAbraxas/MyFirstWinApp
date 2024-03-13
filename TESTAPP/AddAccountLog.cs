@@ -71,31 +71,42 @@ namespace TESTAPP
         #region "입/출금 저장 관련"
         private void bt_AddLogAccept_Click(object sender, EventArgs e)
         {
+
+            try 
+            { 
+
             ValidationValue();
-
             SaveAccountLog();
-
             this.Close();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
         }
 
         private void ValidationValue()
         {
-            if (cb_AccountLog.SelectedIndex == -1)
+            if (IsComboBoxItemSelected(cb_AccountLog))
             {
-                MessageBox.Show("입/출금을 선택하세요.");
-                return;
+                throw new Exception("입/출금을 선택하세요.");
             }
             if (decimal.TryParse(GetTxtAmountPretty(this, txt_AccountLog.Name), out decimal result) && result < 0)
-            {
-                MessageBox.Show("올바른 금액을 선택하세요.");
-                return;
+            { 
+                throw new Exception("올바른 금액을 선택하세요.");
             }
+        }
+
+        public bool IsComboBoxItemSelected(ComboBox comboBox)
+        {
+            return comboBox.SelectedItem == null;
         }
 
         private void SaveAccountLog()
         {
-            string type = cb_AccountLog.SelectedItem as string;
+            AccountLogType type = (AccountLogType)cb_AccountLog.SelectedItem;
 
             decimal.TryParse(GetTxtAmountPretty(this, txt_AccountLog.Name),out decimal amount); 
             // 이게 밸리데이트인데 .. 위에서 또 해야하나.
@@ -106,11 +117,11 @@ namespace TESTAPP
                 DateTime = DateTime.Now,
 
             };
-            if (type == AccountLogType.입금.ToString())
+            if (type == AccountLogType.입금)
             {
                 Deposit(amount, log);
             }
-            else if(type == AccountLogType.출금.ToString())
+            else if(type == AccountLogType.출금)
             {
                 Withdraw(amount, log);
             }

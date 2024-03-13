@@ -72,6 +72,8 @@ namespace TESTAPP.domain.account
             }
         }
 
+
+        // 단리
         private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,DateTime end)
         {
             // 이후에 입/출금 계획 받아서 적용할 예정
@@ -81,7 +83,7 @@ namespace TESTAPP.domain.account
 
             decimal changedInterest = Interest;
 
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.Now.Date;
 
 
             changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
@@ -97,6 +99,29 @@ namespace TESTAPP.domain.account
             resultAmount = amount + resultInterest;
 
             SimpleInterest(ref amount, ref resultInterest, ref resultAmount, until, end);
+        }
+
+        // 복리
+        private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end)
+        {
+
+            DateTime until = GetNextDate(start);
+            if (until.CompareTo(end) > 0) return; // 재귀 종료
+
+            decimal changedInterest = Interest;
+            DateTime now = DateTime.Now.Date;
+
+            changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
+            changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자.
+
+            resultInterest = GetResultInterest(amount, resultInterest, changedInterest);
+
+            resultAmount = amount + resultInterest;
+
+            amount += resultInterest;
+
+            CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until, end);
+
         }
 
 
@@ -155,83 +180,21 @@ namespace TESTAPP.domain.account
             {
 
                 decimal rest = amount - UpperLimitWellInterest;
-                decimal standardInterest = UpperLimitWellInterest * changedInterest;
+                decimal standardInterest = (UpperLimitWellInterest * changedInterest);
                 decimal restInterest = rest * Interest;
 
-                resultInterest += standardInterest + restInterest;
+                resultInterest += (standardInterest + restInterest);
             }
             else
             {
-                resultInterest += amount * changedInterest;
+                resultInterest += (amount * changedInterest);
             }
 
             return resultInterest;
         }
 
-        private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end)
-        {
-            DateTime until = GetNextDate(start);
-            resultInterest = 1;
-            resultAmount = 1;
-        }
 
 
-
-
-
-
-        public decimal GetProfit() // 그냥 현재 기준으로 이자 구하기
-        {
-            return GetProfitLogic(this.Log, DateTime.Now);
-        }
-
-        public decimal GetProfitWithCondition(List<AccountLog> logs, DateTime timeCondion) // 특정 
-        {
-            if (true) // 밸리데이션 조건을 충족할 시. 
-                      // 근데 잘 생각해보면 그냥 이 앞단에서 막는게 나을거같음 이러면 책임분리가 잘 안됨.
-            {
-                return GetProfitLogic(logs, timeCondion);
-            }
-            /*
-            else
-            {
-                MessageBox.Show("계좌에 존재하는 금액보다 더 많은 금액을 출금하려고함");
-            }
-            */
-
-        }
-
-        public decimal GetProfitLogic(List<AccountLog> logs, DateTime timeCondition)
-        {
-            decimal profit = 0;
-            logs.ForEach(log =>
-            {
-                // 여기서 각 로그마다 어떠한 판단을 해서 계산하기 ?
-                mm(log.AccountLogType);
-                //
-                profit += calculate();
-            });
-
-
-            return profit;
-
-        }
-
-        public decimal calculate()
-        {
-            return 1;
-        }
-
-        public decimal mm(AccountLogType type) {
-            switch (type)
-            {
-                case AccountLogType.입금:
-                    return 1;
-                default:
-                    return 0;
-
-            }
-        }
 
     }
 }

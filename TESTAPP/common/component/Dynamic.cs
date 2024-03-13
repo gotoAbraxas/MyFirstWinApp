@@ -72,8 +72,19 @@ namespace TESTAPP.common.component
         public static void SetEnumToCombo<V>(ComboBox control) where V : Enum
         {
             // 콤보 박스에다가 ENUM값을 넣어주는 로직
+            /*
+            typeof(V)
             String[] values = typeof(V).GetEnumNames();
             foreach (String value in values) { control.Items.Add(value); }
+            */
+
+            // 이넘을 직접 넣는 식으로 변경.
+            Array enumValues = Enum.GetValues(typeof(V));
+            control.DisplayMember = "Name";
+            foreach (V enumValue in enumValues)
+            {
+                control.Items.Add(enumValue);
+            }
         }
 
 
