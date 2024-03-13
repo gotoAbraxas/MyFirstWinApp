@@ -298,7 +298,12 @@ namespace TESTAPP
 
         private static void SetPeriodConditions(List<PeriodCondition> periodConditions, string start, string end, string interest)
         {
-            if (int.TryParse(start, out int startValue) && int.TryParse(end, out int endValue) && decimal.TryParse(interest, out decimal interestValue))
+
+            // 조건 식은 따로 메소드로 빼는 것도 괜찮아보임
+            if (int.TryParse(start, out int startValue) 
+                && int.TryParse(end, out int endValue)
+                && decimal.TryParse(interest, out decimal interestValue) 
+                && startValue < endValue)
             {
                 PeriodCondition condition = new PeriodCondition()
                 {
@@ -310,7 +315,7 @@ namespace TESTAPP
             }
             else
             {
-                MessageBox.Show("우대 금리 조건에 잘못된 값이 있습니다. 확인 바랍니다."); // 이후에 개선 
+                throw new Exception("우대 금리 조건에 잘못된 값이 있습니다. 확인 바랍니다.");
             }
         }
 
@@ -328,7 +333,8 @@ namespace TESTAPP
             }
             else
             {
-                MessageBox.Show("우대 금리 조건에 잘못된 값이 있습니다. 확인 바랍니다.");
+
+                throw new Exception("우대 금리 조건에 잘못된 값이 있습니다. 확인 바랍니다.");
             }
         }
 

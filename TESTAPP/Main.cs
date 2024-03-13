@@ -263,8 +263,20 @@ namespace TESTAPP
             txt_CalProfitTab_Interest.Text = $"{(account.Interest * 100)}%";
             txt_CalProfitTab_InterestType.Text = $"{account.SettleType}";
             txt_CalProfitTab_InterestPeriod.Text = $"{account.SettlePeriod}{account.SettlePeriodType}";
-            txt_CalProfitTab_Amount.Text = account.Amount.ToString();
+            txt_CalProfitTab_Amount.Text = $"{string.Format("{0:#,##0}", account.Amount)} 원";
+            txt_CalProfitTab_UpperLimit.Text = account.checkUpperLimitWellInterest ? $"{string.Format("{0:#,##0}", account.UpperLimitWellInterest)} 원" : "없음";
+            txt_CalProfitTab_Available.Text = $"{(MaxInterest(account) + account.Interest) * 100}%";
         }
+
+        private decimal MaxInterest(Account account)
+        {
+
+           decimal pc = account.periodConditions.Select((condition) => condition.ChangedValue).Sum();
+           decimal ac = account.amountConditions.Select((condition) => condition.ChangedValue).Sum();
+
+            return pc + ac;
+        }
+
 
         private void bt_Calculate_Click(object sender, EventArgs e)
         {
@@ -330,7 +342,5 @@ namespace TESTAPP
                 dtp.Value = DateTime.Now;
             }
         }
-
-
     }
 }
