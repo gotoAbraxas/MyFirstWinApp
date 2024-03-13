@@ -12,7 +12,7 @@ namespace TESTAPP.domain.account.sub
         public int StartValue { get; set; }
         public int EndValue { get; set; }
         public decimal ChangedValue { get; set; }
-        public bool isAlwaysApplyed { get; set; }
+        public bool Applyed { get; set; } = true;
 
         public string Description { get; set; }
     }

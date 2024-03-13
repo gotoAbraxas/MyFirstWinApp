@@ -100,6 +100,7 @@ namespace TESTAPP
         private void SetSettleType()
         {
             SetEnumToCombo<SettleType>(cb_SettleType);
+            cb_SettleType.SelectedIndex = 0;
         }
         #endregion
 
@@ -108,6 +109,7 @@ namespace TESTAPP
         {
             // 이자 주기 
             SetEnumToCombo<SettlePeriodType>(cb_SettlePeriod);
+            cb_SettlePeriod.SelectedIndex = 0;
         }
 
         #endregion
@@ -160,6 +162,7 @@ namespace TESTAPP
         private void SetAddCondition()
         {
             SetEnumToCombo<AddConditionType>(cb_AddCondition);
+            cb_AddCondition.SelectedIndex = 0;
         }
 
         #endregion
@@ -167,7 +170,7 @@ namespace TESTAPP
         #region "조건 동적 추가"
         private void bt_AddCondition_Click(object sender, EventArgs e)
         {
-           AddConditionType type = (AddConditionType)cb_AddCondition.SelectedItem ;
+           AddConditionType type = (AddConditionType)cb_AddCondition.SelectedItem;
 
             switch (type)
             {
@@ -196,10 +199,10 @@ namespace TESTAPP
             DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition_st}{ConditionControler.Count}", "", 130, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "~", 10, 30);
             DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition_ed}{ConditionControler.Count}", "", 130, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "원 ", 30, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "원", 20, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "+", 10, 30);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}","", 35, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "%", 10, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
             ConditionControler.Add(layout);
         }
 
@@ -210,13 +213,13 @@ namespace TESTAPP
 
             DynamicLabelInsert(this, new Label(), layout, $"{AddConditionType.기간}{ConditionControler.Count}", AddConditionType.기간.ToString(), 30, 30);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_st}{ConditionControler.Count}", "", 35, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "개월", 40, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", " ~ ", 20, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "개월", 30, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "~", 20, 30);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_ed}{ConditionControler.Count}", "", 35, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "개월", 40, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "개월", 30, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "+", 10, 30);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", "", 35, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "%", 10, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
             ConditionControler.Add(layout);
         }
         #endregion

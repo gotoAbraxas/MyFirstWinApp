@@ -28,7 +28,7 @@ namespace TESTAPP.common.component
         #region " 라벨 전용 컨트롤러 생성기"
         public static void DynamicLabelInsert(Form form, Label control, FlowLayoutPanel pannel, string name = "", string text = "", int width = 40, int height = 60) 
         {
-            control.TextAlign = ContentAlignment.MiddleCenter;
+            control.TextAlign = ContentAlignment.MiddleRight;
             DynamicInsert<Label>(form, control, pannel, name, text, width, height);
         }
         #endregion
