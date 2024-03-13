@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 namespace TESTAPP.domain.account.sub
 {
      // 미사용
+
+    // 사용안하는 이유 => 금액과 기간을 완전 분리해서 사용하기로 함.
+
+
     enum ConditionType
     { 금액,
       기간,

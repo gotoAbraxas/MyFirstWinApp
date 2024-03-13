@@ -156,7 +156,7 @@ namespace TESTAPP
         }
         #endregion
 
-        #region "우대 이율 조건 설정
+        #region "우대 이율 콤보박스 설정
         private void SetAddCondition()
         {
             SetEnumToCombo<AddConditionType>(cb_AddCondition);
