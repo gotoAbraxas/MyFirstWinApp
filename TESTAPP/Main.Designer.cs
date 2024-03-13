@@ -34,8 +34,19 @@ namespace TESTAPP
             this.accountTab = new System.Windows.Forms.TabControl();
             this.myAccountTab = new System.Windows.Forms.TabPage();
             this.calProfitTab = new System.Windows.Forms.TabPage();
+            this.bt_CalProfitTab_Available = new System.Windows.Forms.Button();
+            this.txt_CalProfitTab_Available = new System.Windows.Forms.TextBox();
+            this.lb_CalProfitTab_Available = new System.Windows.Forms.Label();
+            this.lb_CalProfitTab_UpperLimit = new System.Windows.Forms.Label();
+            this.txt_CalProfitTab_UpperLimit = new System.Windows.Forms.TextBox();
+            this.txt_CalProfitTab_InterestType = new System.Windows.Forms.TextBox();
+            this.Ib_CalProfitTab_InterestType = new System.Windows.Forms.Label();
             this.txt_CalProfitTab_Interest = new System.Windows.Forms.TextBox();
+            this.txt_CalProfitTab_Amount = new System.Windows.Forms.TextBox();
+            this.txt_CalProfitTab_InterestPeriod = new System.Windows.Forms.TextBox();
             this.lb_accountTab_Interest = new System.Windows.Forms.Label();
+            this.lb_CalProfitTab_InterestPeriod = new System.Windows.Forms.Label();
+            this.lb_CalProfitTab_Amount = new System.Windows.Forms.Label();
             this.lb_tmp_02 = new System.Windows.Forms.Label();
             this.lb_tmp_01 = new System.Windows.Forms.Label();
             this.dt_From = new System.Windows.Forms.DateTimePicker();
@@ -54,17 +65,6 @@ namespace TESTAPP
             this.cb_SelectAccount = new System.Windows.Forms.ComboBox();
             this.lb_SelectAccount = new System.Windows.Forms.Label();
             this.bt_Refresh = new System.Windows.Forms.Button();
-            this.txt_CalProfitTab_UpperLimit = new System.Windows.Forms.TextBox();
-            this.lb_CalProfitTab_UpperLimit = new System.Windows.Forms.Label();
-            this.lb_CalProfitTab_Available = new System.Windows.Forms.Label();
-            this.txt_CalProfitTab_Available = new System.Windows.Forms.TextBox();
-            this.bt_CalProfitTab_Available = new System.Windows.Forms.Button();
-            this.lb_CalProfitTab_Amount = new System.Windows.Forms.Label();
-            this.lb_CalProfitTab_InterestPeriod = new System.Windows.Forms.Label();
-            this.txt_CalProfitTab_InterestPeriod = new System.Windows.Forms.TextBox();
-            this.txt_CalProfitTab_Amount = new System.Windows.Forms.TextBox();
-            this.txt_CalProfitTab_InterestType = new System.Windows.Forms.TextBox();
-            this.Ib_CalProfitTab_InterestType = new System.Windows.Forms.Label();
             this.accountTab.SuspendLayout();
             this.calProfitTab.SuspendLayout();
             this.tranHis.SuspendLayout();
@@ -81,7 +81,6 @@ namespace TESTAPP
             this.accountTab.SelectedIndex = 0;
             this.accountTab.Size = new System.Drawing.Size(888, 476);
             this.accountTab.TabIndex = 2;
-            this.accountTab.Enter += new System.EventHandler(this.accountTab_Enter);
             // 
             // myAccountTab
             // 
@@ -92,7 +91,6 @@ namespace TESTAPP
             this.myAccountTab.TabIndex = 0;
             this.myAccountTab.Text = "내 계좌";
             this.myAccountTab.UseVisualStyleBackColor = true;
-            this.myAccountTab.Enter += new System.EventHandler(this.accountTab_OnClick);
             // 
             // calProfitTab
             // 
@@ -123,6 +121,79 @@ namespace TESTAPP
             this.calProfitTab.TabIndex = 1;
             this.calProfitTab.Text = "이자 계산해보기";
             this.calProfitTab.UseVisualStyleBackColor = true;
+            this.calProfitTab.Enter += new System.EventHandler(this.calProfitTab_Enter);
+            // 
+            // bt_CalProfitTab_Available
+            // 
+            this.bt_CalProfitTab_Available.Location = new System.Drawing.Point(331, 126);
+            this.bt_CalProfitTab_Available.Name = "bt_CalProfitTab_Available";
+            this.bt_CalProfitTab_Available.Size = new System.Drawing.Size(89, 23);
+            this.bt_CalProfitTab_Available.TabIndex = 28;
+            this.bt_CalProfitTab_Available.Text = "리스트 확인";
+            this.bt_CalProfitTab_Available.UseVisualStyleBackColor = true;
+            // 
+            // txt_CalProfitTab_Available
+            // 
+            this.txt_CalProfitTab_Available.Location = new System.Drawing.Point(150, 128);
+            this.txt_CalProfitTab_Available.Margin = new System.Windows.Forms.Padding(2);
+            this.txt_CalProfitTab_Available.Name = "txt_CalProfitTab_Available";
+            this.txt_CalProfitTab_Available.ReadOnly = true;
+            this.txt_CalProfitTab_Available.Size = new System.Drawing.Size(164, 21);
+            this.txt_CalProfitTab_Available.TabIndex = 27;
+            this.txt_CalProfitTab_Available.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // lb_CalProfitTab_Available
+            // 
+            this.lb_CalProfitTab_Available.AutoSize = true;
+            this.lb_CalProfitTab_Available.Location = new System.Drawing.Point(39, 128);
+            this.lb_CalProfitTab_Available.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_CalProfitTab_Available.Name = "lb_CalProfitTab_Available";
+            this.lb_CalProfitTab_Available.Size = new System.Drawing.Size(73, 24);
+            this.lb_CalProfitTab_Available.TabIndex = 26;
+            this.lb_CalProfitTab_Available.Text = "적용 가능한 \r\n최대이율";
+            this.lb_CalProfitTab_Available.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lb_CalProfitTab_UpperLimit
+            // 
+            this.lb_CalProfitTab_UpperLimit.AutoSize = true;
+            this.lb_CalProfitTab_UpperLimit.Location = new System.Drawing.Point(39, 81);
+            this.lb_CalProfitTab_UpperLimit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_CalProfitTab_UpperLimit.Name = "lb_CalProfitTab_UpperLimit";
+            this.lb_CalProfitTab_UpperLimit.Size = new System.Drawing.Size(61, 24);
+            this.lb_CalProfitTab_UpperLimit.TabIndex = 25;
+            this.lb_CalProfitTab_UpperLimit.Text = "우대 이율 \r\n상한값";
+            this.lb_CalProfitTab_UpperLimit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // txt_CalProfitTab_UpperLimit
+            // 
+            this.txt_CalProfitTab_UpperLimit.Location = new System.Drawing.Point(150, 81);
+            this.txt_CalProfitTab_UpperLimit.Margin = new System.Windows.Forms.Padding(2);
+            this.txt_CalProfitTab_UpperLimit.Name = "txt_CalProfitTab_UpperLimit";
+            this.txt_CalProfitTab_UpperLimit.ReadOnly = true;
+            this.txt_CalProfitTab_UpperLimit.Size = new System.Drawing.Size(164, 21);
+            this.txt_CalProfitTab_UpperLimit.TabIndex = 24;
+            this.txt_CalProfitTab_UpperLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txt_CalProfitTab_InterestType
+            // 
+            this.txt_CalProfitTab_InterestType.Location = new System.Drawing.Point(150, 169);
+            this.txt_CalProfitTab_InterestType.Margin = new System.Windows.Forms.Padding(2);
+            this.txt_CalProfitTab_InterestType.Name = "txt_CalProfitTab_InterestType";
+            this.txt_CalProfitTab_InterestType.ReadOnly = true;
+            this.txt_CalProfitTab_InterestType.Size = new System.Drawing.Size(164, 21);
+            this.txt_CalProfitTab_InterestType.TabIndex = 22;
+            this.txt_CalProfitTab_InterestType.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // Ib_CalProfitTab_InterestType
+            // 
+            this.Ib_CalProfitTab_InterestType.AutoSize = true;
+            this.Ib_CalProfitTab_InterestType.Location = new System.Drawing.Point(39, 171);
+            this.Ib_CalProfitTab_InterestType.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.Ib_CalProfitTab_InterestType.Name = "Ib_CalProfitTab_InterestType";
+            this.Ib_CalProfitTab_InterestType.Size = new System.Drawing.Size(57, 12);
+            this.Ib_CalProfitTab_InterestType.TabIndex = 21;
+            this.Ib_CalProfitTab_InterestType.Text = "적용 방식";
+            this.Ib_CalProfitTab_InterestType.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // txt_CalProfitTab_Interest
             // 
@@ -134,6 +205,26 @@ namespace TESTAPP
             this.txt_CalProfitTab_Interest.TabIndex = 18;
             this.txt_CalProfitTab_Interest.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // txt_CalProfitTab_Amount
+            // 
+            this.txt_CalProfitTab_Amount.Location = new System.Drawing.Point(150, 248);
+            this.txt_CalProfitTab_Amount.Margin = new System.Windows.Forms.Padding(2);
+            this.txt_CalProfitTab_Amount.Name = "txt_CalProfitTab_Amount";
+            this.txt_CalProfitTab_Amount.ReadOnly = true;
+            this.txt_CalProfitTab_Amount.Size = new System.Drawing.Size(164, 21);
+            this.txt_CalProfitTab_Amount.TabIndex = 16;
+            this.txt_CalProfitTab_Amount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txt_CalProfitTab_InterestPeriod
+            // 
+            this.txt_CalProfitTab_InterestPeriod.Location = new System.Drawing.Point(150, 207);
+            this.txt_CalProfitTab_InterestPeriod.Margin = new System.Windows.Forms.Padding(2);
+            this.txt_CalProfitTab_InterestPeriod.Name = "txt_CalProfitTab_InterestPeriod";
+            this.txt_CalProfitTab_InterestPeriod.ReadOnly = true;
+            this.txt_CalProfitTab_InterestPeriod.Size = new System.Drawing.Size(164, 21);
+            this.txt_CalProfitTab_InterestPeriod.TabIndex = 15;
+            this.txt_CalProfitTab_InterestPeriod.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // lb_accountTab_Interest
             // 
             this.lb_accountTab_Interest.AutoSize = true;
@@ -144,6 +235,28 @@ namespace TESTAPP
             this.lb_accountTab_Interest.TabIndex = 14;
             this.lb_accountTab_Interest.Text = "기본 이율";
             this.lb_accountTab_Interest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lb_CalProfitTab_InterestPeriod
+            // 
+            this.lb_CalProfitTab_InterestPeriod.AutoSize = true;
+            this.lb_CalProfitTab_InterestPeriod.Location = new System.Drawing.Point(39, 211);
+            this.lb_CalProfitTab_InterestPeriod.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_CalProfitTab_InterestPeriod.Name = "lb_CalProfitTab_InterestPeriod";
+            this.lb_CalProfitTab_InterestPeriod.Size = new System.Drawing.Size(85, 12);
+            this.lb_CalProfitTab_InterestPeriod.TabIndex = 13;
+            this.lb_CalProfitTab_InterestPeriod.Text = "이자 정산 주기";
+            this.lb_CalProfitTab_InterestPeriod.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lb_CalProfitTab_Amount
+            // 
+            this.lb_CalProfitTab_Amount.AutoSize = true;
+            this.lb_CalProfitTab_Amount.Location = new System.Drawing.Point(39, 251);
+            this.lb_CalProfitTab_Amount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_CalProfitTab_Amount.Name = "lb_CalProfitTab_Amount";
+            this.lb_CalProfitTab_Amount.Size = new System.Drawing.Size(57, 12);
+            this.lb_CalProfitTab_Amount.TabIndex = 12;
+            this.lb_CalProfitTab_Amount.Text = "현재 잔액";
+            this.lb_CalProfitTab_Amount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lb_tmp_02
             // 
@@ -325,120 +438,6 @@ namespace TESTAPP
             this.bt_Refresh.Text = "R";
             this.bt_Refresh.UseVisualStyleBackColor = true;
             this.bt_Refresh.Click += new System.EventHandler(this.bt_Refresh_Click);
-            // 
-            // txt_CalProfitTab_UpperLimit
-            // 
-            this.txt_CalProfitTab_UpperLimit.Location = new System.Drawing.Point(150, 81);
-            this.txt_CalProfitTab_UpperLimit.Margin = new System.Windows.Forms.Padding(2);
-            this.txt_CalProfitTab_UpperLimit.Name = "txt_CalProfitTab_UpperLimit";
-            this.txt_CalProfitTab_UpperLimit.ReadOnly = true;
-            this.txt_CalProfitTab_UpperLimit.Size = new System.Drawing.Size(164, 21);
-            this.txt_CalProfitTab_UpperLimit.TabIndex = 24;
-            this.txt_CalProfitTab_UpperLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // lb_CalProfitTab_UpperLimit
-            // 
-            this.lb_CalProfitTab_UpperLimit.AutoSize = true;
-            this.lb_CalProfitTab_UpperLimit.Location = new System.Drawing.Point(39, 81);
-            this.lb_CalProfitTab_UpperLimit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lb_CalProfitTab_UpperLimit.Name = "lb_CalProfitTab_UpperLimit";
-            this.lb_CalProfitTab_UpperLimit.Size = new System.Drawing.Size(61, 24);
-            this.lb_CalProfitTab_UpperLimit.TabIndex = 25;
-            this.lb_CalProfitTab_UpperLimit.Text = "우대 이율 \r\n상한값";
-            this.lb_CalProfitTab_UpperLimit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lb_CalProfitTab_Available
-            // 
-            this.lb_CalProfitTab_Available.AutoSize = true;
-            this.lb_CalProfitTab_Available.Location = new System.Drawing.Point(39, 128);
-            this.lb_CalProfitTab_Available.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lb_CalProfitTab_Available.Name = "lb_CalProfitTab_Available";
-            this.lb_CalProfitTab_Available.Size = new System.Drawing.Size(73, 24);
-            this.lb_CalProfitTab_Available.TabIndex = 26;
-            this.lb_CalProfitTab_Available.Text = "적용 가능한 \r\n최대이율";
-            this.lb_CalProfitTab_Available.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // txt_CalProfitTab_Available
-            // 
-            this.txt_CalProfitTab_Available.Location = new System.Drawing.Point(150, 128);
-            this.txt_CalProfitTab_Available.Margin = new System.Windows.Forms.Padding(2);
-            this.txt_CalProfitTab_Available.Name = "txt_CalProfitTab_Available";
-            this.txt_CalProfitTab_Available.ReadOnly = true;
-            this.txt_CalProfitTab_Available.Size = new System.Drawing.Size(164, 21);
-            this.txt_CalProfitTab_Available.TabIndex = 27;
-            this.txt_CalProfitTab_Available.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // bt_CalProfitTab_Available
-            // 
-            this.bt_CalProfitTab_Available.Location = new System.Drawing.Point(331, 126);
-            this.bt_CalProfitTab_Available.Name = "bt_CalProfitTab_Available";
-            this.bt_CalProfitTab_Available.Size = new System.Drawing.Size(89, 23);
-            this.bt_CalProfitTab_Available.TabIndex = 28;
-            this.bt_CalProfitTab_Available.Text = "리스트 확인";
-            this.bt_CalProfitTab_Available.UseVisualStyleBackColor = true;
-            // 
-            // lb_CalProfitTab_Amount
-            // 
-            this.lb_CalProfitTab_Amount.AutoSize = true;
-            this.lb_CalProfitTab_Amount.Location = new System.Drawing.Point(39, 251);
-            this.lb_CalProfitTab_Amount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lb_CalProfitTab_Amount.Name = "lb_CalProfitTab_Amount";
-            this.lb_CalProfitTab_Amount.Size = new System.Drawing.Size(57, 12);
-            this.lb_CalProfitTab_Amount.TabIndex = 12;
-            this.lb_CalProfitTab_Amount.Text = "현재 잔액";
-            this.lb_CalProfitTab_Amount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lb_CalProfitTab_InterestPeriod
-            // 
-            this.lb_CalProfitTab_InterestPeriod.AutoSize = true;
-            this.lb_CalProfitTab_InterestPeriod.Location = new System.Drawing.Point(39, 211);
-            this.lb_CalProfitTab_InterestPeriod.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lb_CalProfitTab_InterestPeriod.Name = "lb_CalProfitTab_InterestPeriod";
-            this.lb_CalProfitTab_InterestPeriod.Size = new System.Drawing.Size(85, 12);
-            this.lb_CalProfitTab_InterestPeriod.TabIndex = 13;
-            this.lb_CalProfitTab_InterestPeriod.Text = "이자 정산 주기";
-            this.lb_CalProfitTab_InterestPeriod.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // txt_CalProfitTab_InterestPeriod
-            // 
-            this.txt_CalProfitTab_InterestPeriod.Location = new System.Drawing.Point(150, 207);
-            this.txt_CalProfitTab_InterestPeriod.Margin = new System.Windows.Forms.Padding(2);
-            this.txt_CalProfitTab_InterestPeriod.Name = "txt_CalProfitTab_InterestPeriod";
-            this.txt_CalProfitTab_InterestPeriod.ReadOnly = true;
-            this.txt_CalProfitTab_InterestPeriod.Size = new System.Drawing.Size(164, 21);
-            this.txt_CalProfitTab_InterestPeriod.TabIndex = 15;
-            this.txt_CalProfitTab_InterestPeriod.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // txt_CalProfitTab_Amount
-            // 
-            this.txt_CalProfitTab_Amount.Location = new System.Drawing.Point(150, 248);
-            this.txt_CalProfitTab_Amount.Margin = new System.Windows.Forms.Padding(2);
-            this.txt_CalProfitTab_Amount.Name = "txt_CalProfitTab_Amount";
-            this.txt_CalProfitTab_Amount.ReadOnly = true;
-            this.txt_CalProfitTab_Amount.Size = new System.Drawing.Size(164, 21);
-            this.txt_CalProfitTab_Amount.TabIndex = 16;
-            this.txt_CalProfitTab_Amount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // txt_CalProfitTab_InterestType
-            // 
-            this.txt_CalProfitTab_InterestType.Location = new System.Drawing.Point(150, 169);
-            this.txt_CalProfitTab_InterestType.Margin = new System.Windows.Forms.Padding(2);
-            this.txt_CalProfitTab_InterestType.Name = "txt_CalProfitTab_InterestType";
-            this.txt_CalProfitTab_InterestType.ReadOnly = true;
-            this.txt_CalProfitTab_InterestType.Size = new System.Drawing.Size(164, 21);
-            this.txt_CalProfitTab_InterestType.TabIndex = 22;
-            this.txt_CalProfitTab_InterestType.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // Ib_CalProfitTab_InterestType
-            // 
-            this.Ib_CalProfitTab_InterestType.AutoSize = true;
-            this.Ib_CalProfitTab_InterestType.Location = new System.Drawing.Point(39, 171);
-            this.Ib_CalProfitTab_InterestType.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.Ib_CalProfitTab_InterestType.Name = "Ib_CalProfitTab_InterestType";
-            this.Ib_CalProfitTab_InterestType.Size = new System.Drawing.Size(57, 12);
-            this.Ib_CalProfitTab_InterestType.TabIndex = 21;
-            this.Ib_CalProfitTab_InterestType.Text = "적용 방식";
-            this.Ib_CalProfitTab_InterestType.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Main
             // 

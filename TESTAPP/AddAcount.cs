@@ -67,30 +67,19 @@ namespace TESTAPP
             SetAddCondition();
         }
 
-        #endregion
-
         private void SetAccountService()
         { /// 계좌 서비스 세팅 좀 자원낭비같긴한데 일단 이렇게.
             accountService = new AccountService();
         }
 
-        private void CheckingPreferent()
-        {
-            //우대이율 관련 보이기 / 안보이기
-            PreferentVisable(false);
-        }
+        #endregion
+
+        #region "계좌정보 기타 설정"
 
         private void cb_AccountType_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetTxtAccountType();
         }
-
-        private void ch_CheckPreferent_CheckedChanged(object sender, EventArgs e)
-        {
-            SetPreferentBox(sender);
-        }
-
-        #region "계좌정보 기타 설정"
         private void SetTxtAccountType()
         {
             if (cb_AccountType.SelectedIndex == cb_AccountType.Items.IndexOf("기타"))
@@ -124,6 +113,10 @@ namespace TESTAPP
         #endregion
 
         #region "우대 이자 제한 체크 설정"
+        private void ch_CheckPreferent_CheckedChanged(object sender, EventArgs e)
+        {
+            SetPreferentBox(sender);
+        }
         private void SetPreferentBox(object sender)
         {
             CheckBox box = (CheckBox)sender;
@@ -137,6 +130,11 @@ namespace TESTAPP
                 PreferentVisable(false);
 
             }
+        }
+        private void CheckingPreferent()
+        {
+            //우대이율 관련 보이기 / 안보이기
+            PreferentVisable(false);
         }
 
         #endregion
@@ -166,6 +164,7 @@ namespace TESTAPP
 
         #endregion
 
+        #region "조건 동적 추가"
         private void bt_AddCondition_Click(object sender, EventArgs e)
         {
            AddConditionType type = (AddConditionType)cb_AddCondition.SelectedItem ;
@@ -220,16 +219,9 @@ namespace TESTAPP
             DynamicLabelInsert(this, new Label(), layout, "", "%", 10, 30);
             ConditionControler.Add(layout);
         }
-
-
-        #region "창 닫기
-
-        private void bt_AddAcount_cancel_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
         #endregion
 
+        #region "계좌 저장"
         private void bt_AddAcount_save_Click(object sender, EventArgs e)
         {
             try
@@ -245,8 +237,6 @@ namespace TESTAPP
                 MessageBox.Show($"{exc.Message} 가 잘못되었습니다 다시 확인 바랍니다.");
             }
         }
-
-
 
         private void ValidateValueBeforeSave(out Account account)
         {
@@ -295,6 +285,12 @@ namespace TESTAPP
                 }
             }
         }
+        private void GetConditionValues(int i, out string start, out string end, out string interest)
+        {
+            start = GetControlValue<TextBox>(this, $"{txt_Condition_st}{i}");
+            end = GetControlValue<TextBox>(this, $"{txt_Condition_ed}{i}");
+            interest = GetControlValue<TextBox>(this, $"{txt_Condition_interest}{i}");
+        }
 
         private static void SetPeriodConditions(List<PeriodCondition> periodConditions, string start, string end, string interest)
         {
@@ -338,30 +334,20 @@ namespace TESTAPP
             }
         }
 
-        private void GetConditionValues(int i, out string start, out string end, out string interest)
-        {
-            start = GetControlValue<TextBox>(this, $"{txt_Condition_st}{i}");
-            end = GetControlValue<TextBox>(this, $"{txt_Condition_ed}{i}");
-            interest = GetControlValue<TextBox>(this, $"{txt_Condition_interest}{i}");
-        }
-
         private void SaveAccount(Account myAccount)
         {
             accountService.AddAcount(myAccount);
         }
 
-        private T GetEnumValue<T>(string value) where T : Enum
+        #endregion
+
+        #region "창 닫기
+
+        private void bt_AddAcount_cancel_Click(object sender, EventArgs e)
         {
-            try
-            {
-                return (T)Convert.ChangeType(value, typeof(T));
-            }
-            catch (InvalidCastException)
-            {
-                // 변환 실패 시 처리
-                return default(T);
-            }
+            this.Close();
         }
+        #endregion
 
     }
 }

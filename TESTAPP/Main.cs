@@ -46,46 +46,6 @@ namespace TESTAPP
 
         #endregion
 
-        #region "거래내역 세팅 메소드"
-
-        private void AccountLogSetting()
-        {
-            DataTable dt = AccountLogInit();
-            grid_accountLog.DataSource = dt;
-        }
-        private void AccountLogSetting(Account account)
-        {
-            DataTable dt = AccountLogInit();
-
-            txt_Amount.Text = string.Format("{0:#,##0}", account.Amount);
-
-            var sortedLogs = account.Log.OrderBy(log => log.DateTime).ToList(); // 정렬
-
-            foreach (AccountLog item in sortedLogs)
-            {
-                dt.Rows.Add("sample", item.AccountLogType, item.Amount, item.DateTime);
-            }
- 
-            grid_accountLog.DataSource = dt;
-
-
-        }
-        private DataTable AccountLogInit()
-        {
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("id", typeof(string));
-            dt.Columns.Add("입/출금", typeof(AccountLogType));
-            dt.Columns.Add("금액", typeof(decimal));
-            dt.Columns.Add("날짜", typeof(DateTime));
-
-            grid_accountLog.DataSource = dt;
-
-            return dt;
-        }
-
-        #endregion
-
         #region "계좌 선택 항목"
         private void SelectAccounts()
         { 
@@ -100,6 +60,36 @@ namespace TESTAPP
                // cb_SelectAccount.Items.Add($"{account.Name}_{account.AccountId}");
                 cb_SelectAccount.Items.Add(account);
             }
+        }
+
+        #endregion
+
+        #region "콤보박스 선택된 인덱스 변경시"
+
+        private void cb_SelectAccount_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Account ac = GetSelectedAccount();
+            if (ac is null) return;
+
+            AccountLogSetting(ac);
+            SetCalProfitTabValue(ac);
+        }
+
+        #endregion
+
+        #region "현재 콤보박스에 선택된 계좌 들고오기"
+
+        private Account GetSelectedAccount()
+        {
+
+            Account name = cb_SelectAccount.SelectedItem as Account;
+
+            if (name != null)
+            {
+                accountService.SelectAccountById(1L, name.AccountId);
+                // 굳이 이 과정이 필요한가 싶긴함.. 나중에 수정 필요
+            }
+            return name;
         }
 
         #endregion
@@ -121,7 +111,7 @@ namespace TESTAPP
 
         #endregion
 
-        // 일단 임시
+        #region "각 탭을 누를때 마다 초기화 후 값 세팅"
         private void tranHis_Onclick(object sender, EventArgs e)
         {
             Account ac = GetSelectedAccount();
@@ -130,46 +120,14 @@ namespace TESTAPP
             AccountLogSetting(ac); // 데이터를 세팅
 
         }
-        private void accountTab_OnClick(object sender, EventArgs e)
-        {
-        }
 
-        private void accountTab_Enter(object sender, EventArgs e)
+        private void calProfitTab_Enter(object sender, EventArgs e)
         {
             Account ac = GetSelectedAccount();
 
-            if(ac is null) return;
-
-            SetCalProfitTabValue(ac);
-        }
-
-        //
-
-        #region "콤보박스 선택된 인덱스 변경시"
-
-        private void cb_SelectAccount_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Account ac = GetSelectedAccount();
             if (ac is null) return;
 
-            AccountLogSetting(ac);
             SetCalProfitTabValue(ac);
-        }
-
-        #endregion
-
-        #region "현재 콤보박스에 선택된 계좌 들고오기"
-
-        private Account GetSelectedAccount()
-        {
-
-            Account name = cb_SelectAccount.SelectedItem as Account;
-            
-            if (name != null) { 
-            accountService.SelectAccountById(1L, name.AccountId);
-            // 굳이 이 과정이 필요한가 싶긴함.. 나중에 수정 필요
-            }
-            return name;
         }
 
         #endregion
@@ -214,14 +172,9 @@ namespace TESTAPP
 
             Account ac = GetSelectedAccount();
 
-            if (ac is null)
-            {
-                AccountLogSetting();
-            }
-            else
-            {
-                AccountLogSetting(ac);
-            }
+            AccountLogSetting();
+            InitCalProfitTabValue();
+  
         }
 
         #endregion
@@ -239,8 +192,8 @@ namespace TESTAPP
             tmp.Usercode = 1L;
             tmp.AccountId = account.AccountId;
 
-
             OpenNewForm<AddAccountLog>(tmp);
+
             }
             else
             {
@@ -256,7 +209,56 @@ namespace TESTAPP
 
         #endregion
 
+        #region "거래내역 세팅 메소드"
 
+        private void AccountLogSetting()
+        {
+            DataTable dt = AccountLogInit();
+            grid_accountLog.DataSource = dt;
+        }
+        private void AccountLogSetting(Account account)
+        {
+            DataTable dt = AccountLogInit();
+
+            txt_Amount.Text = string.Format("{0:#,##0}", account.Amount);
+
+            var sortedLogs = account.Log.OrderBy(log => log.DateTime).ToList(); // 정렬
+
+            foreach (AccountLog item in sortedLogs)
+            {
+                dt.Rows.Add("sample", item.AccountLogType, item.Amount, item.DateTime);
+            }
+
+            grid_accountLog.DataSource = dt;
+
+
+        }
+        private DataTable AccountLogInit()
+        {
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("id", typeof(string));
+            dt.Columns.Add("입/출금", typeof(AccountLogType));
+            dt.Columns.Add("금액", typeof(decimal));
+            dt.Columns.Add("날짜", typeof(DateTime));
+
+            grid_accountLog.DataSource = dt;
+
+            return dt;
+        }
+
+        #endregion
+
+        #region "이자 계산 정보 초기화 및 세팅"
+        private void InitCalProfitTabValue()
+        {
+            txt_CalProfitTab_Interest.Text = "";
+            txt_CalProfitTab_InterestType.Text = "";
+            txt_CalProfitTab_InterestPeriod.Text = "";
+            txt_CalProfitTab_Amount.Text = "";
+            txt_CalProfitTab_UpperLimit.Text = "";
+            txt_CalProfitTab_Available.Text = "";
+        }
 
         private void SetCalProfitTabValue(Account account)
         {
@@ -276,8 +278,9 @@ namespace TESTAPP
 
             return pc + ac;
         }
+        #endregion
 
-
+        #region "이자 계산 및 검증"
         private void bt_Calculate_Click(object sender, EventArgs e)
         {
             DateTime now = DateTime.Now.Date;
@@ -342,5 +345,8 @@ namespace TESTAPP
                 dtp.Value = DateTime.Now;
             }
         }
+        #endregion
+
+
     }
 }
