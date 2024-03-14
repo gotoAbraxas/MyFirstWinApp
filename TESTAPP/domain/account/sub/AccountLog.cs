@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TESTAPP.domain.account.sub
 {
 
-    enum AccountLogType
+    public enum AccountLogType
     {
         입금,
         출금,
@@ -21,6 +21,8 @@ namespace TESTAPP.domain.account.sub
 
        public decimal Amount { get; set; }
        public DateTime DateTime { get; set; }
+
+       public decimal Total {  get; set; }
        public  string Description { get; set; }
     }
 }

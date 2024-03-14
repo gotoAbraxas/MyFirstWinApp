@@ -62,24 +62,24 @@ namespace TESTAPP.domain.account
         }
 
 
-        public void GetResult(ref decimal amount,ref decimal resultInterest,ref decimal resultAmount, DateTime start, DateTime end)
+        public void GetResult(ref decimal amount,ref decimal resultInterest,ref decimal resultAmount,DateTime start,in DateTime end,List<VirtualLog> log)
         {
 
             if (SettleType == SettleType.단리)
             {
 
-                SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start,end);
+                SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start,in end, log);
             }
             else if(SettleType == SettleType.복리)
             {
-                CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start,end);
+                CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start,in end, log);
             }
 
         }
 
 
         // 단리
-        private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,DateTime end)
+        private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log)
         {
             // 이후에 입/출금 계획 받아서 적용할 예정
 
@@ -95,19 +95,28 @@ namespace TESTAPP.domain.account
             changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자.
 
             // 지금 적용될 이윤
+            // 몇가지는 조금 엇나가는 계산이 있긴한데 .. 일단 ..  
 
-            // 이건 좀 빡세다 .. 사실 현재 금액이 얼마나 예치되어있었냐를 계산해야하는데... 흑..
-            // 이건 보통 예치금에서나 볼 법한 방식인데 일단 적용
+            decimal nowInterest = GetResultInterest(amount, changedInterest); // 이번 타임 이자
+            resultInterest += nowInterest;
 
-            resultInterest = GetResultInterest(amount, resultInterest, changedInterest);
-            
             resultAmount = amount + resultInterest;
 
-            SimpleInterest(ref amount, ref resultInterest, ref resultAmount, until, end);
+
+            log.Add(new VirtualLog()
+            {
+                AccountLogType = AccountLogType.입금,
+                DateTime = until,
+                Description = "이자",
+                Amount = nowInterest,
+                Total = resultAmount
+            });
+
+            SimpleInterest(ref amount, ref resultInterest, ref resultAmount, until,in end,log);
         }
 
         // 복리
-        private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end)
+        private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log)
         {
 
             DateTime until = GetNextDate(start);
@@ -115,17 +124,30 @@ namespace TESTAPP.domain.account
 
             decimal changedInterest = Interest;
             DateTime now = DateTime.Now.Date;
-
+            
             changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
-            changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자.
+            changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
 
-            resultInterest = GetResultInterest(amount, resultInterest, changedInterest);
+            decimal nowInterest = GetResultInterest(amount, changedInterest); // 이번 타임 이자
 
-            resultAmount = amount + resultInterest;
+            resultInterest += nowInterest;
 
-            amount += resultInterest;
+            resultAmount = amount + nowInterest;
 
-            CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until, end);
+            amount += nowInterest;  // 딱 이거 하나 다르면 그냥 .. if 해도? 근데 또 책임분리 면에선...
+
+
+            log.Add(new VirtualLog()
+            {
+                AccountLogType = AccountLogType.입금,
+                DateTime = until,
+                Description = "이자",
+                Amount = nowInterest,
+                Total = resultAmount
+            });
+
+
+            CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until,in end, log);
 
         }
 
@@ -179,8 +201,10 @@ namespace TESTAPP.domain.account
 
             return result;
         }
-        private decimal GetResultInterest(decimal amount, decimal resultInterest, decimal changedInterest)
+        private decimal GetResultInterest(decimal amount, decimal changedInterest)
         {
+            decimal resultInterest = 0;
+            
             if (checkUpperLimitWellInterest && amount > UpperLimitWellInterest)
             {
 
@@ -188,11 +212,11 @@ namespace TESTAPP.domain.account
                 decimal standardInterest = (UpperLimitWellInterest * changedInterest);
                 decimal restInterest = rest * Interest;
 
-                resultInterest += (standardInterest + restInterest);
+                resultInterest = (standardInterest + restInterest);
             }
             else
             {
-                resultInterest += (amount * changedInterest);
+                resultInterest = (amount * changedInterest);
             }
 
             return resultInterest;

@@ -34,6 +34,9 @@ namespace TESTAPP
             this.accountTab = new System.Windows.Forms.TabControl();
             this.myAccountTab = new System.Windows.Forms.TabPage();
             this.calProfitTab = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cb_CalProfitTab_Period = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.bt_CalProfitTab_Available = new System.Windows.Forms.Button();
             this.txt_CalProfitTab_Available = new System.Windows.Forms.TextBox();
             this.lb_CalProfitTab_Available = new System.Windows.Forms.Label();
@@ -96,6 +99,9 @@ namespace TESTAPP
             // 
             // calProfitTab
             // 
+            this.calProfitTab.Controls.Add(this.label3);
+            this.calProfitTab.Controls.Add(this.cb_CalProfitTab_Period);
+            this.calProfitTab.Controls.Add(this.label2);
             this.calProfitTab.Controls.Add(this.bt_CalProfitTab_Available);
             this.calProfitTab.Controls.Add(this.txt_CalProfitTab_Available);
             this.calProfitTab.Controls.Add(this.lb_CalProfitTab_Available);
@@ -125,6 +131,36 @@ namespace TESTAPP
             this.calProfitTab.Text = "이자 계산해보기";
             this.calProfitTab.UseVisualStyleBackColor = true;
             this.calProfitTab.Enter += new System.EventHandler(this.calProfitTab_Enter);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(321, 548);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(68, 18);
+            this.label3.TabIndex = 31;
+            this.label3.Text = "로 보기";
+            // 
+            // cb_CalProfitTab_Period
+            // 
+            this.cb_CalProfitTab_Period.FormattingEnabled = true;
+            this.cb_CalProfitTab_Period.Location = new System.Drawing.Point(229, 542);
+            this.cb_CalProfitTab_Period.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cb_CalProfitTab_Period.Name = "cb_CalProfitTab_Period";
+            this.cb_CalProfitTab_Period.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.cb_CalProfitTab_Period.Size = new System.Drawing.Size(85, 26);
+            this.cb_CalProfitTab_Period.TabIndex = 30;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(873, 42);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(62, 18);
+            this.label2.TabIndex = 29;
+            this.label2.Text = "미구현";
             // 
             // bt_CalProfitTab_Available
             // 
@@ -339,7 +375,7 @@ namespace TESTAPP
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1139, 582);
+            this.label1.Location = new System.Drawing.Point(1199, 628);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 18);
@@ -348,18 +384,18 @@ namespace TESTAPP
             // 
             // txt_Amount
             // 
-            this.txt_Amount.Location = new System.Drawing.Point(906, 574);
+            this.txt_Amount.Location = new System.Drawing.Point(996, 620);
             this.txt_Amount.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txt_Amount.Name = "txt_Amount";
             this.txt_Amount.ReadOnly = true;
-            this.txt_Amount.Size = new System.Drawing.Size(223, 28);
+            this.txt_Amount.Size = new System.Drawing.Size(193, 28);
             this.txt_Amount.TabIndex = 9;
             this.txt_Amount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lb_Amount
             // 
             this.lb_Amount.AutoSize = true;
-            this.lb_Amount.Location = new System.Drawing.Point(933, 534);
+            this.lb_Amount.Location = new System.Drawing.Point(882, 625);
             this.lb_Amount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lb_Amount.Name = "lb_Amount";
             this.lb_Amount.Size = new System.Drawing.Size(86, 18);
@@ -368,7 +404,7 @@ namespace TESTAPP
             // 
             // bt_Refresh_log
             // 
-            this.bt_Refresh_log.Location = new System.Drawing.Point(936, 106);
+            this.bt_Refresh_log.Location = new System.Drawing.Point(1202, 35);
             this.bt_Refresh_log.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.bt_Refresh_log.Name = "bt_Refresh_log";
             this.bt_Refresh_log.Size = new System.Drawing.Size(27, 27);
@@ -379,7 +415,7 @@ namespace TESTAPP
             // 
             // bt_AddAccountLog
             // 
-            this.bt_AddAccountLog.Location = new System.Drawing.Point(936, 58);
+            this.bt_AddAccountLog.Location = new System.Drawing.Point(1042, 23);
             this.bt_AddAccountLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.bt_AddAccountLog.Name = "bt_AddAccountLog";
             this.bt_AddAccountLog.Size = new System.Drawing.Size(147, 39);
@@ -395,12 +431,13 @@ namespace TESTAPP
             this.grid_accountLog.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.grid_accountLog.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.grid_accountLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grid_accountLog.Location = new System.Drawing.Point(61, 50);
+            this.grid_accountLog.Location = new System.Drawing.Point(37, 70);
             this.grid_accountLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.grid_accountLog.Name = "grid_accountLog";
+            this.grid_accountLog.ReadOnly = true;
             this.grid_accountLog.RowHeadersWidth = 62;
             this.grid_accountLog.RowTemplate.Height = 23;
-            this.grid_accountLog.Size = new System.Drawing.Size(826, 573);
+            this.grid_accountLog.Size = new System.Drawing.Size(1152, 508);
             this.grid_accountLog.TabIndex = 2;
             // 
             // bt_AddAcount
@@ -506,6 +543,9 @@ namespace TESTAPP
         private System.Windows.Forms.TextBox txt_CalProfitTab_InterestPeriod;
         private System.Windows.Forms.Label lb_CalProfitTab_InterestPeriod;
         private System.Windows.Forms.Label lb_CalProfitTab_Amount;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cb_CalProfitTab_Period;
     }
 }
 

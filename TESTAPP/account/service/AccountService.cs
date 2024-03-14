@@ -52,16 +52,18 @@ namespace TESTAPP.account.service
             return repository.GetAllAccountsById(userCode);
         }
 
-        public void Deposit(long userCode, long accountCode,decimal amount,AccountLog log)
+        public Account Deposit(long userCode, long accountCode,decimal amount,AccountLog log)
         {
             Account tmp = SelectAccountById(userCode, accountCode);
 
             tmp.AddLog(log);
             tmp.Amount += amount;
 
+            return tmp;
+
         }
 
-        public void Withdraw(long userCode, long accountCode, decimal amount, AccountLog log)
+        public Account Withdraw(long userCode, long accountCode, decimal amount, AccountLog log)
         {
             Account tmp = SelectAccountById(userCode, accountCode);
 
@@ -69,11 +71,12 @@ namespace TESTAPP.account.service
             {
                 tmp.AddLog(log);
                 tmp.Amount -= amount;
-
+                return tmp;
             }
             else
             {
-                MessageBox.Show("잔액이 부족합니다.");
+                throw new Exception("잔액부족");
+                
             }
 
             

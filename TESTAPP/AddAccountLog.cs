@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TESTAPP.account.service;
+using TESTAPP.domain.account;
 using TESTAPP.domain.account.sub;
 using static TESTAPP.common.component.Dynamic;
 
@@ -50,6 +51,7 @@ namespace TESTAPP
         private void SetAccountLogCombo()
         {
             SetEnumToCombo<AccountLogType>(cb_AccountLog);
+            cb_AccountLog.SelectedIndex = 0;
         }
 
         private void SetAccountService()
@@ -63,8 +65,9 @@ namespace TESTAPP
         private void txt_AccountLog_TextChanged(object sender, EventArgs e)
         {
             TextBox tmp = sender as TextBox;
-
             SetTxtAmountPretty(this, tmp.Name);
+
+            // 이런거 직접 이벤트를 만들어서 폼 만들때 동적으로 이벤트 추가해주는게 안낫나? 
         }
         #endregion
 
@@ -116,6 +119,7 @@ namespace TESTAPP
                 Amount = amount,
                 DateTime = DateTime.Now,
 
+
             };
             if (type == AccountLogType.입금)
             {
@@ -130,12 +134,24 @@ namespace TESTAPP
         {
             log.AccountLogType = AccountLogType.입금;
 
-            account.Deposit(Usercode, AccountId, amount, log);
+            Account ac = account.Deposit(Usercode, AccountId, amount, log);
+            log.Total = ac.Amount;
+
+
         }
         private void Withdraw(decimal amount, AccountLog log)
         {
             log.AccountLogType = AccountLogType.출금;
-            account.Withdraw(Usercode, AccountId, amount, log);
+
+            try 
+            { 
+                Account ac = account.Withdraw(Usercode, AccountId, amount, log);
+                log.Total = ac.Amount;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         #endregion

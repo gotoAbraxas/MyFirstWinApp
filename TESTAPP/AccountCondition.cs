@@ -40,33 +40,55 @@ namespace TESTAPP
             
            foreach(AmountCondition amountCondition in ac.amountConditions)
             {
-                string start = $"{amountCondition.StartValue}원";
-                string end = $"{amountCondition.EndValue}원";
-                string interest = $"{Math.Round(amountCondition.ChangedValue * 100,0)}";
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", "금액", 40, 30);
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", start, 120,30);
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", "~", 10, 30);
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", end, 120, 30);
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", "+", 10, 30);
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", interest, 20, 30);
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", "%", 15, 30);
-                DynamicInsert<CheckBox>(this, new CheckBox(), flp_Condition, "테스트","",40,30);
+                DrawAmountCondition(amountCondition);
             }
             foreach (PeriodCondition periodCondition in ac.periodConditions)
             {
-                string start = $"{periodCondition.StartValue}개월";
-                string end = $"{periodCondition.EndValue}개월";
-                string interest = $"{Math.Round(periodCondition.ChangedValue * 100, 0)}";
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", "기간", 40, 30);
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", start, 40, 30);
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", "~", 10, 30);
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", end, 40, 30);
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", "+", 10, 30);
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", interest, 20, 30);
-                DynamicLabelInsert(this, new Label(), flp_Condition, "", "%", 15, 30);
-                DynamicCheckBox(this, new CheckBox(), flp_Condition,periodCondition.Applyed,"","적용",70,30);
+                DrawPeriodCondition(periodCondition);
             }
 
+        }
+
+        private void DrawAmountCondition(AmountCondition amountCondition)
+        {
+            string start = $"{String.Format("{0:#,##0}", amountCondition.StartValue)}원";
+            string end = $"{String.Format("{0:#,##0}", amountCondition.EndValue)}원";
+            string interest = $"{Math.Round(amountCondition.ChangedValue * 100, 0)}";
+
+            FlowLayoutPanel layout = new FlowLayoutPanel();
+            DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, "", "", flp_Condition.Width - 10, 35);
+
+            DynamicLabelInsert(this, new Label(), layout, "", "금액", 35, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", start, 120, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "~", 10, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", end, 120, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "+", 10, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", interest, 15, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
+            DynamicCheckBox(this, new CheckBox(), layout, amountCondition.Applyed, "", "적용", 70, 30);
+        }
+        private void DrawPeriodCondition(PeriodCondition periodCondition)
+        {
+            string start = $"{periodCondition.StartValue}개월";
+            string end = $"{periodCondition.EndValue}개월";
+            string interest = $"{Math.Round(periodCondition.ChangedValue * 100, 0)}";
+
+            FlowLayoutPanel layout = new FlowLayoutPanel();
+            DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, "", "", flp_Condition.Width - 10, 35);
+
+            DynamicLabelInsert(this, new Label(), layout, "", "기간", 35, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", start, 120, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "~", 10, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", end, 120, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "+", 10, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", interest, 15, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
+            DynamicCheckBox(this, new CheckBox(), layout, periodCondition.Applyed, "", "적용", 70, 30);
+        }
+
+        private void bt_AccountCondition_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
