@@ -66,6 +66,8 @@ namespace TESTAPP
             this.lb_SelectAccount = new System.Windows.Forms.Label();
             this.bt_Refresh = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.cb_CalProfitTab_Period = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.accountTab.SuspendLayout();
             this.calProfitTab.SuspendLayout();
             this.tranHis.SuspendLayout();
@@ -95,6 +97,8 @@ namespace TESTAPP
             // 
             // calProfitTab
             // 
+            this.calProfitTab.Controls.Add(this.label3);
+            this.calProfitTab.Controls.Add(this.cb_CalProfitTab_Period);
             this.calProfitTab.Controls.Add(this.label2);
             this.calProfitTab.Controls.Add(this.bt_CalProfitTab_Available);
             this.calProfitTab.Controls.Add(this.txt_CalProfitTab_Available);
@@ -345,7 +349,7 @@ namespace TESTAPP
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(797, 388);
+            this.label1.Location = new System.Drawing.Point(839, 392);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(17, 12);
             this.label1.TabIndex = 10;
@@ -353,17 +357,17 @@ namespace TESTAPP
             // 
             // txt_Amount
             // 
-            this.txt_Amount.Location = new System.Drawing.Point(634, 383);
+            this.txt_Amount.Location = new System.Drawing.Point(697, 387);
             this.txt_Amount.Name = "txt_Amount";
             this.txt_Amount.ReadOnly = true;
-            this.txt_Amount.Size = new System.Drawing.Size(157, 21);
+            this.txt_Amount.Size = new System.Drawing.Size(136, 21);
             this.txt_Amount.TabIndex = 9;
             this.txt_Amount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lb_Amount
             // 
             this.lb_Amount.AutoSize = true;
-            this.lb_Amount.Location = new System.Drawing.Point(653, 356);
+            this.lb_Amount.Location = new System.Drawing.Point(701, 360);
             this.lb_Amount.Name = "lb_Amount";
             this.lb_Amount.Size = new System.Drawing.Size(57, 12);
             this.lb_Amount.TabIndex = 8;
@@ -371,7 +375,7 @@ namespace TESTAPP
             // 
             // bt_Refresh_log
             // 
-            this.bt_Refresh_log.Location = new System.Drawing.Point(655, 71);
+            this.bt_Refresh_log.Location = new System.Drawing.Point(703, 71);
             this.bt_Refresh_log.Name = "bt_Refresh_log";
             this.bt_Refresh_log.Size = new System.Drawing.Size(19, 18);
             this.bt_Refresh_log.TabIndex = 7;
@@ -381,7 +385,7 @@ namespace TESTAPP
             // 
             // bt_AddAccountLog
             // 
-            this.bt_AddAccountLog.Location = new System.Drawing.Point(655, 39);
+            this.bt_AddAccountLog.Location = new System.Drawing.Point(703, 39);
             this.bt_AddAccountLog.Name = "bt_AddAccountLog";
             this.bt_AddAccountLog.Size = new System.Drawing.Size(103, 26);
             this.bt_AddAccountLog.TabIndex = 3;
@@ -396,11 +400,11 @@ namespace TESTAPP
             this.grid_accountLog.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.grid_accountLog.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.grid_accountLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grid_accountLog.Location = new System.Drawing.Point(43, 33);
+            this.grid_accountLog.Location = new System.Drawing.Point(26, 33);
             this.grid_accountLog.Name = "grid_accountLog";
             this.grid_accountLog.RowHeadersWidth = 62;
             this.grid_accountLog.RowTemplate.Height = 23;
-            this.grid_accountLog.Size = new System.Drawing.Size(578, 382);
+            this.grid_accountLog.Size = new System.Drawing.Size(656, 386);
             this.grid_accountLog.TabIndex = 2;
             // 
             // bt_AddAcount
@@ -450,6 +454,24 @@ namespace TESTAPP
             this.label2.Size = new System.Drawing.Size(41, 12);
             this.label2.TabIndex = 29;
             this.label2.Text = "미구현";
+            // 
+            // cb_CalProfitTab_Period
+            // 
+            this.cb_CalProfitTab_Period.FormattingEnabled = true;
+            this.cb_CalProfitTab_Period.Location = new System.Drawing.Point(160, 361);
+            this.cb_CalProfitTab_Period.Name = "cb_CalProfitTab_Period";
+            this.cb_CalProfitTab_Period.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.cb_CalProfitTab_Period.Size = new System.Drawing.Size(61, 20);
+            this.cb_CalProfitTab_Period.TabIndex = 30;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(225, 365);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(45, 12);
+            this.label3.TabIndex = 31;
+            this.label3.Text = "로 보기";
             // 
             // Main
             // 
@@ -511,6 +533,8 @@ namespace TESTAPP
         private System.Windows.Forms.Label lb_CalProfitTab_InterestPeriod;
         private System.Windows.Forms.Label lb_CalProfitTab_Amount;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cb_CalProfitTab_Period;
     }
 }
 

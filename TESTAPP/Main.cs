@@ -42,6 +42,7 @@ namespace TESTAPP
         private void Main_Load(object sender, EventArgs e)
         {
             accountService = new AccountService(); // 나중에 di로 설정 가능하려나.
+            SetCalProfitTabPeriod();
         }
 
         #endregion
@@ -76,6 +77,15 @@ namespace TESTAPP
         }
 
         #endregion
+
+        #region "이자 계산시 단위 설정"
+        private void SetCalProfitTabPeriod()
+        {
+            SetEnumToCombo<Period>(cb_CalProfitTab_Period);
+            cb_CalProfitTab_Period.SelectedIndex = 0;
+        }
+        #endregion
+
 
         #region "현재 콤보박스에 선택된 계좌 들고오기"
 
@@ -128,6 +138,7 @@ namespace TESTAPP
             if (ac is null) return;
 
             SetCalProfitTabValue(ac);
+            
         }
 
         #endregion
@@ -226,7 +237,7 @@ namespace TESTAPP
 
             foreach (AccountLog item in sortedLogs)
             {
-                dt.Rows.Add("sample", item.AccountLogType, item.Amount, item.DateTime);
+                dt.Rows.Add("sample", item.DateTime, item.AccountLogType, item.Amount,item.Description);
             }
 
             grid_accountLog.DataSource = dt;
@@ -238,9 +249,12 @@ namespace TESTAPP
             DataTable dt = new DataTable();
 
             dt.Columns.Add("id", typeof(string));
+            dt.Columns.Add("날짜", typeof(DateTime));
             dt.Columns.Add("입/출금", typeof(AccountLogType));
             dt.Columns.Add("금액", typeof(decimal));
-            dt.Columns.Add("날짜", typeof(DateTime));
+            dt.Columns.Add("비고", typeof(string));
+
+            
 
             grid_accountLog.DataSource = dt;
 
@@ -286,7 +300,35 @@ namespace TESTAPP
         }
         #endregion
 
+        #region "우대 이율 조건 보기"
+        private void bt_CalProfitTab_Available_Click(object sender, EventArgs e)
+        {
+            Account ac = GetSelectedAccount();
+
+            if (ac is null)
+            {
+                MessageBox.Show("계좌를 먼저 선택해 주십시오");
+                return;
+            }
+
+            AccountCondition accountCondition = new AccountCondition();
+
+            accountCondition.FormClosed += WhenAccountConditionClosed;
+            accountCondition.Usercode = 1L;
+            accountCondition.AccountId = ac.AccountId;
+
+            OpenNewForm<AccountCondition>(accountCondition);
+        }
+
+        private void WhenAccountConditionClosed(object sender, EventArgs e)
+        {
+            // 새로고침 그런거 ..
+        }
+        #endregion
+
         #region "이자 계산 및 검증"
+
+        #region "계산"
         private void bt_Calculate_Click(object sender, EventArgs e)
         {
             DateTime now = DateTime.Now.Date;
@@ -298,36 +340,31 @@ namespace TESTAPP
                 MessageBox.Show("계좌를 먼저 선택해주세요.");
                 return;
             }
-
-            decimal amount = account.Amount;
-            decimal resultinterest = 0;
-            decimal resultAmount = 0;
-            decimal vResultInterest = 0;
-            // 이 작업을 서비스에 정의 ? 아니면 ..
-            //날짜 갭 차이에 대한 원금 변화 반영, 근데 이것도 비즈니스 로직으로 본다면.. 내부로 옮기고 서비스를 타는게 나을듯
-
-            if (amount > 0  && from.CompareTo(now) > 0)
-            {
-                decimal vResultAmount = 0;
-
-                account.GetResult(ref amount, ref vResultInterest, ref vResultAmount,now,in from);
-            }
-
-            if(amount > 0) { 
-
-            account.GetResult(ref amount,ref  resultinterest,ref resultAmount,from,in until);
-
-            MessageBox.Show(
-                $"쌓인 이자 {Math.Round(resultinterest, 0)} " +
-                $"\n선택 기간 외 쌓였던 이자 {Math.Round(vResultInterest, 0)}" +
-                $"\n최종 금액 {Math.Round(resultAmount+ vResultInterest, 0)}");
-            }
-            else
+            else if (account.Amount <= 0)
             {
                 MessageBox.Show($"통장에 돈이 없습니다.");
+                return;
             }
-        }
 
+            ViewVirtualLog form  = new ViewVirtualLog();
+            form.StartPosition = FormStartPosition.CenterScreen;
+
+            form.VirtualDto = new VirtualDto
+            {
+                Now = now,
+                From = from,
+                Until = until,
+                AccountId = account.AccountId,
+                UserCode = account.UserCode,
+                
+            };
+            form.period = (Period)cb_CalProfitTab_Period.SelectedItem;
+
+            form.Show();
+        }
+        #endregion
+
+        #region "검증"
         private void dt_From_ValueChanged(object sender, EventArgs e)
         {
             ValidateDateTime(sender);
@@ -354,31 +391,9 @@ namespace TESTAPP
                 dtp.Value = DateTime.Now;
             }
         }
+        #endregion
 
         #endregion
 
-        private void bt_CalProfitTab_Available_Click(object sender, EventArgs e)
-        {
-            Account ac = GetSelectedAccount();
-
-            if(ac is null)
-            {
-                MessageBox.Show("계좌를 먼저 선택해 주십시오");
-                return;
-            }
-
-            AccountCondition accountCondition = new AccountCondition();
-
-            accountCondition.FormClosed += WhenAccountConditionClosed;
-            accountCondition.Usercode = 1L;
-            accountCondition.AccountId = ac.AccountId;
-
-            OpenNewForm<AccountCondition>(accountCondition);
-        }
-
-        private void WhenAccountConditionClosed(object sender, EventArgs e)
-        {
-
-        }
     }
 }

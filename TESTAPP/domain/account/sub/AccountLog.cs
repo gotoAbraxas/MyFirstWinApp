@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TESTAPP.domain.account.sub
 {
 
-    enum AccountLogType
+    public enum AccountLogType
     {
         입금,
         출금,

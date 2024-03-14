@@ -97,8 +97,10 @@ namespace TESTAPP.domain.account
             // 지금 적용될 이윤
             // 몇가지는 조금 엇나가는 계산이 있긴한데 .. 일단 ..  
 
-            resultInterest = GetResultInterest(amount, resultInterest, changedInterest);
-            
+            decimal nowInterest = GetResultInterest(amount, changedInterest); // 이번 타임 이자
+
+            resultInterest += nowInterest;
+
             resultAmount = amount + resultInterest;
 
             SimpleInterest(ref amount, ref resultInterest, ref resultAmount, until,in end);
@@ -113,15 +115,17 @@ namespace TESTAPP.domain.account
 
             decimal changedInterest = Interest;
             DateTime now = DateTime.Now.Date;
-
+            
             changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
             changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
 
-            resultInterest = GetResultInterest(amount, resultInterest, changedInterest);
+            decimal nowInterest = GetResultInterest(amount, changedInterest); // 이번 타임 이자
 
-            resultAmount = amount + resultInterest;
+            resultInterest += nowInterest;
 
-            amount += resultInterest;  // 딱 이거 하나 다르면 그냥 .. if 해도? 근데 또 책임분리 면에선...
+            resultAmount = amount + nowInterest;
+
+            amount += nowInterest;  // 딱 이거 하나 다르면 그냥 .. if 해도? 근데 또 책임분리 면에선...
 
             CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until,in end);
 
@@ -177,8 +181,10 @@ namespace TESTAPP.domain.account
 
             return result;
         }
-        private decimal GetResultInterest(decimal amount, decimal resultInterest, decimal changedInterest)
+        private decimal GetResultInterest(decimal amount, decimal changedInterest)
         {
+            decimal resultInterest = 0;
+            
             if (checkUpperLimitWellInterest && amount > UpperLimitWellInterest)
             {
 
@@ -186,11 +192,11 @@ namespace TESTAPP.domain.account
                 decimal standardInterest = (UpperLimitWellInterest * changedInterest);
                 decimal restInterest = rest * Interest;
 
-                resultInterest += (standardInterest + restInterest);
+                resultInterest = (standardInterest + restInterest);
             }
             else
             {
-                resultInterest += (amount * changedInterest);
+                resultInterest = (amount * changedInterest);
             }
 
             return resultInterest;

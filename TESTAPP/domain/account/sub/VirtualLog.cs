@@ -6,15 +6,31 @@ using System.Threading.Tasks;
 
 namespace TESTAPP.domain.account.sub
 {
-    enum ChangedType
+    public enum Period
     {
-        금액,
-        금리
+        일단위,
+        월단위,
+        년단위,
+        한번에
     }
 
-    internal class VirtualLog
+    public struct VirtualDto
     {
+        public DateTime Now { get; set; }
+        public DateTime From { get; set; }
+        public DateTime Until { get; set; }
+        public long UserCode { get; set; }
+        public long AccountId { get; set; }
 
+    }
+
+    public struct VirtualLog
+    {
         public int Id { get; set; }
+        public AccountLogType AccountLogType { get; set; }
+
+        public decimal Amount { get; set; }
+        public DateTime DateTime { get; set; }
+        public string Description { get; set; }
     }
 }
