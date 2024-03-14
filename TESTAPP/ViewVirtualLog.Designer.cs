@@ -37,32 +37,38 @@
             // 
             this.dgv_virtualView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_virtualView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_virtualView.Location = new System.Drawing.Point(35, 28);
+            this.dgv_virtualView.Location = new System.Drawing.Point(50, 42);
+            this.dgv_virtualView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgv_virtualView.Name = "dgv_virtualView";
             this.dgv_virtualView.ReadOnly = true;
+            this.dgv_virtualView.RowHeadersWidth = 62;
             this.dgv_virtualView.RowTemplate.Height = 23;
-            this.dgv_virtualView.Size = new System.Drawing.Size(705, 375);
+            this.dgv_virtualView.Size = new System.Drawing.Size(1007, 562);
             this.dgv_virtualView.TabIndex = 0;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(362, 416);
+            this.button1.Location = new System.Drawing.Point(517, 624);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(72, 22);
+            this.button1.Size = new System.Drawing.Size(103, 33);
             this.button1.TabIndex = 1;
             this.button1.Text = "확인";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // ViewVirtualLog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1143, 675);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dgv_virtualView);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ViewVirtualLog";
             this.Text = "ViewCounditionLog";
             this.Load += new System.EventHandler(this.ViewCounditionLog_Load);
+            this.Enter += new System.EventHandler(this.ViewVirtualLog_Enter);
             ((System.ComponentModel.ISupportInitialize)(this.dgv_virtualView)).EndInit();
             this.ResumeLayout(false);
 

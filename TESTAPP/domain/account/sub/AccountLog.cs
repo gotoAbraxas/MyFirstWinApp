@@ -21,6 +21,8 @@ namespace TESTAPP.domain.account.sub
 
        public decimal Amount { get; set; }
        public DateTime DateTime { get; set; }
+
+       public decimal Total {  get; set; }
        public  string Description { get; set; }
     }
 }

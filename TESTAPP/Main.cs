@@ -1,16 +1,10 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TESTAPP.account.service;
-using TESTAPP.common.component;
 using TESTAPP.domain.account;
 using TESTAPP.domain.account.sub;
 using static TESTAPP.common.component.Dynamic;
@@ -49,16 +43,16 @@ namespace TESTAPP
 
         #region "계좌 선택 항목"
         private void SelectAccounts()
-        { 
+        {
             cb_SelectAccount.Items.Clear();
 
-            Dictionary<long,Account>  accounts = accountService.GetAcountsById(1L);
+            Dictionary<long, Account> accounts = accountService.GetAcountsById(1L);
 
             cb_SelectAccount.DisplayMember = "Name_AccountId";
 
-            foreach ( Account account in accounts.Values)
+            foreach (Account account in accounts.Values)
             {
-               // cb_SelectAccount.Items.Add($"{account.Name}_{account.AccountId}");
+                // cb_SelectAccount.Items.Add($"{account.Name}_{account.AccountId}");
                 cb_SelectAccount.Items.Add(account);
             }
         }
@@ -85,7 +79,6 @@ namespace TESTAPP
             cb_CalProfitTab_Period.SelectedIndex = 0;
         }
         #endregion
-
 
         #region "현재 콤보박스에 선택된 계좌 들고오기"
 
@@ -138,7 +131,7 @@ namespace TESTAPP
             if (ac is null) return;
 
             SetCalProfitTabValue(ac);
-            
+
         }
 
         #endregion
@@ -185,7 +178,7 @@ namespace TESTAPP
 
             AccountLogSetting();
             InitCalProfitTabValue();
-  
+
         }
 
         #endregion
@@ -196,14 +189,14 @@ namespace TESTAPP
 
             Account account = GetSelectedAccount();
 
-            if (account != null) 
-            { 
-            AddAccountLog tmp = new AddAccountLog();
-            tmp.FormClosed += WhenAddAccountLogClosed;
-            tmp.Usercode = 1L;
-            tmp.AccountId = account.AccountId;
+            if (account != null)
+            {
+                AddAccountLog tmp = new AddAccountLog();
+                tmp.FormClosed += WhenAddAccountLogClosed;
+                tmp.Usercode = 1L;
+                tmp.AccountId = account.AccountId;
 
-            OpenNewForm<AddAccountLog>(tmp);
+                OpenNewForm<AddAccountLog>(tmp);
 
             }
             else
@@ -237,7 +230,7 @@ namespace TESTAPP
 
             foreach (AccountLog item in sortedLogs)
             {
-                dt.Rows.Add("sample", item.DateTime, item.AccountLogType, item.Amount,item.Description);
+                dt.Rows.Add("sample", item.DateTime, item.AccountLogType, string.Format("{0:#,##0}", item.Amount), string.Format("{0:#,##0}", item.Total), item.Description);
             }
 
             grid_accountLog.DataSource = dt;
@@ -251,12 +244,27 @@ namespace TESTAPP
             dt.Columns.Add("id", typeof(string));
             dt.Columns.Add("날짜", typeof(DateTime));
             dt.Columns.Add("입/출금", typeof(AccountLogType));
-            dt.Columns.Add("금액", typeof(decimal));
+            dt.Columns.Add("금액", typeof(string));
+            dt.Columns.Add("잔액", typeof(string));
             dt.Columns.Add("비고", typeof(string));
+
+            grid_accountLog.DataSource = dt;
 
             
 
-            grid_accountLog.DataSource = dt;
+            grid_accountLog.DataBindingComplete += (sender, o) =>
+            {
+                grid_accountLog.Columns["금액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                grid_accountLog.Columns["잔액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+                grid_accountLog.Columns["금액"].Width = 100;
+                grid_accountLog.Columns["잔액"].Width = 100;
+                grid_accountLog.Columns["입/출금"].Width = 70;
+                grid_accountLog.Columns["날짜"].Width = 140;
+                grid_accountLog.Columns["id"].Width = 60;
+
+            };
+
 
             return dt;
         }
@@ -287,14 +295,14 @@ namespace TESTAPP
         private decimal MaxInterest(Account account)
         {
 
-           decimal pc = account.periodConditions
-                .Where((condition) => condition.Applyed)
-                .Select((condition) => condition.ChangedValue)
-                .Sum();
-           decimal ac = account.amountConditions
-                .Where((condition) => condition.Applyed)
-                .Select((condition) => condition.ChangedValue)
-                .Sum();
+            decimal pc = account.periodConditions
+                 .Where((condition) => condition.Applyed)
+                 .Select((condition) => condition.ChangedValue)
+                 .Sum();
+            decimal ac = account.amountConditions
+                 .Where((condition) => condition.Applyed)
+                 .Select((condition) => condition.ChangedValue)
+                 .Sum();
 
             return pc + ac;
         }
@@ -335,7 +343,7 @@ namespace TESTAPP
             DateTime from = dt_From.Value.Date;
             DateTime until = dt_To.Value.Date;
             Account account = GetSelectedAccount();
-            if(account is null) 
+            if (account is null)
             {
                 MessageBox.Show("계좌를 먼저 선택해주세요.");
                 return;
@@ -346,7 +354,7 @@ namespace TESTAPP
                 return;
             }
 
-            ViewVirtualLog form  = new ViewVirtualLog();
+            ViewVirtualLog form = new ViewVirtualLog();
             form.StartPosition = FormStartPosition.CenterScreen;
 
             form.VirtualDto = new VirtualDto
@@ -356,7 +364,7 @@ namespace TESTAPP
                 Until = until,
                 AccountId = account.AccountId,
                 UserCode = account.UserCode,
-                
+
             };
             form.period = (Period)cb_CalProfitTab_Period.SelectedItem;
 
@@ -385,7 +393,7 @@ namespace TESTAPP
                 dtp.Value = DateTime.Now;
             }
 
-            if(DateTime.Now.Date.CompareTo(dt_From.Value.Date) > 0)
+            if (DateTime.Now.Date.CompareTo(dt_From.Value.Date) > 0)
             {
                 MessageBox.Show("기간은 오늘 이후로만 선택 가능합니다.");
                 dtp.Value = DateTime.Now;

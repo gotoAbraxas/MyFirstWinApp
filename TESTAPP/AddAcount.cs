@@ -1,12 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TESTAPP.account.service;
 using TESTAPP.domain.account;
@@ -170,7 +163,7 @@ namespace TESTAPP
         #region "조건 동적 추가"
         private void bt_AddCondition_Click(object sender, EventArgs e)
         {
-           AddConditionType type = (AddConditionType)cb_AddCondition.SelectedItem;
+            AddConditionType type = (AddConditionType)cb_AddCondition.SelectedItem;
 
             switch (type)
             {
@@ -201,7 +194,7 @@ namespace TESTAPP
             DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition_ed}{ConditionControler.Count}", "", 130, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "원", 20, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "+", 10, 30);
-            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}","", 35, 30);
+            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", "", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
             ConditionControler.Add(layout);
         }
@@ -249,7 +242,7 @@ namespace TESTAPP
 
             SetConditionValues(ref periodConditions, ref amountConditions);
 
-            
+
             //여기는 나중에 개선 한번 해야할듯 .. 
             account = new Account()
             {
@@ -258,22 +251,22 @@ namespace TESTAPP
                 Name_AccountId = $"{txt_AccountName.Text}_{txt_AccountNumber.Text}",
                 Interest = decimal.Parse(txt_Interest.Text) / 100,
                 SettlePeriod = int.Parse(txt_SettlePeriod.Text),
-                SettlePeriodType = (SettlePeriodType)cb_SettlePeriod.SelectedItem, 
+                SettlePeriodType = (SettlePeriodType)cb_SettlePeriod.SelectedItem,
                 SettleType = (SettleType)cb_SettleType.SelectedItem,
                 UserCode = 1L, // 임시로 이렇게 할 예정,
                 checkUpperLimitWellInterest = ch_CheckPreferent.Checked && decimal.Parse(txt_Preferent.Text.Replace(",", "")) > 0,
-                UpperLimitWellInterest = ch_CheckPreferent.Checked ? decimal.Parse(txt_Preferent.Text.Replace(",","")) : 0,
+                UpperLimitWellInterest = ch_CheckPreferent.Checked ? decimal.Parse(txt_Preferent.Text.Replace(",", "")) : 0,
                 amountConditions = amountConditions,
                 periodConditions = periodConditions, // 이 둘은 나중에 또 따로 관리
             };
-            
+
         }
         private void SetConditionValues(ref List<PeriodCondition> periodConditions, ref List<AmountCondition> amountConditions)
         {
 
-                for (int i = 0; i < ConditionControler.Count; i++)
-                {
-                    if (GetControlValue<Label>(this, $"{AddConditionType.기간}{i}") == AddConditionType.기간.ToString())
+            for (int i = 0; i < ConditionControler.Count; i++)
+            {
+                if (GetControlValue<Label>(this, $"{AddConditionType.기간}{i}") == AddConditionType.기간.ToString())
                 {
                     GetConditionValues(i, out string start, out string end, out string interest);
 
@@ -299,9 +292,9 @@ namespace TESTAPP
         {
 
             // 조건 식은 따로 메소드로 빼는 것도 괜찮아보임
-            if (int.TryParse(start, out int startValue) 
+            if (int.TryParse(start, out int startValue)
                 && int.TryParse(end, out int endValue)
-                && decimal.TryParse(interest, out decimal interestValue) 
+                && decimal.TryParse(interest, out decimal interestValue)
                 && startValue < endValue)
             {
                 PeriodCondition condition = new PeriodCondition()

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TESTAPP.account.service;
+using TESTAPP.domain.account;
 using TESTAPP.domain.account.sub;
 using static TESTAPP.common.component.Dynamic;
 
@@ -118,6 +119,7 @@ namespace TESTAPP
                 Amount = amount,
                 DateTime = DateTime.Now,
 
+
             };
             if (type == AccountLogType.입금)
             {
@@ -132,12 +134,24 @@ namespace TESTAPP
         {
             log.AccountLogType = AccountLogType.입금;
 
-            account.Deposit(Usercode, AccountId, amount, log);
+            Account ac = account.Deposit(Usercode, AccountId, amount, log);
+            log.Total = ac.Amount;
+
+
         }
         private void Withdraw(decimal amount, AccountLog log)
         {
             log.AccountLogType = AccountLogType.출금;
-            account.Withdraw(Usercode, AccountId, amount, log);
+
+            try 
+            { 
+                Account ac = account.Withdraw(Usercode, AccountId, amount, log);
+                log.Total = ac.Amount;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         #endregion

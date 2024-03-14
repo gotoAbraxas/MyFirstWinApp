@@ -62,24 +62,24 @@ namespace TESTAPP.domain.account
         }
 
 
-        public void GetResult(ref decimal amount,ref decimal resultInterest,ref decimal resultAmount,DateTime start,in DateTime end)
+        public void GetResult(ref decimal amount,ref decimal resultInterest,ref decimal resultAmount,DateTime start,in DateTime end,List<VirtualLog> log)
         {
 
             if (SettleType == SettleType.단리)
             {
 
-                SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start,in end);
+                SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start,in end, log);
             }
             else if(SettleType == SettleType.복리)
             {
-                CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start,in end);
+                CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start,in end, log);
             }
 
         }
 
 
         // 단리
-        private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end)
+        private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log)
         {
             // 이후에 입/출금 계획 받아서 적용할 예정
 
@@ -98,16 +98,25 @@ namespace TESTAPP.domain.account
             // 몇가지는 조금 엇나가는 계산이 있긴한데 .. 일단 ..  
 
             decimal nowInterest = GetResultInterest(amount, changedInterest); // 이번 타임 이자
-
             resultInterest += nowInterest;
 
             resultAmount = amount + resultInterest;
 
-            SimpleInterest(ref amount, ref resultInterest, ref resultAmount, until,in end);
+
+            log.Add(new VirtualLog()
+            {
+                AccountLogType = AccountLogType.입금,
+                DateTime = until,
+                Description = "이자",
+                Amount = nowInterest,
+                Total = resultAmount
+            });
+
+            SimpleInterest(ref amount, ref resultInterest, ref resultAmount, until,in end,log);
         }
 
         // 복리
-        private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end)
+        private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log)
         {
 
             DateTime until = GetNextDate(start);
@@ -127,7 +136,18 @@ namespace TESTAPP.domain.account
 
             amount += nowInterest;  // 딱 이거 하나 다르면 그냥 .. if 해도? 근데 또 책임분리 면에선...
 
-            CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until,in end);
+
+            log.Add(new VirtualLog()
+            {
+                AccountLogType = AccountLogType.입금,
+                DateTime = until,
+                Description = "이자",
+                Amount = nowInterest,
+                Total = resultAmount
+            });
+
+
+            CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until,in end, log);
 
         }
 
