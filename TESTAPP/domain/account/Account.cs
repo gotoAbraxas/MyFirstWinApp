@@ -62,24 +62,24 @@ namespace TESTAPP.domain.account
         }
 
 
-        public void GetResult(ref decimal amount,ref decimal resultInterest,ref decimal resultAmount, DateTime start, DateTime end)
+        public void GetResult(ref decimal amount,ref decimal resultInterest,ref decimal resultAmount,DateTime start,in DateTime end)
         {
 
             if (SettleType == SettleType.단리)
             {
 
-                SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start,end);
+                SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start,in end);
             }
             else if(SettleType == SettleType.복리)
             {
-                CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start,end);
+                CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start,in end);
             }
 
         }
 
 
         // 단리
-        private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,DateTime end)
+        private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end)
         {
             // 이후에 입/출금 계획 받아서 적용할 예정
 
@@ -95,19 +95,17 @@ namespace TESTAPP.domain.account
             changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자.
 
             // 지금 적용될 이윤
-
-            // 이건 좀 빡세다 .. 사실 현재 금액이 얼마나 예치되어있었냐를 계산해야하는데... 흑..
-            // 이건 보통 예치금에서나 볼 법한 방식인데 일단 적용
+            // 몇가지는 조금 엇나가는 계산이 있긴한데 .. 일단 ..  
 
             resultInterest = GetResultInterest(amount, resultInterest, changedInterest);
             
             resultAmount = amount + resultInterest;
 
-            SimpleInterest(ref amount, ref resultInterest, ref resultAmount, until, end);
+            SimpleInterest(ref amount, ref resultInterest, ref resultAmount, until,in end);
         }
 
         // 복리
-        private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end)
+        private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end)
         {
 
             DateTime until = GetNextDate(start);
@@ -117,15 +115,15 @@ namespace TESTAPP.domain.account
             DateTime now = DateTime.Now.Date;
 
             changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
-            changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자.
+            changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
 
             resultInterest = GetResultInterest(amount, resultInterest, changedInterest);
 
             resultAmount = amount + resultInterest;
 
-            amount += resultInterest;
+            amount += resultInterest;  // 딱 이거 하나 다르면 그냥 .. if 해도? 근데 또 책임분리 면에선...
 
-            CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until, end);
+            CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until,in end);
 
         }
 
