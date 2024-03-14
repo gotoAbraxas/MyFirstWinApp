@@ -218,7 +218,7 @@ namespace TESTAPP
         private void AccountLogSetting()
         {
             DataTable dt = AccountLogInit();
-            grid_accountLog.DataSource = dt;
+
         }
         private void AccountLogSetting(Account account)
         {
@@ -233,9 +233,6 @@ namespace TESTAPP
                 dt.Rows.Add("sample", item.DateTime, item.AccountLogType, string.Format("{0:#,##0}", item.Amount), string.Format("{0:#,##0}", item.Total), item.Description);
             }
 
-            grid_accountLog.DataSource = dt;
-
-
         }
         private DataTable AccountLogInit()
         {
@@ -249,21 +246,6 @@ namespace TESTAPP
             dt.Columns.Add("비고", typeof(string));
 
             grid_accountLog.DataSource = dt;
-
-            
-
-            grid_accountLog.DataBindingComplete += (sender, o) =>
-            {
-                grid_accountLog.Columns["금액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                grid_accountLog.Columns["잔액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-                grid_accountLog.Columns["금액"].Width = 100;
-                grid_accountLog.Columns["잔액"].Width = 100;
-                grid_accountLog.Columns["입/출금"].Width = 70;
-                grid_accountLog.Columns["날짜"].Width = 140;
-                grid_accountLog.Columns["id"].Width = 60;
-
-            };
 
 
             return dt;
