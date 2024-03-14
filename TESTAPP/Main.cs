@@ -300,24 +300,27 @@ namespace TESTAPP
             }
 
             decimal amount = account.Amount;
-            decimal resultinterest = account.Interest;
+            decimal resultinterest = 0;
             decimal resultAmount = 0;
+            decimal vResultInterest = 0;
             // 이 작업을 서비스에 정의 ? 아니면 ..
             //날짜 갭 차이에 대한 원금 변화 반영, 근데 이것도 비즈니스 로직으로 본다면.. 내부로 옮기고 서비스를 타는게 나을듯
- 
-            if (amount > 0 && account.SettleType == SettleType.복리 && from.CompareTo(now) > 0)
+
+            if (amount > 0  && from.CompareTo(now) > 0)
             {
-                decimal vResultInterest = account.Interest;
                 decimal vResultAmount = 0;
 
-                account.GetResult(ref amount, ref vResultInterest, ref vResultAmount, DateTime.Now.Date, from);
+                account.GetResult(ref amount, ref vResultInterest, ref vResultAmount,now,in from);
             }
 
             if(amount > 0) { 
 
-            account.GetResult(ref amount,ref  resultinterest,ref resultAmount, from, until);
+            account.GetResult(ref amount,ref  resultinterest,ref resultAmount,from,in until);
 
-            MessageBox.Show($"쌓인 이자 {Math.Round(resultinterest, 0)} 최종 금액 {Math.Round(resultAmount, 0)}");
+            MessageBox.Show(
+                $"쌓인 이자 {Math.Round(resultinterest, 0)} " +
+                $"\n선택 기간 외 쌓였던 이자 {Math.Round(vResultInterest, 0)}" +
+                $"\n최종 금액 {Math.Round(resultAmount+ vResultInterest, 0)}");
             }
             else
             {
