@@ -50,6 +50,7 @@ namespace TESTAPP
         private void SetAccountLogCombo()
         {
             SetEnumToCombo<AccountLogType>(cb_AccountLog);
+            cb_AccountLog.SelectedIndex = 0;
         }
 
         private void SetAccountService()
@@ -63,8 +64,9 @@ namespace TESTAPP
         private void txt_AccountLog_TextChanged(object sender, EventArgs e)
         {
             TextBox tmp = sender as TextBox;
-
             SetTxtAmountPretty(this, tmp.Name);
+
+            // 이런거 직접 이벤트를 만들어서 폼 만들때 동적으로 이벤트 추가해주는게 안낫나? 
         }
         #endregion
 

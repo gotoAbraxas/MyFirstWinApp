@@ -46,7 +46,7 @@ namespace TESTAPP.common.component
         {
 
             checkBox.Checked = value;
-            //checkBox.CheckedChanged += (sender, e) => value = checkBox.Checked;
+            //checkBox.CheckedChanged += (sender, e) => value = checkBox.Checked; // 여기다 뭐 넣을거 있나?
             DynamicInsert<CheckBox>(form, checkBox, pannel, name, text, width, height);
         }
 
