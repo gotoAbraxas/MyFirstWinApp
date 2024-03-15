@@ -209,8 +209,15 @@ namespace TESTAPP
 
             if (until.CompareTo(end) > 0) return;
 
+            if(period == Period.일단위) // 아 이거 맘에 안든다.
+            {
+                Calculate(standard, until, end, period);
+            }
+            else
+            {
+                Calculate(standard, until.AddDays(1), end, period);
 
-            Calculate(standard, until.AddDays(1), end, period);
+            }
         }
 
         private void NewMethod(DateTime start, DateTime until, out decimal income, out decimal withdraw, out decimal interest, out decimal total)
