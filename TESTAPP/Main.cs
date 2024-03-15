@@ -170,6 +170,7 @@ namespace TESTAPP
             DateTime standard = DateTime.Now.Date.AddDays(1);
             DateTimePicker dtp = new DateTimePicker();
             dtp.MinDate = standard;
+            dtp.Value = standard;
 
             ComboBox cb = new ComboBox();
             SetEnumToCombo<AccountLogType>(cb);
@@ -178,10 +179,10 @@ namespace TESTAPP
 
             DynamicInsert<FlowLayoutPanel>(this, layout, flowLayoutPanel, width: flowLayoutPanel.Width-10, height: 40);
 
-            DynamicInsert<DateTimePicker>(this, dtp, layout, $"{dtp_Condition}{ConditionControler.Count}", "", 110, 30);
-            DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition}{ConditionControler.Count}", "", 120, 30);
+            DynamicInsert<DateTimePicker>(this, dtp, layout, $"{dtp_Condition}{ConditionControler.Count}", 110, 30);
+            DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition}{ConditionControler.Count}", 120, 30);
             DynamicLabelInsert(this, new Label(), layout, $"{lb_Condition}{ConditionControler.Count}", "원", 25, 30);
-            DynamicInsert<ComboBox>(this, cb, layout, $"{cb_Condition}{ConditionControler.Count}", "", 50, 30);
+            DynamicInsert<ComboBox>(this, cb, layout, $"{cb_Condition}{ConditionControler.Count}", 50, 30);
             ConditionControler.Add(layout);
         }
 

@@ -189,12 +189,12 @@ namespace TESTAPP
             DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, width: flp_Condition.Width - 10, height: 35);
 
             DynamicLabelInsert(this, new Label(), layout, $"{AddConditionType.금액}{ConditionControler.Count}", AddConditionType.금액.ToString(), 30, 30);
-            DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition_st}{ConditionControler.Count}", "", 130, 30);
+            DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition_st}{ConditionControler.Count}", 130, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "~", 10, 30);
-            DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition_ed}{ConditionControler.Count}", "", 130, 30);
+            DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition_ed}{ConditionControler.Count}", 130, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "원", 20, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "+", 10, 30);
-            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", "", 35, 30);
+            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
             ConditionControler.Add(layout);
         }
@@ -205,13 +205,13 @@ namespace TESTAPP
             DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, width: flp_Condition.Width - 10, height: 35);
 
             DynamicLabelInsert(this, new Label(), layout, $"{AddConditionType.기간}{ConditionControler.Count}", AddConditionType.기간.ToString(), 30, 30);
-            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_st}{ConditionControler.Count}", "", 35, 30);
+            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_st}{ConditionControler.Count}", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "개월", 30, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "~", 20, 30);
-            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_ed}{ConditionControler.Count}", "", 35, 30);
+            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_ed}{ConditionControler.Count}", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "개월", 30, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "+", 10, 30);
-            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", "", 35, 30);
+            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
             ConditionControler.Add(layout);
         }

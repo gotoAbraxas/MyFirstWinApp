@@ -50,13 +50,13 @@ namespace TESTAPP.domain.account.sub
     public struct VirtualLogConditionaly
     {
         public int Id { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        public DateTime? Start { get; set; }
+        public DateTime? End { get; set; }
         public decimal Deposit { get; set; }
         public decimal Withdraw { get; set; }
         public decimal interest { get; set; }
         public string Description { get; set; }
 
-        public decimal Total { get; set; }
+        public decimal? Total { get; set; }
     }
 }
