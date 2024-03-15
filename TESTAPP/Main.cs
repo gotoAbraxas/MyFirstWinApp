@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,7 +24,9 @@ namespace TESTAPP
         private readonly string txt_Condition = "txt_Condition";
         private readonly string ch_Condition = "ch_Condition";
         private readonly string bt_Condition = "bt_Condition";
-
+        private readonly string dtp_Condition = "dtp_Condition";
+        private readonly string lb_Condition = "lb_Condition";
+        private readonly string cb_Condition = "cb_Condition";
         #endregion
 
         #region "생성자"
@@ -37,6 +40,14 @@ namespace TESTAPP
         {
             accountService = new AccountService(); // 나중에 di로 설정 가능하려나.
             SetCalProfitTabPeriod();
+            InitDate();
+
+        }
+
+        private void InitDate()
+        {
+            dt_From.MinDate = DateTime.Now;
+            dt_To.MinDate = DateTime.Now.AddDays(1);
         }
 
         #endregion
@@ -68,6 +79,14 @@ namespace TESTAPP
 
             AccountLogSetting(ac);
             SetCalProfitTabValue(ac);
+
+
+            foreach (Control control in ConditionControler)
+            {
+                this.Controls.Remove(control);
+                control.Dispose();
+            }
+            ConditionControler.Clear();
         }
 
         #endregion
@@ -136,10 +155,9 @@ namespace TESTAPP
 
         #endregion
 
-        #region "임시"
-        // ------------------ 임시
+        #region "동적 조건 추가"
 
-        private void button1_Click(object sender, EventArgs e)
+        private void bt_addCondition_Click(object sender, EventArgs e)
         {
             AddCondition();
 
@@ -149,15 +167,24 @@ namespace TESTAPP
         {
             FlowLayoutPanel layout = new FlowLayoutPanel();
 
-            DynamicInsert<FlowLayoutPanel>(this, layout, flowLayoutPanel, width: flowLayoutPanel.Width, height: 40);
+            DateTime standard = DateTime.Now.Date.AddDays(1);
+            DateTimePicker dtp = new DateTimePicker();
+            dtp.MinDate = standard;
 
-            DynamicInsert<Button>(this, new Button(), layout, $"{bt_Condition}{ConditionControler.Count}", "버튼", 40, 30);
-            DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition}{ConditionControler.Count}", "", 130, 30);
-            DynamicInsert<CheckBox>(this, new CheckBox(), layout, $"{ch_Condition}{ConditionControler.Count}", "항상 적용", 100, 30);
+            ComboBox cb = new ComboBox();
+            SetEnumToCombo<AccountLogType>(cb);
+            cb.SelectedIndex = 0;
+            cb.DropDownStyle = ComboBoxStyle.DropDownList; // 나중엔 콤보박스도 따로 만들면 좋긴할듯 .?
+
+            DynamicInsert<FlowLayoutPanel>(this, layout, flowLayoutPanel, width: flowLayoutPanel.Width-10, height: 40);
+
+            DynamicInsert<DateTimePicker>(this, dtp, layout, $"{dtp_Condition}{ConditionControler.Count}", "", 110, 30);
+            DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition}{ConditionControler.Count}", "", 120, 30);
+            DynamicLabelInsert(this, new Label(), layout, $"{lb_Condition}{ConditionControler.Count}", "원", 25, 30);
+            DynamicInsert<ComboBox>(this, cb, layout, $"{cb_Condition}{ConditionControler.Count}", "", 50, 30);
             ConditionControler.Add(layout);
         }
 
-        // ------------------ 임시
 
         #endregion
 
@@ -250,21 +277,7 @@ namespace TESTAPP
 
             grid_accountLog.DataSource = dt;
 
-            
-
-            grid_accountLog.DataBindingComplete += (sender, o) =>
-            {
-                grid_accountLog.Columns["금액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                grid_accountLog.Columns["잔액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-                grid_accountLog.Columns["금액"].Width = 100;
-                grid_accountLog.Columns["잔액"].Width = 100;
-                grid_accountLog.Columns["입/출금"].Width = 70;
-                grid_accountLog.Columns["날짜"].Width = 140;
-                grid_accountLog.Columns["id"].Width = 60;
-
-            };
-
+           
 
             return dt;
         }
@@ -334,7 +347,7 @@ namespace TESTAPP
         }
         #endregion
 
-        #region "이자 계산 및 검증"
+        #region "이자 계산, 동적계획 및 검증"
 
         #region "계산"
         private void bt_Calculate_Click(object sender, EventArgs e)
@@ -366,9 +379,34 @@ namespace TESTAPP
                 UserCode = account.UserCode,
 
             };
+
+            form.afterPlans = GetAferPlan();
             form.period = (Period)cb_CalProfitTab_Period.SelectedItem;
 
             form.Show();
+        }
+
+        #endregion
+
+        #region "입출금 계획 동적 세팅"
+        private List<AfterPlan> GetAferPlan()
+        {
+            List<AfterPlan> aps = new List<AfterPlan>();
+
+            for(int i = 0; i < ConditionControler.Count; i++)
+            {
+                aps.Add(new AfterPlan()
+                {
+                    AccountLogType = (AccountLogType) GetControl<ComboBox>(this, $"{cb_Condition}{i}").SelectedItem,
+                    Amount = decimal.Parse(GetTxtAmountPretty(this, $"{txt_Condition}{i}")),
+                    DateTime = GetControl<DateTimePicker>(this, $"{dtp_Condition}{i}").Value.Date,
+                    Description = "입/출금 계획"
+                });
+            }
+
+            aps = aps.OrderBy((item)=> item.DateTime).ToList();
+
+            return aps;
         }
         #endregion
 

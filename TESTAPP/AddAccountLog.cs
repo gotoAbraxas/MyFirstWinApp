@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TESTAPP.account.service;
 using TESTAPP.domain.account;
@@ -75,12 +67,12 @@ namespace TESTAPP
         private void bt_AddLogAccept_Click(object sender, EventArgs e)
         {
 
-            try 
-            { 
+            try
+            {
 
-            ValidationValue();
-            SaveAccountLog();
-            this.Close();
+                ValidationValue();
+                SaveAccountLog();
+                this.Close();
 
             }
             catch (Exception ex)
@@ -97,7 +89,7 @@ namespace TESTAPP
                 throw new Exception("입/출금을 선택하세요.");
             }
             if (decimal.TryParse(GetTxtAmountPretty(this, txt_AccountLog.Name), out decimal result) && result < 0)
-            { 
+            {
                 throw new Exception("올바른 금액을 선택하세요.");
             }
         }
@@ -111,13 +103,14 @@ namespace TESTAPP
         {
             AccountLogType type = (AccountLogType)cb_AccountLog.SelectedItem;
 
-            decimal.TryParse(GetTxtAmountPretty(this, txt_AccountLog.Name),out decimal amount); 
+            decimal.TryParse(GetTxtAmountPretty(this, txt_AccountLog.Name), out decimal amount);
             // 이게 밸리데이트인데 .. 위에서 또 해야하나.
 
             AccountLog log = new AccountLog()
             {
                 Amount = amount,
                 DateTime = DateTime.Now,
+                Description = ""
 
 
             };
@@ -125,7 +118,7 @@ namespace TESTAPP
             {
                 Deposit(amount, log);
             }
-            else if(type == AccountLogType.출금)
+            else if (type == AccountLogType.출금)
             {
                 Withdraw(amount, log);
             }
@@ -143,8 +136,8 @@ namespace TESTAPP
         {
             log.AccountLogType = AccountLogType.출금;
 
-            try 
-            { 
+            try
+            {
                 Account ac = account.Withdraw(Usercode, AccountId, amount, log);
                 log.Total = ac.Amount;
             }
