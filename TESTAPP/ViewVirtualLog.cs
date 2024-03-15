@@ -289,7 +289,7 @@ namespace TESTAPP
             dt.Columns.Add("비고", typeof(string));
 
             dgv_virtualView.DataSource = dt;
-
+            
             dgv_virtualView.DataBindingComplete += (sender, o) =>
             {
                 dgv_virtualView.Columns["금액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;

@@ -246,7 +246,7 @@ namespace TESTAPP
         private void AccountLogSetting()
         {
             DataTable dt = AccountLogInit();
-            grid_accountLog.DataSource = dt;
+
         }
         private void AccountLogSetting(Account account)
         {
@@ -260,9 +260,6 @@ namespace TESTAPP
             {
                 dt.Rows.Add("sample", item.DateTime, item.AccountLogType, string.Format("{0:#,##0}", item.Amount), string.Format("{0:#,##0}", item.Total), item.Description);
             }
-
-            grid_accountLog.DataSource = dt;
-
 
         }
         private DataTable AccountLogInit()

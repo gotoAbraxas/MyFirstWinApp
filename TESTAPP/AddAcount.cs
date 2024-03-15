@@ -19,6 +19,7 @@ namespace TESTAPP
         private readonly string ch_Condition = "ch_Condition";
         private readonly string lb_Condition = "lb_Condition";
         private readonly string txt_Condition_interest = "txt_Condition_interest";
+        private readonly string cb_Condition = "cb_Condition";
 
         List<Control> ConditionControler = new List<Control>();
         private AccountService accountService;
@@ -29,6 +30,8 @@ namespace TESTAPP
             기간,
             기타
         }
+
+        
 
         #endregion
 
@@ -186,6 +189,8 @@ namespace TESTAPP
         {
             FlowLayoutPanel layout = new FlowLayoutPanel();
 
+            ComboBox cb = new ComboBox();
+
             DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, width: flp_Condition.Width - 10, height: 35);
 
             DynamicLabelInsert(this, new Label(), layout, $"{AddConditionType.금액}{ConditionControler.Count}", AddConditionType.금액.ToString(), 30, 30);
@@ -197,6 +202,12 @@ namespace TESTAPP
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
             ConditionControler.Add(layout);
+
+            cb.Items.Add("+");
+            cb.Items.Add("-");
+            cb.SelectedIndex = 0;
+
+            
         }
 
         private void AddPeriodCondion()
