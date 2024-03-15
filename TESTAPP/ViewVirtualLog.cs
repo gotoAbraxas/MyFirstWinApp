@@ -20,6 +20,9 @@ namespace TESTAPP
         private AccountService service;
         public VirtualDto VirtualDto { get; set; }
         public List<VirtualLog> virtualLog { get; set; } = new List<VirtualLog>();
+
+        public List<AfterPlan> afterPlans { get; set; } = new List<AfterPlan>();
+        public List<VirtualLogConditionaly> virtualLogConditionalies { get; set; } = new List<VirtualLogConditionaly>();
         public Period period { get; set; }
         public ViewVirtualLog()
         {
@@ -29,16 +32,120 @@ namespace TESTAPP
         private void ViewCounditionLog_Load(object sender, EventArgs e)
         {
             ServiceInit();
-
-            DataTable dt = AccountLogInit();
-
+            
             CopyLog();
 
             AfterInit();
 
+            DataTable dt = new DataTable();
+            if (period == Period.내역)
+            {
+            AccountLogInit(dt);
             GetResult(dt);
+            }
+            else 
+            { 
+            AccountLogConditionInit(dt);
+            GetResultConditionaly(dt);
+            }
+
+            
+
         }
 
+        #region "조건에 맞는 검색"
+        private void GetResultConditionaly(DataTable dt)
+        {
+            Calculate(VirtualDto.From, VirtualDto.From,VirtualDto.Until,period);
+
+            SetData(dt);
+        }
+
+        private void Calculate(DateTime standard,DateTime start,DateTime end,Period period)
+        {
+           DateTime until =  AddDate(start, period);
+
+            decimal income = 0;
+                
+            income = virtualLog
+                .Where((log) => start.CompareTo(log.DateTime.Date) <= 0 && log.DateTime.Date.CompareTo(until) < 0 && !log.Description.Equals("이자"))
+                .Select((log) => log.Amount).Sum();
+
+
+            decimal interest = 0;
+
+           interest =  virtualLog
+                .Where((log) => start.CompareTo(log.DateTime.Date) <= 0 && log.DateTime.Date.CompareTo(until) < 0 && log.Description.Equals("이자"))
+                .Select(log => log.Amount).Sum();
+
+            decimal total = virtualLog
+                .Where((log) => (standard.CompareTo(log.DateTime.Date) <= 0) && (log.DateTime.Date.CompareTo(until) < 0))
+                .OrderBy((log) => log.DateTime)
+                .Select((log) => log.Total)
+                .LastOrDefault();
+
+            virtualLogConditionalies.Add(
+                    new VirtualLogConditionaly()
+                    {
+                        Start = start,
+                        End = until,
+                        interest = interest,
+                        Deposit = income,
+                        Total = total,
+                        Withdraw = 0
+                    }
+                );
+
+            if (until.CompareTo(end) > 0) return;
+
+
+            Calculate(standard, until, end, period);
+        }
+
+        private DateTime AddDate(DateTime start, Period period)
+        {
+            if (period == Period.일단위)
+            {
+                return start.AddDays(1);
+            }
+            else if (period == Period.월단위)
+            {
+                return start.AddMonths(1);
+            }
+            else
+            {
+                return start.AddYears(1);
+            }
+        }
+
+
+        private void SetData(DataTable dt)
+        {
+            foreach (var item in virtualLogConditionalies)
+            {
+                dt.Rows.Add(
+                    "sample",
+                    item.Start,
+                    item.End,
+                    PrettyValue(item.Deposit),
+                    PrettyValue(item.Withdraw),
+                    PrettyValue(item.interest),
+                    PrettyValue(item.Total),
+                    item.Description);
+            }
+        }
+
+        #endregion
+
+        #region "금액 이쁘게, 그리고 소숫점 올림"
+        private string PrettyValue(decimal value)
+        {
+            return string.Format("{0:#,##0}", Math.Round(value, 0));
+        }
+
+        #endregion
+
+        #region "가상 내역 세팅"
         private void CopyLog()
         {
             account.Log.ForEach(log =>
@@ -51,10 +158,13 @@ namespace TESTAPP
                         Amount = log.Amount,
                         DateTime = log.DateTime,
                         Total = log.Total,
+                        Description = log.Description
                     });
                 }
             });
         }
+
+        #endregion
 
         private void AfterInit()
         {
@@ -72,15 +182,23 @@ namespace TESTAPP
             // 이 작업을 서비스에 정의 ? 아니면 ..
             //날짜 갭 차이에 대한 원금 변화 반영, 근데 이것도 비즈니스 로직으로 본다면.. 내부로 옮기고 서비스를 타는게 나을듯
 
-            if (from.CompareTo(now) > 0)
+
+            try
             {
-                decimal vResultAmount = 0;
+                if (from.CompareTo(now) > 0)
+                {
+                    decimal vResultAmount = 0;
 
-                account.GetResult(ref amount, ref vResultInterest, ref vResultAmount, now, in from, virtualLog);
+                    account.GetResult(ref amount, ref vResultInterest, ref vResultAmount, now, in from, virtualLog, afterPlans);
+                }
+
+                account.GetResult(ref amount, ref resultinterest, ref resultAmount, from, in until, virtualLog, afterPlans);
             }
-
-            account.GetResult(ref amount, ref resultinterest, ref resultAmount, from, in until, virtualLog);
-
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                this.Close();
+            }
         }
 
 
@@ -88,7 +206,7 @@ namespace TESTAPP
         {
             foreach (var item in virtualLog.OrderBy(log => log.DateTime))
             {
-                dt.Rows.Add("sample", item.DateTime, item.AccountLogType, string.Format("{0:#,##0}", item.Amount),string.Format("{0:#,##0}", item.Total) ,item.Description);
+                dt.Rows.Add("sample", item.DateTime, item.AccountLogType, PrettyValue(item.Amount),PrettyValue(item.Total) ,item.Description);
             }
 
         }
@@ -99,11 +217,37 @@ namespace TESTAPP
 
             this.account = service.SelectAccountById(VirtualDto.UserCode, VirtualDto.AccountId);
         }
-
-        private DataTable AccountLogInit()
+        private void AccountLogConditionInit(DataTable dt)
         {
-            DataTable dt = new DataTable();
 
+            dt.Columns.Add("id", typeof(string));
+            dt.Columns.Add("From", typeof(DateTime));
+            dt.Columns.Add("To", typeof(DateTime));
+            dt.Columns.Add("입금 총액", typeof(string));
+            dt.Columns.Add("출금 총액", typeof(string));
+            dt.Columns.Add("이자 총액", typeof(string));
+            dt.Columns.Add("잔액", typeof(string));
+            dt.Columns.Add("비고", typeof(string));
+
+            dgv_virtualView.DataSource = dt;
+            
+            dgv_virtualView.DataBindingComplete += (sender, o) =>
+            {
+                dgv_virtualView.Columns["입금 총액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dgv_virtualView.Columns["출금 총액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dgv_virtualView.Columns["이자 총액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dgv_virtualView.Columns["잔액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                //dgv_virtualView.Columns["금액"].Width = 100;
+                //dgv_virtualView.Columns["잔액"].Width = 100;
+                //dgv_virtualView.Columns["입/출금"].Width = 70;
+                //dgv_virtualView.Columns["날짜"].Width = 140;
+                //dgv_virtualView.Columns["id"].Width = 60;
+            };
+            
+        }
+
+        private void AccountLogInit(DataTable dt)
+        {
             dt.Columns.Add("id", typeof(string));
             dt.Columns.Add("날짜", typeof(DateTime));
             dt.Columns.Add("입/출금", typeof(AccountLogType));
@@ -125,8 +269,6 @@ namespace TESTAPP
                 dgv_virtualView.Columns["id"].Width = 60;
 
             };
-
-            return dt;
         }
 
         private void button1_Click(object sender, EventArgs e)

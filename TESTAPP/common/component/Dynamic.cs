@@ -61,6 +61,17 @@ namespace TESTAPP.common.component
         }
         #endregion
 
+        #region "이름으로 컨트롤을 가져옴"
+        public static T GetControl<T>(Form form, string name) where T : Control
+        {
+            if (form.Controls.Find(name, true).FirstOrDefault() is T control)
+            {
+                return control;
+            }
+            return null;
+        }
+        #endregion
+
         #region "동적 Text 의 금액을 GET/SET 하는 메소드"
         public static string GetTxtAmountPretty(Form form, string name)
         {

@@ -11,7 +11,7 @@ namespace TESTAPP.domain.account.sub
         일단위,
         월단위,
         년단위,
-        한번에
+        내역
     }
 
     public struct VirtualDto
@@ -31,6 +31,30 @@ namespace TESTAPP.domain.account.sub
 
         public decimal Amount { get; set; }
         public DateTime DateTime { get; set; }
+        public string Description { get; set; }
+
+        public decimal Total { get; set; }
+    }
+
+    public struct AfterPlan
+    {
+        public int Id { get; set; }
+        public AccountLogType AccountLogType { get; set; }
+
+        public decimal Amount { get; set; }
+        public DateTime DateTime { get; set; }
+        public string Description { get; set; }
+
+    }
+
+    public struct VirtualLogConditionaly
+    {
+        public int Id { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public decimal Deposit { get; set; }
+        public decimal Withdraw { get; set; }
+        public decimal interest { get; set; }
         public string Description { get; set; }
 
         public decimal Total { get; set; }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using TESTAPP.domain.account.iFace;
 using TESTAPP.domain.account.sub;
 
@@ -62,29 +63,35 @@ namespace TESTAPP.domain.account
         }
 
 
-        public void GetResult(ref decimal amount,ref decimal resultInterest,ref decimal resultAmount,DateTime start,in DateTime end,List<VirtualLog> log)
+        public void GetResult(ref decimal amount,ref decimal resultInterest,ref decimal resultAmount,DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
         {
 
             if (SettleType == SettleType.단리)
             {
 
-                SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start,in end, log);
+                SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start,in end, log, in afterPlans);
             }
             else if(SettleType == SettleType.복리)
             {
-                CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start,in end, log);
+                CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start,in end, log,in afterPlans);
             }
 
         }
 
 
         // 단리
-        private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log)
+        private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
         {
             // 이후에 입/출금 계획 받아서 적용할 예정
-
             DateTime until = GetNextDate(start);
-            if (until.CompareTo(end) > 0) return; // 재귀 종료
+            if (until.CompareTo(end) > 0)
+            {
+                ReflectAfterPlan(amount, start, end, log, afterPlans, resultInterest);
+                return; // 재귀 종료
+            }
+
+
+            amount = ReflectAfterPlan(amount, start, until, log, afterPlans, resultInterest);
 
             decimal changedInterest = Interest;
 
@@ -112,19 +119,28 @@ namespace TESTAPP.domain.account
                 Total = resultAmount
             });
 
-            SimpleInterest(ref amount, ref resultInterest, ref resultAmount, until,in end,log);
+            SimpleInterest(ref amount, ref resultInterest, ref resultAmount, until, in end, log, afterPlans);
         }
 
+
+
         // 복리
-        private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log)
+        private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log, in List<AfterPlan> afterPlans)
         {
 
             DateTime until = GetNextDate(start);
-            if (until.CompareTo(end) > 0) return; // 재귀 종료
+
+            if (until.CompareTo(end) > 0)
+            {
+                ReflectAfterPlan(amount, until, end, log, afterPlans, resultInterest);
+                return; // 재귀 종료
+            }
 
             decimal changedInterest = Interest;
             DateTime now = DateTime.Now.Date;
-            
+
+            amount = ReflectAfterPlan(amount, start, until, log, afterPlans, resultInterest);
+
             changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
             changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
 
@@ -147,7 +163,7 @@ namespace TESTAPP.domain.account
             });
 
 
-            CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until,in end, log);
+            CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until,in end, log, afterPlans);
 
         }
 
@@ -155,20 +171,51 @@ namespace TESTAPP.domain.account
 
         private DateTime GetNextDate(DateTime time)
         {
+
+            DateTime dt = new DateTime();
+            dt = time;
             if (SettlePeriodType == SettlePeriodType.일)
             {
-                return time.AddDays(SettlePeriod);
+                return dt.AddDays(SettlePeriod);
             }
             else if (SettlePeriodType == SettlePeriodType.개월)
             {
-                return time.AddMonths(SettlePeriod);
+                return dt.AddMonths(SettlePeriod);
             }
             else if (SettlePeriodType == SettlePeriodType.년)
             {
-                return time.AddYears(SettlePeriod);
+                return dt.AddYears(SettlePeriod);
             }
-            return time;
+            return dt;
         }
+        private decimal ReflectAfterPlan(decimal amount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans,decimal resultInterest)
+        {
+            var ac = afterPlans
+                .Where((item) => (start.CompareTo(item.DateTime) < 0) && (item.DateTime.CompareTo(end) <= 0)).ToList();
+
+            amount += ac.Where((item)=> item.AccountLogType == AccountLogType.입금).Select((item) => item.Amount).Sum();
+            amount -= ac.Where((item) => item.AccountLogType == AccountLogType.출금).Select((item) => item.Amount).Sum();
+
+            if (amount < 0) throw new Exception("잔액이 0 이하로 되는 경우가 존재합니다.");
+
+            decimal tmpIn = resultInterest;
+            decimal tmp = amount + resultInterest;
+
+            foreach (var item in ac)
+            {
+                log.Add(new VirtualLog()
+                {
+                    AccountLogType = item.AccountLogType,
+                    DateTime = item.DateTime,
+                    Description = item.Description,
+                    Amount = item.Amount,
+                    Total = tmp
+                });
+            }
+
+            return amount;
+        }
+
 
         private decimal GetResultPeriodCondion(DateTime start,DateTime now)
         {
