@@ -121,13 +121,14 @@ namespace TESTAPP
         {
             SelectAccounts();
             AccountLogSetting();
+
+            
         }
         private void bt_Refresh_log_Click(object sender, EventArgs e)
         {
             Account ac = GetSelectedAccount();
 
             if (ac is null) return;
-
             AccountLogSetting(ac);
         }
 

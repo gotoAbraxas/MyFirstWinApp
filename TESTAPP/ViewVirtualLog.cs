@@ -23,7 +23,9 @@ namespace TESTAPP
         public List<VirtualLog> virtualLog { get; set; } = new List<VirtualLog>();
 
         public List<AfterPlan> afterPlans { get; set; } = new List<AfterPlan>();
-        public List<VirtualLogConditionaly> virtualLogConditionalies { get; set; } = new List<VirtualLogConditionaly>();
+        public List<VirtualLogConditionaly> virtualLogsConditionaly { get; set; } = new List<VirtualLogConditionaly>();
+
+        public List<VirtualLogformally> VirtualLogsformally { get; set; } = new List<VirtualLogformally>();
         public Period period { get; set; }
         public ViewVirtualLog()
         {
@@ -45,8 +47,10 @@ namespace TESTAPP
             GetResult(dt);
             }
             else 
-            { 
-            AccountLogConditionInit(dt);
+            {
+            AccountLogformallyInit(dt);
+
+            //AccountLogConditionInit(dt);
             GetResultConditionaly(dt);
             }
 
@@ -149,7 +153,7 @@ namespace TESTAPP
         {
             Calculate(VirtualDto.From, VirtualDto.From, VirtualDto.Until, period);
 
-            SetData(dt);
+            SetDataFormally(dt);
         }
 
         private void Calculate(DateTime standard, DateTime start, DateTime end, Period period)
@@ -159,27 +163,44 @@ namespace TESTAPP
             decimal income = 0;
             decimal withdraw = 0;
             decimal interest = 0;
-            decimal total = 0;
-            NewMethod(start, until, out income, out withdraw, out interest, out total);
+            decimal? total = null;
+            GetResult(start, until, out income, out withdraw, out interest, out total);
 
+
+            bool IsExistence = false;
             if (income > 0)
             {
-                virtualLogConditionalies.Add(
+
+                /*
+                virtualLogsConditionaly.Add(
                     new VirtualLogConditionaly()
                     {
                         Start = start,
                         End = until,
                         interest = 0,
                         Deposit = income,
-                        Total = null,
+                        Total = total,
                         Withdraw = 0
                     }
                 );
+
+                */
+                VirtualLogsformally.Add(
+                    new VirtualLogformally()
+                    {
+                        Start =start.ToShortDateString(),
+                        End = until.ToShortDateString(),
+                        Amount = income,
+                        Description = "입금"
+                    }
+                );
+                IsExistence = true;
             }
 
             if (withdraw > 0)
             {
-                virtualLogConditionalies.Add(
+                /*
+                virtualLogsConditionaly.Add(
                     new VirtualLogConditionaly()
                     {
                         Start = start,
@@ -190,11 +211,25 @@ namespace TESTAPP
                         Withdraw = withdraw
                     }
                 );
+
+                */
+                VirtualLogsformally.Add(
+                    new VirtualLogformally()
+                    {
+                    Start = IsExistence ? "": start.ToShortDateString(),
+                    End = IsExistence ? "": until.ToShortDateString(),
+                    Amount = withdraw,
+                    Description = "출금"
+                    }
+                );
+                IsExistence = true;
             }
 
             if (interest > 0)
             {
-                virtualLogConditionalies.Add(
+
+                /*
+                virtualLogsConditionaly.Add(
                     new VirtualLogConditionaly()
                     {
                         Start = start,
@@ -205,6 +240,23 @@ namespace TESTAPP
                         Withdraw = 0
                     }
                 );
+
+                */
+                VirtualLogsformally.Add(
+                   new VirtualLogformally()
+                   {
+                       Start = IsExistence ?"": start.ToShortDateString(),
+                       End = IsExistence ? "":until.ToShortDateString(),
+                       Amount = interest,
+                       Description = "이자"
+                   }
+               );
+                IsExistence = true;
+            }
+            if (IsExistence) 
+            { 
+            var last = VirtualLogsformally.Last();
+            last.Total = total;
             }
 
             if (until.CompareTo(end) > 0) return;
@@ -220,7 +272,7 @@ namespace TESTAPP
             }
         }
 
-        private void NewMethod(DateTime start, DateTime until, out decimal income, out decimal withdraw, out decimal interest, out decimal total)
+        private void GetResult(DateTime start, DateTime until, out decimal income, out decimal withdraw, out decimal interest, out decimal? total)
         {
             var table = virtualLog
                             .Where((log) => start.CompareTo(log.DateTime.Date) <= 0 && log.DateTime.Date.CompareTo(until) < 0);
@@ -237,7 +289,7 @@ namespace TESTAPP
 
             interest = table.Where((log) => log.Description.Equals("이자"))
                  .Select(log => log.Amount).Sum();
-
+            // 여기서 에러 생길수도
             total = table
                 .OrderBy((log) => log.DateTime)
                 .Select((log) => log.Total)
@@ -270,7 +322,7 @@ namespace TESTAPP
 
         private void SetData(DataTable dt)
         {
-            foreach (var item in virtualLogConditionalies)
+            foreach (var item in virtualLogsConditionaly)
             {
                 dt.Rows.Add(
                     "sample",
@@ -284,8 +336,24 @@ namespace TESTAPP
             }
         }
 
+        private void SetDataFormally(DataTable dt)
+        {
+            foreach (var item in VirtualLogsformally)
+            {
+                dt.Rows.Add(
+                    "sample",
+                    item.Start,
+                    item.End,
+                    PrettyValue(item.Amount),
+                    PrettyValue(item.Total),
+                    item.Description);
+            }
+        }
+
         #endregion
 
+
+        #region "테이블 세팅"
         private void AccountLogInit(DataTable dt)
         {
             dt.Columns.Add("id", typeof(string));
@@ -334,6 +402,31 @@ namespace TESTAPP
             };
             
         }
+
+        private void AccountLogformallyInit(DataTable dt)
+        {
+            dt.Columns.Add("id", typeof(string));
+            dt.Columns.Add("From", typeof(string));
+            dt.Columns.Add("To", typeof(string));
+            dt.Columns.Add("금액", typeof(string));
+            dt.Columns.Add("잔액", typeof(string));
+            dt.Columns.Add("비고", typeof(string));
+
+            dgv_virtualView.DataSource = dt;
+
+            dgv_virtualView.DataBindingComplete += (sender, o) =>
+            {
+                dgv_virtualView.Columns["금액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dgv_virtualView.Columns["잔액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+                dgv_virtualView.Columns["금액"].Width = 100;
+                dgv_virtualView.Columns["잔액"].Width = 100;
+                dgv_virtualView.Columns["id"].Width = 60;
+
+            };
+        }
+
+        #endregion
 
         private void button1_Click(object sender, EventArgs e)
         {
