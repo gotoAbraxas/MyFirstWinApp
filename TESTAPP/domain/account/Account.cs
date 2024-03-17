@@ -28,7 +28,7 @@ namespace TESTAPP.domain.account
     internal class Account : IAccount
     {
         #region "생성자"
-
+        
         public Account() { }
 
         #endregion

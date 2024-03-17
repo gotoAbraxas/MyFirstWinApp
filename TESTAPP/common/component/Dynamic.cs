@@ -86,7 +86,7 @@ namespace TESTAPP.common.component
             // 금액 1,000,000 이렇게 찍어주는 로직
             if (form.Controls.Find(name, true).FirstOrDefault() is TextBox control)
             {
-                if (decimal.TryParse(control.Text, out decimal result))
+                if (decimal.TryParse(control.Text, out decimal result) && result >= 0)
                 {
                     control.Text = string.Format("{0:#,##0}", result);
                     control.SelectionStart = control.TextLength;

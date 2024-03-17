@@ -22,8 +22,6 @@ namespace TESTAPP
         List<Control> ConditionControler = new List<Control>();
 
         private readonly string txt_Condition = "txt_Condition";
-        private readonly string ch_Condition = "ch_Condition";
-        private readonly string bt_Condition = "bt_Condition";
         private readonly string dtp_Condition = "dtp_Condition";
         private readonly string lb_Condition = "lb_Condition";
         private readonly string cb_Condition = "cb_Condition";

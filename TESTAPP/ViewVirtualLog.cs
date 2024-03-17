@@ -54,8 +54,25 @@ namespace TESTAPP
             GetResultConditionaly(dt);
             }
 
-            
+            CombineResult();
 
+        }
+
+        private void CombineResult()
+        {// 근데 이 작업은 로그를 첨 더할때 하면되긴함 .. 굳이 이렇게 하면 성능이 떨어지는데 고민임
+
+            var Get = virtualLog.Where((data) => data.AccountLogType.Equals(AccountLogType.입금));
+
+            decimal? TotalInterest =  Get.Where((data) => data.Description =="이자").Select((data) => data.Amount).Sum();
+            decimal? TotalIncome = Get.Where((data) => data.Description != "이자").Select((data) => data.Amount).Sum();
+            decimal? TotalWithdraw = virtualLog.Where((data) => data.AccountLogType.Equals(AccountLogType.출금)).Select((data) => data.Amount).Sum();
+            decimal? TotalAmount = virtualLog.Last().Total;
+
+            txt_View_Amount.Text = PrettyValue(TotalAmount);
+            txt_View_income.Text = PrettyValue(TotalIncome);
+            txt_View_interest.Text = PrettyValue(TotalInterest);
+            txt_View_withdraw.Text = PrettyValue(TotalWithdraw);
+            
         }
 
         #region "서비스 세팅"
@@ -211,8 +228,10 @@ namespace TESTAPP
                         Withdraw = withdraw
                     }
                 );
-
+                
                 */
+
+                
                 VirtualLogsformally.Add(
                     new VirtualLogformally()
                     {

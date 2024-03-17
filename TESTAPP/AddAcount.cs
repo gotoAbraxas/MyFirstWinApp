@@ -16,10 +16,7 @@ namespace TESTAPP
 
         private readonly string txt_Condition_st = "txt_Condition_st";
         private readonly string txt_Condition_ed = "txt_Condition_ed";
-        private readonly string ch_Condition = "ch_Condition";
-        private readonly string lb_Condition = "lb_Condition";
         private readonly string txt_Condition_interest = "txt_Condition_interest";
-        private readonly string cb_Condition = "cb_Condition";
 
         List<Control> ConditionControler = new List<Control>();
         private AccountService accountService;
