@@ -22,8 +22,6 @@ namespace TESTAPP
         List<Control> ConditionControler = new List<Control>();
 
         private readonly string txt_Condition = "txt_Condition";
-        private readonly string ch_Condition = "ch_Condition";
-        private readonly string bt_Condition = "bt_Condition";
         private readonly string dtp_Condition = "dtp_Condition";
         private readonly string lb_Condition = "lb_Condition";
         private readonly string cb_Condition = "cb_Condition";
@@ -121,13 +119,14 @@ namespace TESTAPP
         {
             SelectAccounts();
             AccountLogSetting();
+
+            
         }
         private void bt_Refresh_log_Click(object sender, EventArgs e)
         {
             Account ac = GetSelectedAccount();
 
             if (ac is null) return;
-
             AccountLogSetting(ac);
         }
 
@@ -170,6 +169,7 @@ namespace TESTAPP
             DateTime standard = DateTime.Now.Date.AddDays(1);
             DateTimePicker dtp = new DateTimePicker();
             dtp.MinDate = standard;
+            dtp.Value = standard;
 
             ComboBox cb = new ComboBox();
             SetEnumToCombo<AccountLogType>(cb);
@@ -178,10 +178,10 @@ namespace TESTAPP
 
             DynamicInsert<FlowLayoutPanel>(this, layout, flowLayoutPanel, width: flowLayoutPanel.Width-10, height: 40);
 
-            DynamicInsert<DateTimePicker>(this, dtp, layout, $"{dtp_Condition}{ConditionControler.Count}", "", 110, 30);
-            DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition}{ConditionControler.Count}", "", 120, 30);
+            DynamicInsert<DateTimePicker>(this, dtp, layout, $"{dtp_Condition}{ConditionControler.Count}", 110, 30);
+            DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition}{ConditionControler.Count}", 120, 30);
             DynamicLabelInsert(this, new Label(), layout, $"{lb_Condition}{ConditionControler.Count}", "원", 25, 30);
-            DynamicInsert<ComboBox>(this, cb, layout, $"{cb_Condition}{ConditionControler.Count}", "", 50, 30);
+            DynamicInsert<ComboBox>(this, cb, layout, $"{cb_Condition}{ConditionControler.Count}", 50, 30);
             ConditionControler.Add(layout);
         }
 
@@ -245,7 +245,7 @@ namespace TESTAPP
         private void AccountLogSetting()
         {
             DataTable dt = AccountLogInit();
-            grid_accountLog.DataSource = dt;
+
         }
         private void AccountLogSetting(Account account)
         {
@@ -259,9 +259,6 @@ namespace TESTAPP
             {
                 dt.Rows.Add("sample", item.DateTime, item.AccountLogType, string.Format("{0:#,##0}", item.Amount), string.Format("{0:#,##0}", item.Total), item.Description);
             }
-
-            grid_accountLog.DataSource = dt;
-
 
         }
         private DataTable AccountLogInit()

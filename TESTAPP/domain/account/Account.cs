@@ -28,7 +28,7 @@ namespace TESTAPP.domain.account
     internal class Account : IAccount
     {
         #region "생성자"
-
+        
         public Account() { }
 
         #endregion
@@ -169,11 +169,9 @@ namespace TESTAPP.domain.account
 
 
 
-        private DateTime GetNextDate(DateTime time)
+        private DateTime GetNextDate(DateTime dt)
         {
 
-            DateTime dt = new DateTime();
-            dt = time;
             if (SettlePeriodType == SettlePeriodType.일)
             {
                 return dt.AddDays(SettlePeriod);
