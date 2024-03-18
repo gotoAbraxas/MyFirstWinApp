@@ -17,6 +17,7 @@ namespace TESTAPP
         private readonly string txt_Condition_st = "txt_Condition_st";
         private readonly string txt_Condition_ed = "txt_Condition_ed";
         private readonly string txt_Condition_interest = "txt_Condition_interest";
+        private readonly string bt_Condition_interest = "bt_Condition_interest";
 
         List<Control> ConditionControler = new List<Control>();
         private AccountService accountService;
@@ -181,12 +182,11 @@ namespace TESTAPP
             }
         }
 
-
         private void AddAmountCondition()
         {
             FlowLayoutPanel layout = new FlowLayoutPanel();
 
-            ComboBox cb = new ComboBox();
+            Button bt = PlusMinusBt();
 
             DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, width: flp_Condition.Width - 10, height: 35);
 
@@ -195,21 +195,18 @@ namespace TESTAPP
             DynamicLabelInsert(this, new Label(), layout, "", "~", 10, 30);
             DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition_ed}{ConditionControler.Count}", 130, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "원", 20, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "+", 10, 30);
+            DynamicInsert<Button>(this, bt, layout, $"{bt_Condition_interest}{ConditionControler.Count}", 20, 20);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
             ConditionControler.Add(layout);
 
-            cb.Items.Add("+");
-            cb.Items.Add("-");
-            cb.SelectedIndex = 0;
-
-            
         }
 
         private void AddPeriodCondion()
         {
             FlowLayoutPanel layout = new FlowLayoutPanel();
+            Button bt = PlusMinusBt();
+
             DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, width: flp_Condition.Width - 10, height: 35);
 
             DynamicLabelInsert(this, new Label(), layout, $"{AddConditionType.기간}{ConditionControler.Count}", AddConditionType.기간.ToString(), 30, 30);
@@ -218,11 +215,32 @@ namespace TESTAPP
             DynamicLabelInsert(this, new Label(), layout, "", "~", 20, 30);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_ed}{ConditionControler.Count}", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "개월", 30, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "+", 10, 30);
+            DynamicInsert<Button>(this, bt, layout, $"{bt_Condition_interest}{ConditionControler.Count}", 20, 20);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
             ConditionControler.Add(layout);
         }
+        private Button PlusMinusBt()
+        {
+            Button bt = new Button
+            {
+                Text = "+"
+            };
+            bt.Click += (sender, o) =>
+            {
+                if (bt.Text.Equals("+"))
+                {
+                    bt.Text = "-";
+                }
+                else
+                {
+                    bt.Text = "+";
+                }
+            };
+            return bt;
+        }
+
+
         #endregion
 
         #region "계좌 저장"
@@ -276,27 +294,30 @@ namespace TESTAPP
             {
                 if (GetControlValue<Label>(this, $"{AddConditionType.기간}{i}") == AddConditionType.기간.ToString())
                 {
-                    GetConditionValues(i, out string start, out string end, out string interest);
+                    GetConditionValues(i, out string start, out string end, out string interest, out int sign);
 
-                    SetPeriodConditions(periodConditions, start, end, interest);
+                    SetPeriodConditions(periodConditions, start, end, interest,sign);
 
                 }
                 else if (GetControlValue<Label>(this, $"{AddConditionType.금액}{i}") == AddConditionType.금액.ToString())
                 {
-                    GetConditionValues(i, out string start, out string end, out string interest);
+                    GetConditionValues(i, out string start, out string end, out string interest,out int sign);
 
-                    SetAmountConditions(amountConditions, start, end, interest);
+                    SetAmountConditions(amountConditions, start, end, interest, sign);
                 }
             }
         }
-        private void GetConditionValues(int i, out string start, out string end, out string interest)
+        private void GetConditionValues(int i, out string start, out string end, out string interest,out int sign)
         {
             start = GetControlValue<TextBox>(this, $"{txt_Condition_st}{i}");
             end = GetControlValue<TextBox>(this, $"{txt_Condition_ed}{i}");
             interest = GetControlValue<TextBox>(this, $"{txt_Condition_interest}{i}");
+            sign = GetControl<Button>(this, $"{bt_Condition_interest}{i}").Text.Equals("+") ? 1 : -1;
         }
 
-        private static void SetPeriodConditions(List<PeriodCondition> periodConditions, string start, string end, string interest)
+
+        // 이거 두개 잘하면 합침 .. 
+        private void SetPeriodConditions(List<PeriodCondition> periodConditions, string start, string end, string interest, int sign)
         {
 
             // 조건 식은 따로 메소드로 빼는 것도 괜찮아보임
@@ -309,7 +330,7 @@ namespace TESTAPP
                 {
                     StartValue = startValue,
                     EndValue = endValue,
-                    ChangedValue = interestValue / 100,
+                    ChangedValue = (interestValue / 100) * sign,
                 };
                 periodConditions.Add(condition);
             }
@@ -319,21 +340,23 @@ namespace TESTAPP
             }
         }
 
-        private static void SetAmountConditions(List<AmountCondition> amountConditions, string start, string end, string interest)
+        private void SetAmountConditions(List<AmountCondition> amountConditions, string start, string end, string interest,int sign)
         {
-            if (decimal.TryParse(start, out decimal startValue) && decimal.TryParse(end, out decimal endValue) && decimal.TryParse(interest, out decimal interestValue))
+            if (decimal.TryParse(start, out decimal startValue) 
+                && decimal.TryParse(end, out decimal endValue) 
+                && decimal.TryParse(interest, out decimal interestValue)
+                && startValue < endValue)
             {
                 AmountCondition condition = new AmountCondition()
                 {
                     StartValue = startValue,
                     EndValue = endValue,
-                    ChangedValue = interestValue / 100,
+                    ChangedValue = (interestValue / 100) * sign,
                 };
                 amountConditions.Add(condition);
             }
             else
             {
-
                 throw new Exception("우대 금리 조건에 잘못된 값이 있습니다. 확인 바랍니다.");
             }
         }
