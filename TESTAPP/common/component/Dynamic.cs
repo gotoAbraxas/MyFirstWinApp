@@ -30,7 +30,7 @@ namespace TESTAPP.common.component
         {
             control.TextAlign = ContentAlignment.MiddleRight;
             control.Text = text;
-            DynamicInsert<Label>(form, control, pannel, "", width, height);
+            DynamicInsert<Label>(form, control, pannel, name, width, height);
         }
         #endregion
 

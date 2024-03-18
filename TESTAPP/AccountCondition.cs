@@ -53,7 +53,19 @@ namespace TESTAPP
         {
             string start = $"{String.Format("{0:#,##0}", amountCondition.StartValue)}원";
             string end = $"{String.Format("{0:#,##0}", amountCondition.EndValue)}원";
-            string interest = $"{Math.Round(amountCondition.ChangedValue * 100, 0)}";
+            string interest = $"{Math.Abs(Math.Round(amountCondition.ChangedValue * 100, 0))}";
+
+            Label lb = new Label();
+
+            if(amountCondition.ChangedValue >= 0)
+            {
+                lb.Text = "+";
+            }
+            else
+            {
+                lb.Text = "-";
+            }
+
 
             FlowLayoutPanel layout = new FlowLayoutPanel();
             DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, "", flp_Condition.Width - 10, 35);
@@ -62,16 +74,28 @@ namespace TESTAPP
             DynamicLabelInsert(this, new Label(), layout, "", start, 120, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "~", 10, 30);
             DynamicLabelInsert(this, new Label(), layout, "", end, 120, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "+", 10, 30);
+            DynamicLabelInsert(this, lb, layout, "", lb.Text, 10, 30);
             DynamicLabelInsert(this, new Label(), layout, "", interest, 15, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
-            DynamicCheckBox(this, new CheckBox(), layout, amountCondition.Applyed, "적용", 70, 30);
+            //DynamicCheckBox(this, new CheckBox(), layout, amountCondition.Applyed, "적용", 70, 30);
         }
         private void DrawPeriodCondition(PeriodCondition periodCondition)
         {
             string start = $"{periodCondition.StartValue}개월";
             string end = $"{periodCondition.EndValue}개월";
-            string interest = $"{Math.Round(periodCondition.ChangedValue * 100, 0)}";
+            string interest = $"{Math.Abs(Math.Round(periodCondition.ChangedValue * 100, 0))}";
+
+
+            Label lb = new Label();
+
+            if (periodCondition.ChangedValue >= 0)
+            {
+                lb.Text = "+";
+            }
+            else
+            {
+                lb.Text = "-";
+            }
 
             FlowLayoutPanel layout = new FlowLayoutPanel();
             DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, "", flp_Condition.Width - 10, 35);
@@ -80,10 +104,10 @@ namespace TESTAPP
             DynamicLabelInsert(this, new Label(), layout, "", start, 120, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "~", 10, 30);
             DynamicLabelInsert(this, new Label(), layout, "", end, 120, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "+", 10, 30);
+            DynamicLabelInsert(this, lb, layout, "", lb.Text, 10, 30);
             DynamicLabelInsert(this, new Label(), layout, "", interest, 15, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
-            DynamicCheckBox(this, new CheckBox(), layout, periodCondition.Applyed, "적용", 70, 30);
+           // DynamicCheckBox(this, new CheckBox(), layout, periodCondition.Applyed, "적용", 70, 30);
         }
 
         private void bt_AccountCondition_Click(object sender, EventArgs e)

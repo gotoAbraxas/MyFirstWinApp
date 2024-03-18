@@ -189,28 +189,42 @@ namespace TESTAPP.domain.account
         private decimal ReflectAfterPlan(decimal amount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans,decimal resultInterest)
         {
             var ac = afterPlans
-                .Where((item) => (start.CompareTo(item.DateTime) < 0) && (item.DateTime.CompareTo(end) <= 0)).ToList();
+                .Where((item) => (start.CompareTo(item.DateTime) < 0) && (item.DateTime.CompareTo(end) <= 0))
+                .OrderBy((item)=>item.DateTime).ToList();
 
-            amount += ac.Where((item)=> item.AccountLogType == AccountLogType.입금).Select((item) => item.Amount).Sum();
-            amount -= ac.Where((item) => item.AccountLogType == AccountLogType.출금).Select((item) => item.Amount).Sum();
 
-            if (amount < 0) throw new Exception("잔액이 0 이하로 되는 경우가 존재합니다.");
-
-            decimal tmpIn = resultInterest;
-            decimal tmp = amount + resultInterest;
-
-            foreach (var item in ac)
+            foreach (var afterPlan in ac)
             {
-                log.Add(new VirtualLog()
+                decimal amountChange;
+                if (afterPlan.AccountLogType == AccountLogType.입금)
                 {
-                    AccountLogType = item.AccountLogType,
-                    DateTime = item.DateTime,
-                    Description = item.Description,
-                    Amount = item.Amount,
-                    Total = tmp
-                });
-            }
+                    amountChange = afterPlan.Amount;
+                }
+                else if (afterPlan.AccountLogType == AccountLogType.출금)
+                {
+                    amountChange = -afterPlan.Amount;
+                }
+                else
+                {
+                    throw new ArgumentException("Unexpected AccountLogType");
+                }
 
+                amount += amountChange;
+                if (amount < 0)
+                {
+                    throw new Exception("잔액이 0 이하로 되는 경우가 존재합니다.");
+                }
+
+                log.Add(new VirtualLog
+                {
+                    AccountLogType = afterPlan.AccountLogType,
+                    DateTime = afterPlan.DateTime,
+                    Description = afterPlan.Description,
+                    Amount = afterPlan.Amount,
+                    Total = amount + resultInterest
+                });
+
+            }
             return amount;
         }
 
