@@ -53,14 +53,15 @@
             this.txt_SettlePeriod = new System.Windows.Forms.TextBox();
             this.cb_SettlePeriod = new System.Windows.Forms.ComboBox();
             this.cb_AddCondition = new System.Windows.Forms.ComboBox();
+            this.lb_standardInterest = new System.Windows.Forms.Label();
+            this.txt_standardInterest = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // bt_AddAcount_save
             // 
-            this.bt_AddAcount_save.Location = new System.Drawing.Point(484, 645);
-            this.bt_AddAcount_save.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bt_AddAcount_save.Location = new System.Drawing.Point(339, 430);
             this.bt_AddAcount_save.Name = "bt_AddAcount_save";
-            this.bt_AddAcount_save.Size = new System.Drawing.Size(91, 34);
+            this.bt_AddAcount_save.Size = new System.Drawing.Size(64, 23);
             this.bt_AddAcount_save.TabIndex = 0;
             this.bt_AddAcount_save.Text = "저장하기";
             this.bt_AddAcount_save.UseVisualStyleBackColor = true;
@@ -68,10 +69,9 @@
             // 
             // bt_AddAcount_cancel
             // 
-            this.bt_AddAcount_cancel.Location = new System.Drawing.Point(613, 645);
-            this.bt_AddAcount_cancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bt_AddAcount_cancel.Location = new System.Drawing.Point(429, 430);
             this.bt_AddAcount_cancel.Name = "bt_AddAcount_cancel";
-            this.bt_AddAcount_cancel.Size = new System.Drawing.Size(91, 34);
+            this.bt_AddAcount_cancel.Size = new System.Drawing.Size(64, 23);
             this.bt_AddAcount_cancel.TabIndex = 1;
             this.bt_AddAcount_cancel.Text = "취소";
             this.bt_AddAcount_cancel.UseVisualStyleBackColor = true;
@@ -81,97 +81,87 @@
             // 
             this.cb_AccountType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_AccountType.FormattingEnabled = true;
-            this.cb_AccountType.Location = new System.Drawing.Point(161, 26);
-            this.cb_AccountType.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cb_AccountType.Location = new System.Drawing.Point(113, 17);
             this.cb_AccountType.Name = "cb_AccountType";
-            this.cb_AccountType.Size = new System.Drawing.Size(105, 26);
+            this.cb_AccountType.Size = new System.Drawing.Size(75, 20);
             this.cb_AccountType.TabIndex = 2;
             this.cb_AccountType.SelectedIndexChanged += new System.EventHandler(this.cb_AccountType_SelectedIndexChanged);
             // 
             // lb_AccountType
             // 
             this.lb_AccountType.AutoSize = true;
-            this.lb_AccountType.Location = new System.Drawing.Point(16, 32);
-            this.lb_AccountType.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lb_AccountType.Location = new System.Drawing.Point(11, 21);
             this.lb_AccountType.Name = "lb_AccountType";
-            this.lb_AccountType.Size = new System.Drawing.Size(86, 18);
+            this.lb_AccountType.Size = new System.Drawing.Size(57, 12);
             this.lb_AccountType.TabIndex = 3;
             this.lb_AccountType.Text = "계좌 유형";
             // 
             // txt_AccountType
             // 
             this.txt_AccountType.Enabled = false;
-            this.txt_AccountType.Location = new System.Drawing.Point(279, 24);
-            this.txt_AccountType.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txt_AccountType.Location = new System.Drawing.Point(195, 16);
             this.txt_AccountType.Name = "txt_AccountType";
-            this.txt_AccountType.Size = new System.Drawing.Size(107, 28);
+            this.txt_AccountType.Size = new System.Drawing.Size(76, 21);
             this.txt_AccountType.TabIndex = 4;
             this.txt_AccountType.Visible = false;
             // 
             // txt_AccountName
             // 
-            this.txt_AccountName.Location = new System.Drawing.Point(161, 80);
-            this.txt_AccountName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txt_AccountName.Location = new System.Drawing.Point(113, 53);
             this.txt_AccountName.Name = "txt_AccountName";
-            this.txt_AccountName.Size = new System.Drawing.Size(140, 28);
+            this.txt_AccountName.Size = new System.Drawing.Size(99, 21);
             this.txt_AccountName.TabIndex = 5;
             this.txt_AccountName.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lb_AccountName
             // 
             this.lb_AccountName.AutoSize = true;
-            this.lb_AccountName.Location = new System.Drawing.Point(17, 86);
-            this.lb_AccountName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lb_AccountName.Location = new System.Drawing.Point(12, 57);
             this.lb_AccountName.Name = "lb_AccountName";
-            this.lb_AccountName.Size = new System.Drawing.Size(86, 18);
+            this.lb_AccountName.Size = new System.Drawing.Size(57, 12);
             this.lb_AccountName.TabIndex = 6;
             this.lb_AccountName.Text = "계좌 이름";
             // 
             // lb_AccountNumber
             // 
             this.lb_AccountNumber.AutoSize = true;
-            this.lb_AccountNumber.Location = new System.Drawing.Point(17, 132);
-            this.lb_AccountNumber.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lb_AccountNumber.Location = new System.Drawing.Point(12, 88);
             this.lb_AccountNumber.Name = "lb_AccountNumber";
-            this.lb_AccountNumber.Size = new System.Drawing.Size(86, 18);
+            this.lb_AccountNumber.Size = new System.Drawing.Size(57, 12);
             this.lb_AccountNumber.TabIndex = 7;
             this.lb_AccountNumber.Text = "계좌 번호";
             // 
             // txt_AccountNumber
             // 
-            this.txt_AccountNumber.Location = new System.Drawing.Point(161, 128);
-            this.txt_AccountNumber.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txt_AccountNumber.Location = new System.Drawing.Point(113, 85);
             this.txt_AccountNumber.Name = "txt_AccountNumber";
-            this.txt_AccountNumber.Size = new System.Drawing.Size(204, 28);
+            this.txt_AccountNumber.Size = new System.Drawing.Size(144, 21);
             this.txt_AccountNumber.TabIndex = 8;
             this.txt_AccountNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lb_Interest
             // 
             this.lb_Interest.AutoSize = true;
-            this.lb_Interest.Location = new System.Drawing.Point(16, 183);
-            this.lb_Interest.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lb_Interest.Location = new System.Drawing.Point(11, 122);
             this.lb_Interest.Name = "lb_Interest";
-            this.lb_Interest.Size = new System.Drawing.Size(122, 36);
+            this.lb_Interest.Size = new System.Drawing.Size(83, 24);
             this.lb_Interest.TabIndex = 9;
             this.lb_Interest.Text = "기본 이율 \r\n( 기대 수익률)";
             // 
             // txt_Interest
             // 
-            this.txt_Interest.Location = new System.Drawing.Point(163, 177);
-            this.txt_Interest.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txt_Interest.Location = new System.Drawing.Point(114, 118);
             this.txt_Interest.Name = "txt_Interest";
-            this.txt_Interest.Size = new System.Drawing.Size(105, 28);
+            this.txt_Interest.Size = new System.Drawing.Size(75, 21);
             this.txt_Interest.TabIndex = 10;
             this.txt_Interest.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lb_SettleType
             // 
             this.lb_SettleType.AutoSize = true;
-            this.lb_SettleType.Location = new System.Drawing.Point(16, 236);
-            this.lb_SettleType.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lb_SettleType.Location = new System.Drawing.Point(11, 157);
             this.lb_SettleType.Name = "lb_SettleType";
-            this.lb_SettleType.Size = new System.Drawing.Size(86, 18);
+            this.lb_SettleType.Size = new System.Drawing.Size(57, 12);
             this.lb_SettleType.TabIndex = 11;
             this.lb_SettleType.Text = "적용 방식";
             // 
@@ -179,37 +169,33 @@
             // 
             this.cb_SettleType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_SettleType.FormattingEnabled = true;
-            this.cb_SettleType.Location = new System.Drawing.Point(163, 230);
-            this.cb_SettleType.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cb_SettleType.Location = new System.Drawing.Point(114, 153);
             this.cb_SettleType.Name = "cb_SettleType";
-            this.cb_SettleType.Size = new System.Drawing.Size(105, 26);
+            this.cb_SettleType.Size = new System.Drawing.Size(75, 20);
             this.cb_SettleType.TabIndex = 12;
             // 
             // lb_InterestCondition
             // 
             this.lb_InterestCondition.AutoSize = true;
-            this.lb_InterestCondition.Location = new System.Drawing.Point(696, 45);
-            this.lb_InterestCondition.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lb_InterestCondition.Location = new System.Drawing.Point(487, 30);
             this.lb_InterestCondition.Name = "lb_InterestCondition";
-            this.lb_InterestCondition.Size = new System.Drawing.Size(128, 18);
+            this.lb_InterestCondition.Size = new System.Drawing.Size(85, 12);
             this.lb_InterestCondition.TabIndex = 13;
             this.lb_InterestCondition.Text = "우대 금리 조건";
             // 
             // flp_Condition
             // 
             this.flp_Condition.AutoScroll = true;
-            this.flp_Condition.Location = new System.Drawing.Point(516, 81);
-            this.flp_Condition.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flp_Condition.Location = new System.Drawing.Point(361, 54);
             this.flp_Condition.Name = "flp_Condition";
-            this.flp_Condition.Size = new System.Drawing.Size(674, 495);
+            this.flp_Condition.Size = new System.Drawing.Size(472, 330);
             this.flp_Condition.TabIndex = 14;
             // 
             // bt_AddCondition
             // 
-            this.bt_AddCondition.Location = new System.Drawing.Point(956, 40);
-            this.bt_AddCondition.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bt_AddCondition.Location = new System.Drawing.Point(669, 27);
             this.bt_AddCondition.Name = "bt_AddCondition";
-            this.bt_AddCondition.Size = new System.Drawing.Size(61, 28);
+            this.bt_AddCondition.Size = new System.Drawing.Size(43, 19);
             this.bt_AddCondition.TabIndex = 15;
             this.bt_AddCondition.Text = "추가";
             this.bt_AddCondition.UseVisualStyleBackColor = true;
@@ -218,30 +204,27 @@
             // ut_Interest
             // 
             this.ut_Interest.AutoSize = true;
-            this.ut_Interest.Location = new System.Drawing.Point(279, 184);
-            this.ut_Interest.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.ut_Interest.Location = new System.Drawing.Point(195, 123);
             this.ut_Interest.Name = "ut_Interest";
-            this.ut_Interest.Size = new System.Drawing.Size(22, 18);
+            this.ut_Interest.Size = new System.Drawing.Size(15, 12);
             this.ut_Interest.TabIndex = 16;
             this.ut_Interest.Text = "%";
             // 
             // lb_Preferent
             // 
             this.lb_Preferent.AutoSize = true;
-            this.lb_Preferent.Location = new System.Drawing.Point(16, 386);
-            this.lb_Preferent.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lb_Preferent.Location = new System.Drawing.Point(11, 306);
             this.lb_Preferent.Name = "lb_Preferent";
-            this.lb_Preferent.Size = new System.Drawing.Size(44, 18);
+            this.lb_Preferent.Size = new System.Drawing.Size(29, 12);
             this.lb_Preferent.TabIndex = 17;
             this.lb_Preferent.Text = "금액";
             // 
             // ch_CheckPreferent
             // 
             this.ch_CheckPreferent.AutoSize = true;
-            this.ch_CheckPreferent.Location = new System.Drawing.Point(20, 348);
-            this.ch_CheckPreferent.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ch_CheckPreferent.Location = new System.Drawing.Point(14, 281);
             this.ch_CheckPreferent.Name = "ch_CheckPreferent";
-            this.ch_CheckPreferent.Size = new System.Drawing.Size(196, 22);
+            this.ch_CheckPreferent.Size = new System.Drawing.Size(132, 16);
             this.ch_CheckPreferent.TabIndex = 18;
             this.ch_CheckPreferent.Text = "우대 금리 한도 여부";
             this.ch_CheckPreferent.UseVisualStyleBackColor = true;
@@ -249,10 +232,9 @@
             // 
             // txt_Preferent
             // 
-            this.txt_Preferent.Location = new System.Drawing.Point(159, 380);
-            this.txt_Preferent.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txt_Preferent.Location = new System.Drawing.Point(111, 302);
             this.txt_Preferent.Name = "txt_Preferent";
-            this.txt_Preferent.Size = new System.Drawing.Size(204, 28);
+            this.txt_Preferent.Size = new System.Drawing.Size(144, 21);
             this.txt_Preferent.TabIndex = 19;
             this.txt_Preferent.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txt_Preferent.TextChanged += new System.EventHandler(this.txt_Preferent_TextChanged);
@@ -260,29 +242,26 @@
             // lb_Preferent_limit
             // 
             this.lb_Preferent_limit.AutoSize = true;
-            this.lb_Preferent_limit.Location = new System.Drawing.Point(373, 384);
-            this.lb_Preferent_limit.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lb_Preferent_limit.Location = new System.Drawing.Point(261, 305);
             this.lb_Preferent_limit.Name = "lb_Preferent_limit";
-            this.lb_Preferent_limit.Size = new System.Drawing.Size(68, 18);
+            this.lb_Preferent_limit.Size = new System.Drawing.Size(45, 12);
             this.lb_Preferent_limit.TabIndex = 20;
             this.lb_Preferent_limit.Text = "원 까지";
             // 
             // lb_SettlePeriod
             // 
             this.lb_SettlePeriod.AutoSize = true;
-            this.lb_SettlePeriod.Location = new System.Drawing.Point(16, 300);
-            this.lb_SettlePeriod.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lb_SettlePeriod.Location = new System.Drawing.Point(11, 200);
             this.lb_SettlePeriod.Name = "lb_SettlePeriod";
-            this.lb_SettlePeriod.Size = new System.Drawing.Size(128, 18);
+            this.lb_SettlePeriod.Size = new System.Drawing.Size(85, 12);
             this.lb_SettlePeriod.TabIndex = 21;
             this.lb_SettlePeriod.Text = "이자 정산 주기";
             // 
             // txt_SettlePeriod
             // 
-            this.txt_SettlePeriod.Location = new System.Drawing.Point(159, 296);
-            this.txt_SettlePeriod.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txt_SettlePeriod.Location = new System.Drawing.Point(111, 197);
             this.txt_SettlePeriod.Name = "txt_SettlePeriod";
-            this.txt_SettlePeriod.Size = new System.Drawing.Size(108, 28);
+            this.txt_SettlePeriod.Size = new System.Drawing.Size(77, 21);
             this.txt_SettlePeriod.TabIndex = 22;
             this.txt_SettlePeriod.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -290,27 +269,43 @@
             // 
             this.cb_SettlePeriod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_SettlePeriod.FormattingEnabled = true;
-            this.cb_SettlePeriod.Location = new System.Drawing.Point(280, 296);
-            this.cb_SettlePeriod.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cb_SettlePeriod.Location = new System.Drawing.Point(196, 197);
             this.cb_SettlePeriod.Name = "cb_SettlePeriod";
-            this.cb_SettlePeriod.Size = new System.Drawing.Size(83, 26);
+            this.cb_SettlePeriod.Size = new System.Drawing.Size(59, 20);
             this.cb_SettlePeriod.TabIndex = 23;
             // 
             // cb_AddCondition
             // 
             this.cb_AddCondition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_AddCondition.FormattingEnabled = true;
-            this.cb_AddCondition.Location = new System.Drawing.Point(826, 40);
-            this.cb_AddCondition.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cb_AddCondition.Location = new System.Drawing.Point(578, 27);
             this.cb_AddCondition.Name = "cb_AddCondition";
-            this.cb_AddCondition.Size = new System.Drawing.Size(105, 26);
+            this.cb_AddCondition.Size = new System.Drawing.Size(75, 20);
             this.cb_AddCondition.TabIndex = 24;
+            // 
+            // lb_standardInterest
+            // 
+            this.lb_standardInterest.AutoSize = true;
+            this.lb_standardInterest.Location = new System.Drawing.Point(64, 233);
+            this.lb_standardInterest.Name = "lb_standardInterest";
+            this.lb_standardInterest.Size = new System.Drawing.Size(105, 12);
+            this.lb_standardInterest.TabIndex = 25;
+            this.lb_standardInterest.Text = "<-> 1년 기준 이율";
+            // 
+            // txt_standardInterest
+            // 
+            this.txt_standardInterest.Location = new System.Drawing.Point(175, 228);
+            this.txt_standardInterest.Name = "txt_standardInterest";
+            this.txt_standardInterest.Size = new System.Drawing.Size(48, 21);
+            this.txt_standardInterest.TabIndex = 26;
             // 
             // AddAcount
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1260, 705);
+            this.ClientSize = new System.Drawing.Size(882, 470);
+            this.Controls.Add(this.txt_standardInterest);
+            this.Controls.Add(this.lb_standardInterest);
             this.Controls.Add(this.cb_AddCondition);
             this.Controls.Add(this.cb_SettlePeriod);
             this.Controls.Add(this.txt_SettlePeriod);
@@ -336,7 +331,6 @@
             this.Controls.Add(this.cb_AccountType);
             this.Controls.Add(this.bt_AddAcount_cancel);
             this.Controls.Add(this.bt_AddAcount_save);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "AddAcount";
             this.Text = "AddAcount";
             this.Load += new System.EventHandler(this.AddAcount_Load);
@@ -372,5 +366,7 @@
         private System.Windows.Forms.TextBox txt_SettlePeriod;
         private System.Windows.Forms.ComboBox cb_SettlePeriod;
         private System.Windows.Forms.ComboBox cb_AddCondition;
+        private System.Windows.Forms.Label lb_standardInterest;
+        private System.Windows.Forms.TextBox txt_standardInterest;
     }
 }
