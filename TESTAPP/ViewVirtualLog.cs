@@ -48,9 +48,9 @@ namespace TESTAPP
             }
             else 
             {
-            AccountLogformallyInit(dt);
+            //AccountLogformallyInit(dt);
 
-            //AccountLogConditionInit(dt);
+            AccountLogConditionInit(dt);
             GetResultConditionaly(dt);
             }
 
@@ -170,7 +170,7 @@ namespace TESTAPP
         {
             Calculate(VirtualDto.From, VirtualDto.From, VirtualDto.Until, period);
 
-            SetDataFormally(dt);
+            SetData(dt);
         }
 
         private void Calculate(DateTime standard, DateTime start, DateTime end, Period period)
@@ -186,22 +186,7 @@ namespace TESTAPP
 
             bool IsExistence = false;
             if (income > 0)
-            {
-
-                /*
-                virtualLogsConditionaly.Add(
-                    new VirtualLogConditionaly()
-                    {
-                        Start = start,
-                        End = until,
-                        interest = 0,
-                        Deposit = income,
-                        Total = total,
-                        Withdraw = 0
-                    }
-                );
-
-                */
+            {          
                 VirtualLogsformally.Add(
                     new VirtualLogformally()
                     {
@@ -210,28 +195,12 @@ namespace TESTAPP
                         Amount = income,
                         Description = "입금"
                     }
-                );
+                );  
                 IsExistence = true;
             }
 
             if (withdraw > 0)
-            {
-                /*
-                virtualLogsConditionaly.Add(
-                    new VirtualLogConditionaly()
-                    {
-                        Start = start,
-                        End = until,
-                        interest = interest,
-                        Deposit = income,
-                        Total = total,
-                        Withdraw = withdraw
-                    }
-                );
-                
-                */
-
-                
+            {         
                 VirtualLogsformally.Add(
                     new VirtualLogformally()
                     {
@@ -246,21 +215,6 @@ namespace TESTAPP
 
             if (interest > 0)
             {
-
-                /*
-                virtualLogsConditionaly.Add(
-                    new VirtualLogConditionaly()
-                    {
-                        Start = start,
-                        End = until,
-                        interest = interest,
-                        Deposit = 0,
-                        Total = total,
-                        Withdraw = 0
-                    }
-                );
-
-                */
                 VirtualLogsformally.Add(
                    new VirtualLogformally()
                    {
@@ -272,6 +226,19 @@ namespace TESTAPP
                );
                 IsExistence = true;
             }
+
+            virtualLogsConditionaly.Add(
+                new VirtualLogConditionaly()
+                {
+                    Start = start,
+                    End = until,
+                    interest = interest,
+                    Deposit = income,
+                    Total = total,
+                    Withdraw = withdraw
+                }
+            );
+
             if (IsExistence) 
             { 
             var last = VirtualLogsformally.Last();
@@ -309,7 +276,8 @@ namespace TESTAPP
             interest = table.Where((log) => log.Description.Equals("이자"))
                  .Select(log => log.Amount).Sum();
             // 여기서 에러 생길수도
-            total = table
+            total = virtualLog
+                .Where((log) => log.DateTime.Date.CompareTo(until) < 0)
                 .OrderBy((log) => log.DateTime)
                 .Select((log) => log.Total)
                 .LastOrDefault();
@@ -379,7 +347,7 @@ namespace TESTAPP
             dt.Columns.Add("날짜", typeof(DateTime));
             dt.Columns.Add("입/출금", typeof(AccountLogType));
             dt.Columns.Add("금액", typeof(string));
-            dt.Columns.Add("잔액", typeof(string));
+            dt.Columns.Add("거래후잔액", typeof(string));
             dt.Columns.Add("비고", typeof(string));
 
             dgv_virtualView.DataSource = dt;
@@ -387,10 +355,10 @@ namespace TESTAPP
             dgv_virtualView.DataBindingComplete += (sender, o) =>
             {
                 dgv_virtualView.Columns["금액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                dgv_virtualView.Columns["잔액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dgv_virtualView.Columns["거래후잔액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
                 dgv_virtualView.Columns["금액"].Width = 100;
-                dgv_virtualView.Columns["잔액"].Width = 100;
+                dgv_virtualView.Columns["거래후잔액"].Width = 100;
                 dgv_virtualView.Columns["입/출금"].Width = 70;
                 dgv_virtualView.Columns["날짜"].Width = 140;
                 dgv_virtualView.Columns["id"].Width = 60;
@@ -407,7 +375,7 @@ namespace TESTAPP
             dt.Columns.Add("입금 총액", typeof(string));
             dt.Columns.Add("출금 총액", typeof(string));
             dt.Columns.Add("이자 총액", typeof(string));
-            dt.Columns.Add("잔액", typeof(string));
+            dt.Columns.Add("거래후잔액", typeof(string));
             dt.Columns.Add("비고", typeof(string));
 
             dgv_virtualView.DataSource = dt;
@@ -417,7 +385,7 @@ namespace TESTAPP
                 dgv_virtualView.Columns["입금 총액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 dgv_virtualView.Columns["출금 총액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 dgv_virtualView.Columns["이자 총액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                dgv_virtualView.Columns["잔액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dgv_virtualView.Columns["거래후잔액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             };
             
         }
