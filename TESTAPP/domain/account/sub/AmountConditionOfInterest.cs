@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TESTAPP.domain.account.sub
 {
-    internal class AmountCondition
+    internal class AmountConditionOfInterest
     {
         public decimal StartValue { get; set; }
         public decimal EndValue { get; set; }

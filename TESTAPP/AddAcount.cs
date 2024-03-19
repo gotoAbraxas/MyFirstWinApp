@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using TESTAPP.account.service;
 using TESTAPP.domain.account;
 using TESTAPP.domain.account.sub;
@@ -8,6 +9,8 @@ using static TESTAPP.common.component.Dynamic;
 
 namespace TESTAPP
 {
+
+    delegate void InterestDynamic(TextBox tb, double remain, double share, TextBox reflectbox);
 
     public partial class AddAcount : Form
     {
@@ -263,8 +266,8 @@ namespace TESTAPP
         private void ValidateValueBeforeSave(out Account account)
         {
 
-            List<AmountCondition> amountConditions = new List<AmountCondition>();
-            List<PeriodCondition> periodConditions = new List<PeriodCondition>();
+            List<AmountConditionOfInterest> amountConditions = new List<AmountConditionOfInterest>();
+            List<PeriodConditionOfInterest> periodConditions = new List<PeriodConditionOfInterest>();
 
             SetConditionValues(ref periodConditions, ref amountConditions);
 
@@ -287,7 +290,7 @@ namespace TESTAPP
             };
 
         }
-        private void SetConditionValues(ref List<PeriodCondition> periodConditions, ref List<AmountCondition> amountConditions)
+        private void SetConditionValues(ref List<PeriodConditionOfInterest> periodConditions, ref List<AmountConditionOfInterest> amountConditions)
         {
 
             for (int i = 0; i < ConditionControler.Count; i++)
@@ -317,7 +320,7 @@ namespace TESTAPP
 
 
         // 이거 두개 잘하면 합침 .. 
-        private void SetPeriodConditions(List<PeriodCondition> periodConditions, string start, string end, string interest, int sign)
+        private void SetPeriodConditions(List<PeriodConditionOfInterest> periodConditions, string start, string end, string interest, int sign)
         {
 
             // 조건 식은 따로 메소드로 빼는 것도 괜찮아보임
@@ -326,7 +329,7 @@ namespace TESTAPP
                 && decimal.TryParse(interest, out decimal interestValue)
                 && startValue < endValue)
             {
-                PeriodCondition condition = new PeriodCondition()
+                PeriodConditionOfInterest condition = new PeriodConditionOfInterest()
                 {
                     StartValue = startValue,
                     EndValue = endValue,
@@ -340,14 +343,14 @@ namespace TESTAPP
             }
         }
 
-        private void SetAmountConditions(List<AmountCondition> amountConditions, string start, string end, string interest,int sign)
+        private void SetAmountConditions(List<AmountConditionOfInterest> amountConditions, string start, string end, string interest,int sign)
         {
             if (decimal.TryParse(start, out decimal startValue) 
                 && decimal.TryParse(end, out decimal endValue) 
                 && decimal.TryParse(interest, out decimal interestValue)
                 && startValue < endValue)
             {
-                AmountCondition condition = new AmountCondition()
+                AmountConditionOfInterest condition = new AmountConditionOfInterest()
                 {
                     StartValue = startValue,
                     EndValue = endValue,
@@ -374,6 +377,61 @@ namespace TESTAPP
         {
             this.Close();
         }
+        #endregion
+
+        #region "이율 추산, 역추산"
+
+        // 합칠 수 있지만 굳이 싶은 부분.
+        private void CalculateFomalInterest(object sender, KeyEventArgs e)
+        {
+            TextBox tb = sender as TextBox;
+
+            if (double.TryParse(txt_SettlePeriod.Text, out double period)
+                && decimal.TryParse(tb.Text, out _))
+            {
+                int share = ConvertSettlePeriodDate((SettlePeriodType)cb_SettlePeriod.SelectedItem);
+
+                SetInterestDynamic(tb, share, period, txt_Interest);
+
+            }
+        }
+        private void CalculateStandardInterest(object sender, KeyEventArgs e)
+        {
+
+            TextBox tb = sender as TextBox;
+
+            if (double.TryParse(txt_SettlePeriod.Text, out double period)
+                && decimal.TryParse(tb.Text, out _))
+            {
+                int share = ConvertSettlePeriodDate((SettlePeriodType)cb_SettlePeriod.SelectedItem);
+
+                SetInterestDynamic(tb, period, share, txt_standardInterest);
+
+            }
+        }
+
+        private void ReflectRelatedValue(object sender, EventArgs e)
+        {
+            if (!double.TryParse(txt_SettlePeriod.Text, out double period)) return;
+            int share = ConvertSettlePeriodDate((SettlePeriodType)cb_SettlePeriod.SelectedItem);
+
+            if (decimal.TryParse(txt_Interest.Text, out _))
+            {
+                SetInterestDynamic(txt_Interest, period, share, txt_standardInterest);
+            }
+            else if (decimal.TryParse(txt_standardInterest.Text, out _))
+            {
+                SetInterestDynamic(txt_standardInterest, share, period, txt_Interest);
+            }
+        }
+
+        private void SetInterestDynamic(TextBox tb,double remain,double share, TextBox reflectbox)
+        {
+            // 연단위 이자를 일,월 등의 이자로 쪼개거나 /반대로 일,월 등의 이자를 연단위로 합쳐주는 메소드
+            decimal approximation = ConvertInterest((SettleType)cb_SettleType.SelectedItem, tb.Text, remain, share);
+            reflectbox.Text = approximation.ToString();
+        }
+
         #endregion
 
     }

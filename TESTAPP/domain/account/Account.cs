@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using TESTAPP.domain.account.iFace;
 using TESTAPP.domain.account.sub;
+using static TESTAPP.common.component.Dynamic;
 
 namespace TESTAPP.domain.account
 {
@@ -40,11 +41,12 @@ namespace TESTAPP.domain.account
         public string Name { get; set; } // 계좌 이름
         public string Name_AccountId { get; set; } // 최종 식별 코드
         public decimal Interest {  get; set; } // 이율
+        public decimal UnitPeriodInterest { get; set; } // 단위 기간 이율 
         public decimal Amount { get; set; } = 0; // 통장잔액
         public List<AccountLog> Log { get; set; } = new List<AccountLog>(); // 거래 기록
 
-        public List<AmountCondition> amountConditions { get; set; }
-        public List<PeriodCondition> periodConditions { get; set; }
+        public List<AmountConditionOfInterest> amountConditions { get; set; } // 
+        public List<PeriodConditionOfInterest> periodConditions { get; set; }
         public SettleType SettleType { get; set; } // 정산 타입
         public int SettlePeriod { get; set; } // 정산 주기
 
@@ -78,7 +80,7 @@ namespace TESTAPP.domain.account
 
         }
 
-
+        // 두개가 매우 유사해서 합칠 수 있을거같은데 ...
         // 단리
         private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
         {
@@ -95,16 +97,17 @@ namespace TESTAPP.domain.account
 
             decimal changedInterest = Interest;
 
-            DateTime now = DateTime.Now.Date;
-
-
             changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
-            changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자.
+            changedInterest += GetResultPeriodCondion(start); // 조건에 맞게 추가할 이자.
+
+            int date = ConvertSettlePeriodDate(SettlePeriodType);
+            decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
+
 
             // 지금 적용될 이윤
             // 몇가지는 조금 엇나가는 계산이 있긴한데 .. 일단 ..  
 
-            decimal nowInterest = GetResultInterest(amount, changedInterest); // 이번 타임 이자
+            decimal nowInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자
             resultInterest += nowInterest;
 
             resultAmount = amount + resultInterest;
@@ -137,14 +140,16 @@ namespace TESTAPP.domain.account
             }
 
             decimal changedInterest = Interest;
-            DateTime now = DateTime.Now.Date;
 
             amount = ReflectAfterPlan(amount, start, until, log, afterPlans, resultInterest);
 
             changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
-            changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
+            changedInterest += GetResultPeriodCondion(start); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
 
-            decimal nowInterest = GetResultInterest(amount, changedInterest); // 이번 타임 이자
+            int date = ConvertSettlePeriodDate(SettlePeriodType);
+            decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
+
+            decimal nowInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자
 
             resultInterest += nowInterest;
 
@@ -229,9 +234,9 @@ namespace TESTAPP.domain.account
         }
 
 
-        private decimal GetResultPeriodCondion(DateTime start,DateTime now)
+        private decimal GetResultPeriodCondion(DateTime start)
         {
-
+            DateTime now = DateTime.Now.Date;
             decimal result = 0;
             List<decimal> resultPeriodConditions = periodConditions
                                     .Where((condition) => start.CompareTo(now.AddMonths(condition.StartValue)) > 0 && condition.Applyed)
@@ -260,7 +265,7 @@ namespace TESTAPP.domain.account
 
             return result;
         }
-        private decimal GetResultInterest(decimal amount, decimal changedInterest)
+        private decimal GetResultInterestAmount(decimal amount, decimal changedInterest)
         {
             decimal resultInterest = 0;
             

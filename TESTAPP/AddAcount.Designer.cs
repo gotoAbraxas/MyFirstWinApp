@@ -55,6 +55,7 @@
             this.cb_AddCondition = new System.Windows.Forms.ComboBox();
             this.lb_standardInterest = new System.Windows.Forms.Label();
             this.txt_standardInterest = new System.Windows.Forms.TextBox();
+            this.ut_standardInterest = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // bt_AddAcount_save
@@ -81,7 +82,7 @@
             // 
             this.cb_AccountType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_AccountType.FormattingEnabled = true;
-            this.cb_AccountType.Location = new System.Drawing.Point(113, 17);
+            this.cb_AccountType.Location = new System.Drawing.Point(127, 17);
             this.cb_AccountType.Name = "cb_AccountType";
             this.cb_AccountType.Size = new System.Drawing.Size(75, 20);
             this.cb_AccountType.TabIndex = 2;
@@ -99,7 +100,7 @@
             // txt_AccountType
             // 
             this.txt_AccountType.Enabled = false;
-            this.txt_AccountType.Location = new System.Drawing.Point(195, 16);
+            this.txt_AccountType.Location = new System.Drawing.Point(209, 16);
             this.txt_AccountType.Name = "txt_AccountType";
             this.txt_AccountType.Size = new System.Drawing.Size(76, 21);
             this.txt_AccountType.TabIndex = 4;
@@ -107,7 +108,7 @@
             // 
             // txt_AccountName
             // 
-            this.txt_AccountName.Location = new System.Drawing.Point(113, 53);
+            this.txt_AccountName.Location = new System.Drawing.Point(127, 53);
             this.txt_AccountName.Name = "txt_AccountName";
             this.txt_AccountName.Size = new System.Drawing.Size(99, 21);
             this.txt_AccountName.TabIndex = 5;
@@ -133,7 +134,7 @@
             // 
             // txt_AccountNumber
             // 
-            this.txt_AccountNumber.Location = new System.Drawing.Point(113, 85);
+            this.txt_AccountNumber.Location = new System.Drawing.Point(127, 85);
             this.txt_AccountNumber.Name = "txt_AccountNumber";
             this.txt_AccountNumber.Size = new System.Drawing.Size(144, 21);
             this.txt_AccountNumber.TabIndex = 8;
@@ -144,22 +145,23 @@
             this.lb_Interest.AutoSize = true;
             this.lb_Interest.Location = new System.Drawing.Point(11, 122);
             this.lb_Interest.Name = "lb_Interest";
-            this.lb_Interest.Size = new System.Drawing.Size(83, 24);
+            this.lb_Interest.Size = new System.Drawing.Size(107, 24);
             this.lb_Interest.TabIndex = 9;
-            this.lb_Interest.Text = "기본 이율 \r\n( 기대 수익률)";
+            this.lb_Interest.Text = "기본 이율 \r\n(연간 기대 수익률)";
             // 
             // txt_Interest
             // 
-            this.txt_Interest.Location = new System.Drawing.Point(114, 118);
+            this.txt_Interest.Location = new System.Drawing.Point(128, 118);
             this.txt_Interest.Name = "txt_Interest";
             this.txt_Interest.Size = new System.Drawing.Size(75, 21);
             this.txt_Interest.TabIndex = 10;
             this.txt_Interest.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txt_Interest.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CalculateStandardInterest);
             // 
             // lb_SettleType
             // 
             this.lb_SettleType.AutoSize = true;
-            this.lb_SettleType.Location = new System.Drawing.Point(11, 157);
+            this.lb_SettleType.Location = new System.Drawing.Point(11, 163);
             this.lb_SettleType.Name = "lb_SettleType";
             this.lb_SettleType.Size = new System.Drawing.Size(57, 12);
             this.lb_SettleType.TabIndex = 11;
@@ -169,10 +171,11 @@
             // 
             this.cb_SettleType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_SettleType.FormattingEnabled = true;
-            this.cb_SettleType.Location = new System.Drawing.Point(114, 153);
+            this.cb_SettleType.Location = new System.Drawing.Point(128, 159);
             this.cb_SettleType.Name = "cb_SettleType";
             this.cb_SettleType.Size = new System.Drawing.Size(75, 20);
             this.cb_SettleType.TabIndex = 12;
+            this.cb_SettleType.SelectedIndexChanged += new System.EventHandler(this.ReflectRelatedValue);
             // 
             // lb_InterestCondition
             // 
@@ -204,7 +207,7 @@
             // ut_Interest
             // 
             this.ut_Interest.AutoSize = true;
-            this.ut_Interest.Location = new System.Drawing.Point(195, 123);
+            this.ut_Interest.Location = new System.Drawing.Point(209, 123);
             this.ut_Interest.Name = "ut_Interest";
             this.ut_Interest.Size = new System.Drawing.Size(15, 12);
             this.ut_Interest.TabIndex = 16;
@@ -232,7 +235,7 @@
             // 
             // txt_Preferent
             // 
-            this.txt_Preferent.Location = new System.Drawing.Point(111, 302);
+            this.txt_Preferent.Location = new System.Drawing.Point(126, 302);
             this.txt_Preferent.Name = "txt_Preferent";
             this.txt_Preferent.Size = new System.Drawing.Size(144, 21);
             this.txt_Preferent.TabIndex = 19;
@@ -242,7 +245,7 @@
             // lb_Preferent_limit
             // 
             this.lb_Preferent_limit.AutoSize = true;
-            this.lb_Preferent_limit.Location = new System.Drawing.Point(261, 305);
+            this.lb_Preferent_limit.Location = new System.Drawing.Point(276, 307);
             this.lb_Preferent_limit.Name = "lb_Preferent_limit";
             this.lb_Preferent_limit.Size = new System.Drawing.Size(45, 12);
             this.lb_Preferent_limit.TabIndex = 20;
@@ -259,20 +262,22 @@
             // 
             // txt_SettlePeriod
             // 
-            this.txt_SettlePeriod.Location = new System.Drawing.Point(111, 197);
+            this.txt_SettlePeriod.Location = new System.Drawing.Point(125, 197);
             this.txt_SettlePeriod.Name = "txt_SettlePeriod";
             this.txt_SettlePeriod.Size = new System.Drawing.Size(77, 21);
             this.txt_SettlePeriod.TabIndex = 22;
             this.txt_SettlePeriod.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txt_SettlePeriod.TextChanged += new System.EventHandler(this.ReflectRelatedValue);
             // 
             // cb_SettlePeriod
             // 
             this.cb_SettlePeriod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_SettlePeriod.FormattingEnabled = true;
-            this.cb_SettlePeriod.Location = new System.Drawing.Point(196, 197);
+            this.cb_SettlePeriod.Location = new System.Drawing.Point(210, 197);
             this.cb_SettlePeriod.Name = "cb_SettlePeriod";
             this.cb_SettlePeriod.Size = new System.Drawing.Size(59, 20);
             this.cb_SettlePeriod.TabIndex = 23;
+            this.cb_SettlePeriod.SelectedIndexChanged += new System.EventHandler(this.ReflectRelatedValue);
             // 
             // cb_AddCondition
             // 
@@ -286,24 +291,35 @@
             // lb_standardInterest
             // 
             this.lb_standardInterest.AutoSize = true;
-            this.lb_standardInterest.Location = new System.Drawing.Point(64, 233);
+            this.lb_standardInterest.Location = new System.Drawing.Point(10, 233);
             this.lb_standardInterest.Name = "lb_standardInterest";
-            this.lb_standardInterest.Size = new System.Drawing.Size(105, 12);
+            this.lb_standardInterest.Size = new System.Drawing.Size(111, 12);
             this.lb_standardInterest.TabIndex = 25;
-            this.lb_standardInterest.Text = "<-> 1년 기준 이율";
+            this.lb_standardInterest.Text = "<-> 단위 기간 이율";
             // 
             // txt_standardInterest
             // 
-            this.txt_standardInterest.Location = new System.Drawing.Point(175, 228);
+            this.txt_standardInterest.Location = new System.Drawing.Point(126, 229);
             this.txt_standardInterest.Name = "txt_standardInterest";
-            this.txt_standardInterest.Size = new System.Drawing.Size(48, 21);
+            this.txt_standardInterest.Size = new System.Drawing.Size(75, 21);
             this.txt_standardInterest.TabIndex = 26;
+            this.txt_standardInterest.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CalculateFomalInterest);
+            // 
+            // ut_standardInterest
+            // 
+            this.ut_standardInterest.AutoSize = true;
+            this.ut_standardInterest.Location = new System.Drawing.Point(211, 235);
+            this.ut_standardInterest.Name = "ut_standardInterest";
+            this.ut_standardInterest.Size = new System.Drawing.Size(15, 12);
+            this.ut_standardInterest.TabIndex = 27;
+            this.ut_standardInterest.Text = "%";
             // 
             // AddAcount
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 470);
+            this.Controls.Add(this.ut_standardInterest);
             this.Controls.Add(this.txt_standardInterest);
             this.Controls.Add(this.lb_standardInterest);
             this.Controls.Add(this.cb_AddCondition);
@@ -368,5 +384,6 @@
         private System.Windows.Forms.ComboBox cb_AddCondition;
         private System.Windows.Forms.Label lb_standardInterest;
         private System.Windows.Forms.TextBox txt_standardInterest;
+        private System.Windows.Forms.Label ut_standardInterest;
     }
 }

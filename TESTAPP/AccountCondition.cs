@@ -38,18 +38,18 @@ namespace TESTAPP
             Account ac = account.SelectAccountById(Usercode, AccountId);
 
             
-           foreach(AmountCondition amountCondition in ac.amountConditions)
+           foreach(AmountConditionOfInterest amountCondition in ac.amountConditions)
             {
                 DrawAmountCondition(amountCondition);
             }
-            foreach (PeriodCondition periodCondition in ac.periodConditions)
+            foreach (PeriodConditionOfInterest periodCondition in ac.periodConditions)
             {
                 DrawPeriodCondition(periodCondition);
             }
 
         }
 
-        private void DrawAmountCondition(AmountCondition amountCondition)
+        private void DrawAmountCondition(AmountConditionOfInterest amountCondition)
         {
             string start = $"{String.Format("{0:#,##0}", amountCondition.StartValue)}원";
             string end = $"{String.Format("{0:#,##0}", amountCondition.EndValue)}원";
@@ -79,7 +79,7 @@ namespace TESTAPP
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
             //DynamicCheckBox(this, new CheckBox(), layout, amountCondition.Applyed, "적용", 70, 30);
         }
-        private void DrawPeriodCondition(PeriodCondition periodCondition)
+        private void DrawPeriodCondition(PeriodConditionOfInterest periodCondition)
         {
             string start = $"{periodCondition.StartValue}개월";
             string end = $"{periodCondition.EndValue}개월";

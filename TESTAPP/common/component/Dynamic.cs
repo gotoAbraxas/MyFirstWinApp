@@ -7,9 +7,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TESTAPP.domain.account;
 
 namespace TESTAPP.common.component
 {
+
+    // 이거 싹다 인터페이스로 옮기고 싶은데 버전이 딸려서 안됨 ...
     internal static class Dynamic
     {
 
@@ -42,13 +45,6 @@ namespace TESTAPP.common.component
             DynamicInsert<TextBox>(form, control, pannel, name, width, height);
         }
         #endregion
-
-        public static void DynamicCheckBox(Form form, CheckBox checkBox, FlowLayoutPanel pannel,bool value, string name = "", int width = 40, int height = 60)
-        {
-
-            checkBox.Checked = value;
-            DynamicInsert<CheckBox>(form, checkBox, pannel, name, width, height);
-        }
 
         #region "이름으로 Text 값을 가져옴"
         public static string GetControlValue<T>(Form form, string name) where T : Control
@@ -140,6 +136,45 @@ namespace TESTAPP.common.component
         }
         #endregion
 
+        #region "이자 추정 및 역추정"
+        public static decimal ConvertInterest(SettleType type, string value, double remain, double share)
+        {
+            // 연간 이자율 <-> 단위기간 이자율 추정하기
+            decimal approximation;
+            if (type == SettleType.복리)
+            {
+                decimal number = (decimal.Parse(value) / 100) + 1;
+                decimal cubeRoot = (decimal)Math.Pow((double)number, remain / share);
+                approximation = (Math.Round(cubeRoot * 100, 6) - 100);
+            }
+            else
+            {
+                decimal number = decimal.Parse(value);
+                decimal interestResult = number * (decimal)(remain / share);
+                approximation = (Math.Round(interestResult, 6));
+            }
+            return approximation; 
+        }
 
+        #endregion
+
+        public static int ConvertSettlePeriodDate(SettlePeriodType type)
+        {
+            int share = 1;
+            switch (type)
+            {
+                case SettlePeriodType.일:
+                    share = 365;
+                    break;
+                case SettlePeriodType.개월:
+                    share = 12;
+                    break;
+                case SettlePeriodType.년:
+                    share = 1;
+                    break;
+            }
+
+            return share;
+        }
     }
 }
