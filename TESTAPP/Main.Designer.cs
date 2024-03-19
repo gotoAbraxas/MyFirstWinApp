@@ -173,7 +173,7 @@ namespace TESTAPP
             this.lb_CalProfitTab_Available.Name = "lb_CalProfitTab_Available";
             this.lb_CalProfitTab_Available.Size = new System.Drawing.Size(73, 24);
             this.lb_CalProfitTab_Available.TabIndex = 26;
-            this.lb_CalProfitTab_Available.Text = "적용 가능한 \r\n최대이율";
+            this.lb_CalProfitTab_Available.Text = "적용 가능한 \r\n우대이율";
             this.lb_CalProfitTab_Available.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lb_CalProfitTab_UpperLimit
