@@ -251,12 +251,12 @@ namespace TESTAPP
             // lb_accountTab_Interest
             // 
             this.lb_accountTab_Interest.AutoSize = true;
-            this.lb_accountTab_Interest.Location = new System.Drawing.Point(39, 42);
+            this.lb_accountTab_Interest.Location = new System.Drawing.Point(39, 40);
             this.lb_accountTab_Interest.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_accountTab_Interest.Name = "lb_accountTab_Interest";
-            this.lb_accountTab_Interest.Size = new System.Drawing.Size(57, 12);
+            this.lb_accountTab_Interest.Size = new System.Drawing.Size(63, 24);
             this.lb_accountTab_Interest.TabIndex = 14;
-            this.lb_accountTab_Interest.Text = "기본 이율";
+            this.lb_accountTab_Interest.Text = "기본 이율\r\n(연간이율)";
             this.lb_accountTab_Interest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lb_CalProfitTab_InterestPeriod
