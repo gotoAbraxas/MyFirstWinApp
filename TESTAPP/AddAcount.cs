@@ -312,6 +312,24 @@ namespace TESTAPP
 
         #endregion
 
+        #region "동적 조건 초기화"
+        private void bt_Reset_Click(object sender, EventArgs e)
+        {
+            ResetCondition();
+        }
+
+        private void ResetCondition()
+        {
+            foreach (Control control in ConditionControler)
+            {
+                this.Controls.Remove(control);
+                control.Dispose();
+            }
+            ConditionControler.Clear();
+        }
+
+        #endregion
+
         #region "계좌 저장"
         private void bt_AddAcount_save_Click(object sender, EventArgs e)
         {
@@ -449,9 +467,9 @@ namespace TESTAPP
         {
             this.Close();
         }
+
+
         #endregion
-
-
-
+  
     }
 }

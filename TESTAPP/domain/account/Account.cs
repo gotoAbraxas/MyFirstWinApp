@@ -58,6 +58,7 @@ namespace TESTAPP.domain.account
 
         #endregion
 
+        #region "메서드"
 
         public void AddLog(AccountLog log)
         {
@@ -67,17 +68,17 @@ namespace TESTAPP.domain.account
 
         public void GetResult(ref decimal amount,ref decimal resultInterest,ref decimal resultAmount,DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
         {
-
-            if (SettleType == SettleType.단리)
+            switch (SettleType)
             {
-
-                SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start,in end, log, in afterPlans);
+                case SettleType.단리:
+                    SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start, in end, log, in afterPlans);
+                    break;
+                case SettleType.복리:
+                    CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start, in end, log, in afterPlans);
+                    break;
+                default:
+                    break;
             }
-            else if(SettleType == SettleType.복리)
-            {
-                CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start,in end, log,in afterPlans);
-            }
-
         }
 
         // 두개가 매우 유사해서 합칠 수 있을거같은데 ...
@@ -150,7 +151,14 @@ namespace TESTAPP.domain.account
 
             decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
 
-            decimal nowInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자
+            decimal nowInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자 <- 이게 바뀌어야함.
+            /*
+             * 이번 타임 이자 이걸 어떻게 바꿀 꺼냐면, 총 세가지를 더한 값을 넣어줄거임.
+             * 1. 시작기간부터 잘 반영된 금액
+             * 2. 도중에 입금된 금액(이건 비율을 가져오려면 조금 신경써야할 부분이 있음)
+             * 3. 도중에 출금된 금액(이것도 입금 기간부터 끝 기간까지가 역으로 환산되는 금액임)
+             * 
+             */
 
             resultInterest += nowInterest;
 
@@ -268,8 +276,8 @@ namespace TESTAPP.domain.account
         }
         private decimal GetResultInterestAmount(decimal amount, decimal changedInterest)
         {
-            decimal resultInterest = 0;
-            
+            decimal resultInterest;
+
             if (checkUpperLimitWellInterest && amount > UpperLimitWellInterest)
             {
 
@@ -287,7 +295,7 @@ namespace TESTAPP.domain.account
             return resultInterest;
         }
 
-
+        #endregion
 
 
     }

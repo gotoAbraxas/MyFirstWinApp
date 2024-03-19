@@ -58,6 +58,7 @@
             this.txt_standardInterest = new System.Windows.Forms.TextBox();
             this.ut_standardInterest = new System.Windows.Forms.Label();
             this.tTip_Settle = new System.Windows.Forms.ToolTip(this.components);
+            this.bt_Reset = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // bt_AddAcount_save
@@ -316,11 +317,22 @@
             this.ut_standardInterest.TabIndex = 27;
             this.ut_standardInterest.Text = "%";
             // 
+            // bt_Reset
+            // 
+            this.bt_Reset.Location = new System.Drawing.Point(795, 27);
+            this.bt_Reset.Name = "bt_Reset";
+            this.bt_Reset.Size = new System.Drawing.Size(38, 19);
+            this.bt_Reset.TabIndex = 28;
+            this.bt_Reset.Text = "R";
+            this.bt_Reset.UseVisualStyleBackColor = true;
+            this.bt_Reset.Click += new System.EventHandler(this.bt_Reset_Click);
+            // 
             // AddAcount
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 470);
+            this.Controls.Add(this.bt_Reset);
             this.Controls.Add(this.ut_standardInterest);
             this.Controls.Add(this.txt_standardInterest);
             this.Controls.Add(this.lb_standardInterest);
@@ -389,5 +401,6 @@
         private System.Windows.Forms.TextBox txt_standardInterest;
         private System.Windows.Forms.Label ut_standardInterest;
         private System.Windows.Forms.ToolTip tTip_Settle;
+        private System.Windows.Forms.Button bt_Reset;
     }
 }
