@@ -45,7 +45,7 @@ namespace TESTAPP
 
         #endregion
 
-        #region "초기화"
+        #region "OnLoad"
 
         private void AddAcount_Load(object sender, EventArgs e)
         {
@@ -55,14 +55,16 @@ namespace TESTAPP
 
         public void Init()
         {
-            cb_AccountType.Items.Add("사용할지 말지 안정함.");
-            cb_AccountType.Items.Add("기타"); // 이걸 어떻게 사용할지는 의문. 만들때 정하냐 or 만들면서 정하냐
+            tTip_Settle.SetToolTip(cb_SettleType, "복리의 경우, \n이자가 투자금액에 재투자 되는 경우를 의미하기도 합니다.");
+            
+            SetAccountType();
             SetSettleType();
             SetAccountService();
             CheckingPreferent();
             SetInterestPeriod();
             SetAddCondition();
         }
+
 
         private void SetAccountService()
         { /// 계좌 서비스 세팅 좀 자원낭비같긴한데 일단 이렇게.
@@ -91,6 +93,15 @@ namespace TESTAPP
                 txt_AccountType.Visible = false;
             }
         }
+        #endregion
+
+        #region "계좌 유형 설정"
+        private void SetAccountType()
+        {
+            SetEnumToCombo<AccountType>(cb_AccountType);
+            cb_AccountType.SelectedIndex = 0;
+        }
+
         #endregion
 
         #region "이자 지급방식 설정"
@@ -306,6 +317,10 @@ namespace TESTAPP
         {
             try
             {
+
+                //만약 이 모듈이 외부에서 필요하다고 하면 어떻게 분리해서 제공해야 좋을까?
+                // 내 생각엔 이 자리에서 AccountDto 를 제작한 뒤에 넘겨서 검증을 하고, 완성된 Account를 넘겨주고, 이 기능이 service 에 있으면 어떨까 싶음
+
                 ValidateValueBeforeSave(out Account account);
 
                 SaveAccount(account);
@@ -345,6 +360,8 @@ namespace TESTAPP
             };
 
         }
+
+        // 이것도 서비스로 옮긴다 하면 저장되어있는 밑단에 있는 SetPeriodConditions, SetAmountConditions 이 두개를 옮기는게 나을듯.
         private void SetConditionValues(ref List<PeriodConditionOfInterest> periodConditions, ref List<AmountConditionOfInterest> amountConditions)
         {
 

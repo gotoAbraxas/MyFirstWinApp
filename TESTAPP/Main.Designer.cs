@@ -34,6 +34,7 @@ namespace TESTAPP
             this.accountTab = new System.Windows.Forms.TabControl();
             this.myAccountTab = new System.Windows.Forms.TabPage();
             this.calProfitTab = new System.Windows.Forms.TabPage();
+            this.bt_ResetCondition = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.cb_CalProfitTab_Period = new System.Windows.Forms.ComboBox();
             this.bt_CalProfitTab_Available = new System.Windows.Forms.Button();
@@ -96,6 +97,7 @@ namespace TESTAPP
             // 
             // calProfitTab
             // 
+            this.calProfitTab.Controls.Add(this.bt_ResetCondition);
             this.calProfitTab.Controls.Add(this.label3);
             this.calProfitTab.Controls.Add(this.cb_CalProfitTab_Period);
             this.calProfitTab.Controls.Add(this.bt_CalProfitTab_Available);
@@ -127,10 +129,20 @@ namespace TESTAPP
             this.calProfitTab.UseVisualStyleBackColor = true;
             this.calProfitTab.Enter += new System.EventHandler(this.calProfitTab_Enter);
             // 
+            // bt_ResetCondition
+            // 
+            this.bt_ResetCondition.Location = new System.Drawing.Point(812, 22);
+            this.bt_ResetCondition.Name = "bt_ResetCondition";
+            this.bt_ResetCondition.Size = new System.Drawing.Size(28, 17);
+            this.bt_ResetCondition.TabIndex = 32;
+            this.bt_ResetCondition.Text = "R";
+            this.bt_ResetCondition.UseVisualStyleBackColor = true;
+            this.bt_ResetCondition.Click += new System.EventHandler(this.bt_ResetCondition_Click);
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(225, 365);
+            this.label3.Location = new System.Drawing.Point(228, 376);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(67, 12);
             this.label3.TabIndex = 31;
@@ -139,7 +151,7 @@ namespace TESTAPP
             // cb_CalProfitTab_Period
             // 
             this.cb_CalProfitTab_Period.FormattingEnabled = true;
-            this.cb_CalProfitTab_Period.Location = new System.Drawing.Point(160, 361);
+            this.cb_CalProfitTab_Period.Location = new System.Drawing.Point(160, 372);
             this.cb_CalProfitTab_Period.Name = "cb_CalProfitTab_Period";
             this.cb_CalProfitTab_Period.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.cb_CalProfitTab_Period.Size = new System.Drawing.Size(61, 20);
@@ -526,6 +538,7 @@ namespace TESTAPP
         private System.Windows.Forms.Label lb_CalProfitTab_Amount;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cb_CalProfitTab_Period;
+        private System.Windows.Forms.Button bt_ResetCondition;
     }
 }
 

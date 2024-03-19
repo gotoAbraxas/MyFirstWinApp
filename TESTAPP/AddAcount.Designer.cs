@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.bt_AddAcount_save = new System.Windows.Forms.Button();
             this.bt_AddAcount_cancel = new System.Windows.Forms.Button();
             this.cb_AccountType = new System.Windows.Forms.ComboBox();
@@ -56,6 +57,7 @@
             this.lb_standardInterest = new System.Windows.Forms.Label();
             this.txt_standardInterest = new System.Windows.Forms.TextBox();
             this.ut_standardInterest = new System.Windows.Forms.Label();
+            this.tTip_Settle = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // bt_AddAcount_save
@@ -348,6 +350,7 @@
             this.Controls.Add(this.bt_AddAcount_cancel);
             this.Controls.Add(this.bt_AddAcount_save);
             this.Name = "AddAcount";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AddAcount";
             this.Load += new System.EventHandler(this.AddAcount_Load);
             this.ResumeLayout(false);
@@ -385,5 +388,6 @@
         private System.Windows.Forms.Label lb_standardInterest;
         private System.Windows.Forms.TextBox txt_standardInterest;
         private System.Windows.Forms.Label ut_standardInterest;
+        private System.Windows.Forms.ToolTip tTip_Settle;
     }
 }

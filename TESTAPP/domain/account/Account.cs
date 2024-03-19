@@ -147,6 +147,7 @@ namespace TESTAPP.domain.account
             changedInterest += GetResultPeriodCondion(start); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
 
             int date = ConvertSettlePeriodDate(SettlePeriodType);
+
             decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
 
             decimal nowInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자
@@ -255,7 +256,7 @@ namespace TESTAPP.domain.account
             decimal result = 0;
 
             List<decimal> resultAmountConditions = amountConditions
-                         .Where((condition) => condition.StartValue < tmp && condition.Applyed)
+                         .Where((condition) => condition.StartValue < tmp&& tmp <= condition.EndValue && condition.Applyed)
                          .Select((condition) => condition.ChangedValue).ToList();
 
             foreach (decimal item in resultAmountConditions)

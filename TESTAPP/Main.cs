@@ -39,7 +39,6 @@ namespace TESTAPP
             accountService = new AccountService(); // 나중에 di로 설정 가능하려나.
             SetCalProfitTabPeriod();
             InitDate();
-
         }
 
         private void InitDate()
@@ -78,7 +77,11 @@ namespace TESTAPP
             AccountLogSetting(ac);
             SetCalProfitTabValue(ac);
 
+            ResetCondition();
+        }
 
+        private void ResetCondition()
+        {
             foreach (Control control in ConditionControler)
             {
                 this.Controls.Remove(control);
@@ -255,13 +258,39 @@ namespace TESTAPP
 
         #endregion
 
+        #region "동적 조건 추가 리셋"
+        private void bt_ResetCondition_Click(object sender, EventArgs e)
+        {
+            ResetCondition();
+        }
+
+        #endregion
+
         #region "계좌 추가 폼 관련"
         private void bt_AddAcount_Click(object sender, EventArgs e)
         {
-            AddAcount addAcount = new AddAcount();
 
-            addAcount.FormClosed += WhenAddAcountClosed;
-            OpenNewForm<AddAcount>(addAcount);
+            var sat = new SelectAccountTypeDialog();
+            sat.ShowDialog();
+
+            if (sat.Result is null) return;
+            
+            AccountType type = (AccountType)sat.Result;
+
+            switch (type)
+            {
+                case AccountType.자유입출금:
+                    break;
+                case AccountType.저축성예금:
+                    break;
+                case AccountType.직접입력:
+                    AddAcount addAcount = new AddAcount();
+
+                    addAcount.FormClosed += WhenAddAcountClosed;
+                    OpenNewForm<AddAcount>(addAcount);
+                    break;
+
+            }
         }
 
         private void WhenAddAcountClosed(object sender, EventArgs e)
@@ -380,7 +409,7 @@ namespace TESTAPP
             form.afterPlans = GetAferPlan();
             form.period = (Period)cb_CalProfitTab_Period.SelectedItem;
 
-            form.Show();
+            form.ShowDialog();
         }
 
         #endregion
@@ -434,9 +463,14 @@ namespace TESTAPP
                 dtp.Value = DateTime.Now;
             }
         }
-        #endregion
 
         #endregion
 
+        #endregion
+
+        private void toolTip1_Popup(object sender, PopupEventArgs e)
+        {
+
+        }
     }
 }
