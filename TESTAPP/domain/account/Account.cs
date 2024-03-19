@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using TESTAPP.domain.account.iFace;
 using TESTAPP.domain.account.sub;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 using static TESTAPP.common.component.Dynamic;
 
 namespace TESTAPP.domain.account
@@ -201,6 +202,9 @@ namespace TESTAPP.domain.account
         }
         private decimal ReflectAfterPlan(decimal amount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans,decimal resultInterest)
         {
+            List<AfterPlanDateRatio> apr = new List<AfterPlanDateRatio>();
+
+
             var ac = afterPlans
                 .Where((item) => (start.CompareTo(item.DateTime) < 0) && (item.DateTime.CompareTo(end) <= 0))
                 .OrderBy((item)=>item.DateTime).ToList();
@@ -236,6 +240,20 @@ namespace TESTAPP.domain.account
                     Amount = afterPlan.Amount,
                     Total = amount + resultInterest
                 });
+
+                double myLambda()
+                {
+                    double ratio = ((double)start.Day) / end.Day;
+                    return ratio;
+                }
+
+                apr.Add
+                    (new AfterPlanDateRatio
+                    {
+                        AccountLogType = afterPlan.AccountLogType,
+                        Amount = amountChange * (decimal) myLambda()
+                    }
+                    );
 
             }
             return amount;
