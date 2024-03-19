@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using TESTAPP.account.service;
 using TESTAPP.domain.account;
 using TESTAPP.domain.account.sub;
@@ -8,6 +9,8 @@ using static TESTAPP.common.component.Dynamic;
 
 namespace TESTAPP
 {
+
+    delegate void InterestDynamic(TextBox tb, double remain, double share, TextBox reflectbox);
 
     public partial class AddAcount : Form
     {
@@ -42,7 +45,7 @@ namespace TESTAPP
 
         #endregion
 
-        #region "초기화"
+        #region "OnLoad"
 
         private void AddAcount_Load(object sender, EventArgs e)
         {
@@ -52,14 +55,16 @@ namespace TESTAPP
 
         public void Init()
         {
-            cb_AccountType.Items.Add("사용할지 말지 안정함.");
-            cb_AccountType.Items.Add("기타"); // 이걸 어떻게 사용할지는 의문. 만들때 정하냐 or 만들면서 정하냐
+            tTip_Settle.SetToolTip(cb_SettleType, "복리의 경우, \n이자가 투자금액에 재투자 되는 경우를 의미하기도 합니다.");
+            
+            SetAccountType();
             SetSettleType();
             SetAccountService();
             CheckingPreferent();
             SetInterestPeriod();
             SetAddCondition();
         }
+
 
         private void SetAccountService()
         { /// 계좌 서비스 세팅 좀 자원낭비같긴한데 일단 이렇게.
@@ -90,6 +95,15 @@ namespace TESTAPP
         }
         #endregion
 
+        #region "계좌 유형 설정"
+        private void SetAccountType()
+        {
+            SetEnumToCombo<AccountType>(cb_AccountType);
+            cb_AccountType.SelectedIndex = 0;
+        }
+
+        #endregion
+
         #region "이자 지급방식 설정"
         private void SetSettleType()
         {
@@ -104,6 +118,61 @@ namespace TESTAPP
             // 이자 주기 
             SetEnumToCombo<SettlePeriodType>(cb_SettlePeriod);
             cb_SettlePeriod.SelectedIndex = 0;
+        }
+
+        #endregion
+
+        #region "이율 추산, 역추산"
+
+        // 합칠 수 있지만 굳이 싶은 부분.
+        private void CalculateFomalInterest(object sender, KeyEventArgs e)
+        {
+            TextBox tb = sender as TextBox;
+
+            if (double.TryParse(txt_SettlePeriod.Text, out double period)
+                && decimal.TryParse(tb.Text, out _))
+            {
+                int share = ConvertSettlePeriodDate((SettlePeriodType)cb_SettlePeriod.SelectedItem);
+
+                SetInterestDynamic(tb, share, period, txt_Interest);
+
+            }
+        }
+        private void CalculateStandardInterest(object sender, KeyEventArgs e)
+        {
+
+            TextBox tb = sender as TextBox;
+
+            if (double.TryParse(txt_SettlePeriod.Text, out double period)
+                && decimal.TryParse(tb.Text, out _))
+            {
+                int share = ConvertSettlePeriodDate((SettlePeriodType)cb_SettlePeriod.SelectedItem);
+
+                SetInterestDynamic(tb, period, share, txt_standardInterest);
+
+            }
+        }
+
+        private void ReflectRelatedValue(object sender, EventArgs e)
+        {
+            if (!double.TryParse(txt_SettlePeriod.Text, out double period)) return;
+            int share = ConvertSettlePeriodDate((SettlePeriodType)cb_SettlePeriod.SelectedItem);
+
+            if (decimal.TryParse(txt_Interest.Text, out _))
+            {
+                SetInterestDynamic(txt_Interest, period, share, txt_standardInterest);
+            }
+            else if (decimal.TryParse(txt_standardInterest.Text, out _))
+            {
+                SetInterestDynamic(txt_standardInterest, share, period, txt_Interest);
+            }
+        }
+
+        private void SetInterestDynamic(TextBox tb, double remain, double share, TextBox reflectbox)
+        {
+            // 연단위 이자를 일,월 등의 이자로 쪼개거나 /반대로 일,월 등의 이자를 연단위로 합쳐주는 메소드
+            decimal approximation = ConvertInterest((SettleType)cb_SettleType.SelectedItem, tb.Text, remain, share);
+            reflectbox.Text = approximation.ToString();
         }
 
         #endregion
@@ -243,11 +312,33 @@ namespace TESTAPP
 
         #endregion
 
+        #region "동적 조건 초기화"
+        private void bt_Reset_Click(object sender, EventArgs e)
+        {
+            ResetCondition();
+        }
+
+        private void ResetCondition()
+        {
+            foreach (Control control in ConditionControler)
+            {
+                this.Controls.Remove(control);
+                control.Dispose();
+            }
+            ConditionControler.Clear();
+        }
+
+        #endregion
+
         #region "계좌 저장"
         private void bt_AddAcount_save_Click(object sender, EventArgs e)
         {
             try
             {
+
+                //만약 이 모듈이 외부에서 필요하다고 하면 어떻게 분리해서 제공해야 좋을까?
+                // 내 생각엔 이 자리에서 AccountDto 를 제작한 뒤에 넘겨서 검증을 하고, 완성된 Account를 넘겨주고, 이 기능이 service 에 있으면 어떨까 싶음
+
                 ValidateValueBeforeSave(out Account account);
 
                 SaveAccount(account);
@@ -263,8 +354,8 @@ namespace TESTAPP
         private void ValidateValueBeforeSave(out Account account)
         {
 
-            List<AmountCondition> amountConditions = new List<AmountCondition>();
-            List<PeriodCondition> periodConditions = new List<PeriodCondition>();
+            List<AmountConditionOfInterest> amountConditions = new List<AmountConditionOfInterest>();
+            List<PeriodConditionOfInterest> periodConditions = new List<PeriodConditionOfInterest>();
 
             SetConditionValues(ref periodConditions, ref amountConditions);
 
@@ -287,7 +378,9 @@ namespace TESTAPP
             };
 
         }
-        private void SetConditionValues(ref List<PeriodCondition> periodConditions, ref List<AmountCondition> amountConditions)
+
+        // 이것도 서비스로 옮긴다 하면 저장되어있는 밑단에 있는 SetPeriodConditions, SetAmountConditions 이 두개를 옮기는게 나을듯.
+        private void SetConditionValues(ref List<PeriodConditionOfInterest> periodConditions, ref List<AmountConditionOfInterest> amountConditions)
         {
 
             for (int i = 0; i < ConditionControler.Count; i++)
@@ -317,7 +410,7 @@ namespace TESTAPP
 
 
         // 이거 두개 잘하면 합침 .. 
-        private void SetPeriodConditions(List<PeriodCondition> periodConditions, string start, string end, string interest, int sign)
+        private void SetPeriodConditions(List<PeriodConditionOfInterest> periodConditions, string start, string end, string interest, int sign)
         {
 
             // 조건 식은 따로 메소드로 빼는 것도 괜찮아보임
@@ -326,7 +419,7 @@ namespace TESTAPP
                 && decimal.TryParse(interest, out decimal interestValue)
                 && startValue < endValue)
             {
-                PeriodCondition condition = new PeriodCondition()
+                PeriodConditionOfInterest condition = new PeriodConditionOfInterest()
                 {
                     StartValue = startValue,
                     EndValue = endValue,
@@ -340,14 +433,14 @@ namespace TESTAPP
             }
         }
 
-        private void SetAmountConditions(List<AmountCondition> amountConditions, string start, string end, string interest,int sign)
+        private void SetAmountConditions(List<AmountConditionOfInterest> amountConditions, string start, string end, string interest,int sign)
         {
             if (decimal.TryParse(start, out decimal startValue) 
                 && decimal.TryParse(end, out decimal endValue) 
                 && decimal.TryParse(interest, out decimal interestValue)
                 && startValue < endValue)
             {
-                AmountCondition condition = new AmountCondition()
+                AmountConditionOfInterest condition = new AmountConditionOfInterest()
                 {
                     StartValue = startValue,
                     EndValue = endValue,
@@ -374,7 +467,9 @@ namespace TESTAPP
         {
             this.Close();
         }
-        #endregion
 
+
+        #endregion
+  
     }
 }

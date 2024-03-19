@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TESTAPP.domain.account.sub
 {
-    internal class PeriodCondition
+    internal class PeriodConditionOfInterest
     {
 
         public int StartValue { get; set; }

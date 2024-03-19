@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using TESTAPP.domain.account.iFace;
 using TESTAPP.domain.account.sub;
+using static TESTAPP.common.component.Dynamic;
 
 namespace TESTAPP.domain.account
 {
@@ -40,11 +41,12 @@ namespace TESTAPP.domain.account
         public string Name { get; set; } // 계좌 이름
         public string Name_AccountId { get; set; } // 최종 식별 코드
         public decimal Interest {  get; set; } // 이율
+        public decimal UnitPeriodInterest { get; set; } // 단위 기간 이율 
         public decimal Amount { get; set; } = 0; // 통장잔액
         public List<AccountLog> Log { get; set; } = new List<AccountLog>(); // 거래 기록
 
-        public List<AmountCondition> amountConditions { get; set; }
-        public List<PeriodCondition> periodConditions { get; set; }
+        public List<AmountConditionOfInterest> amountConditions { get; set; } // 
+        public List<PeriodConditionOfInterest> periodConditions { get; set; }
         public SettleType SettleType { get; set; } // 정산 타입
         public int SettlePeriod { get; set; } // 정산 주기
 
@@ -56,6 +58,7 @@ namespace TESTAPP.domain.account
 
         #endregion
 
+        #region "메서드"
 
         public void AddLog(AccountLog log)
         {
@@ -65,20 +68,20 @@ namespace TESTAPP.domain.account
 
         public void GetResult(ref decimal amount,ref decimal resultInterest,ref decimal resultAmount,DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
         {
-
-            if (SettleType == SettleType.단리)
+            switch (SettleType)
             {
-
-                SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start,in end, log, in afterPlans);
+                case SettleType.단리:
+                    SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start, in end, log, in afterPlans);
+                    break;
+                case SettleType.복리:
+                    CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start, in end, log, in afterPlans);
+                    break;
+                default:
+                    break;
             }
-            else if(SettleType == SettleType.복리)
-            {
-                CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start,in end, log,in afterPlans);
-            }
-
         }
 
-
+        // 두개가 매우 유사해서 합칠 수 있을거같은데 ...
         // 단리
         private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
         {
@@ -95,16 +98,17 @@ namespace TESTAPP.domain.account
 
             decimal changedInterest = Interest;
 
-            DateTime now = DateTime.Now.Date;
-
-
             changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
-            changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자.
+            changedInterest += GetResultPeriodCondion(start); // 조건에 맞게 추가할 이자.
+
+            int date = ConvertSettlePeriodDate(SettlePeriodType);
+            decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
+
 
             // 지금 적용될 이윤
             // 몇가지는 조금 엇나가는 계산이 있긴한데 .. 일단 ..  
 
-            decimal nowInterest = GetResultInterest(amount, changedInterest); // 이번 타임 이자
+            decimal nowInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자
             resultInterest += nowInterest;
 
             resultAmount = amount + resultInterest;
@@ -137,14 +141,24 @@ namespace TESTAPP.domain.account
             }
 
             decimal changedInterest = Interest;
-            DateTime now = DateTime.Now.Date;
 
             amount = ReflectAfterPlan(amount, start, until, log, afterPlans, resultInterest);
 
             changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
-            changedInterest += GetResultPeriodCondion(start, now); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
+            changedInterest += GetResultPeriodCondion(start); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
 
-            decimal nowInterest = GetResultInterest(amount, changedInterest); // 이번 타임 이자
+            int date = ConvertSettlePeriodDate(SettlePeriodType);
+
+            decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
+
+            decimal nowInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자 <- 이게 바뀌어야함.
+            /*
+             * 이번 타임 이자 이걸 어떻게 바꿀 꺼냐면, 총 세가지를 더한 값을 넣어줄거임.
+             * 1. 시작기간부터 잘 반영된 금액
+             * 2. 도중에 입금된 금액(이건 비율을 가져오려면 조금 신경써야할 부분이 있음)
+             * 3. 도중에 출금된 금액(이것도 입금 기간부터 끝 기간까지가 역으로 환산되는 금액임)
+             * 
+             */
 
             resultInterest += nowInterest;
 
@@ -229,9 +243,9 @@ namespace TESTAPP.domain.account
         }
 
 
-        private decimal GetResultPeriodCondion(DateTime start,DateTime now)
+        private decimal GetResultPeriodCondion(DateTime start)
         {
-
+            DateTime now = DateTime.Now.Date;
             decimal result = 0;
             List<decimal> resultPeriodConditions = periodConditions
                                     .Where((condition) => start.CompareTo(now.AddMonths(condition.StartValue)) > 0 && condition.Applyed)
@@ -250,7 +264,7 @@ namespace TESTAPP.domain.account
             decimal result = 0;
 
             List<decimal> resultAmountConditions = amountConditions
-                         .Where((condition) => condition.StartValue < tmp && condition.Applyed)
+                         .Where((condition) => condition.StartValue < tmp&& tmp <= condition.EndValue && condition.Applyed)
                          .Select((condition) => condition.ChangedValue).ToList();
 
             foreach (decimal item in resultAmountConditions)
@@ -260,10 +274,10 @@ namespace TESTAPP.domain.account
 
             return result;
         }
-        private decimal GetResultInterest(decimal amount, decimal changedInterest)
+        private decimal GetResultInterestAmount(decimal amount, decimal changedInterest)
         {
-            decimal resultInterest = 0;
-            
+            decimal resultInterest;
+
             if (checkUpperLimitWellInterest && amount > UpperLimitWellInterest)
             {
 
@@ -281,7 +295,7 @@ namespace TESTAPP.domain.account
             return resultInterest;
         }
 
-
+        #endregion
 
 
     }

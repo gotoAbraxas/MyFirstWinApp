@@ -39,7 +39,6 @@ namespace TESTAPP
             accountService = new AccountService(); // 나중에 di로 설정 가능하려나.
             SetCalProfitTabPeriod();
             InitDate();
-
         }
 
         private void InitDate()
@@ -68,7 +67,7 @@ namespace TESTAPP
 
         #endregion
 
-        #region "콤보박스 선택된 인덱스 변경시"
+        #region "계좌 콤보박스 인덱스 변경시"
 
         private void cb_SelectAccount_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -78,56 +77,17 @@ namespace TESTAPP
             AccountLogSetting(ac);
             SetCalProfitTabValue(ac);
 
+            ResetCondition();
+        }
 
+        private void ResetCondition()
+        {
             foreach (Control control in ConditionControler)
             {
                 this.Controls.Remove(control);
                 control.Dispose();
             }
             ConditionControler.Clear();
-        }
-
-        #endregion
-
-        #region "이자 계산시 단위 설정"
-        private void SetCalProfitTabPeriod()
-        {
-            SetEnumToCombo<Period>(cb_CalProfitTab_Period);
-            cb_CalProfitTab_Period.SelectedIndex = 0;
-        }
-        #endregion
-
-        #region "현재 콤보박스에 선택된 계좌 들고오기"
-
-        private Account GetSelectedAccount()
-        {
-
-            Account name = cb_SelectAccount.SelectedItem as Account;
-
-            if (name != null)
-            {
-                accountService.SelectAccountById(1L, name.AccountId);
-                // 굳이 이 과정이 필요한가 싶긴함.. 나중에 수정 필요
-            }
-            return name;
-        }
-
-        #endregion
-
-        #region "혹시 모를 리프레쉬 버튼"
-        private void bt_Refresh_Click(object sender, EventArgs e)
-        {
-            SelectAccounts();
-            AccountLogSetting();
-
-            
-        }
-        private void bt_Refresh_log_Click(object sender, EventArgs e)
-        {
-            Account ac = GetSelectedAccount();
-
-            if (ac is null) return;
-            AccountLogSetting(ac);
         }
 
         #endregion
@@ -150,6 +110,116 @@ namespace TESTAPP
 
             SetCalProfitTabValue(ac);
 
+        }
+
+        #endregion
+
+        #region "우대 이율 조건 보기"
+        private void bt_CalProfitTab_Available_Click(object sender, EventArgs e)
+        {
+            Account ac = GetSelectedAccount();
+
+            if (ac is null)
+            {
+                MessageBox.Show("계좌를 먼저 선택해 주십시오");
+                return;
+            }
+
+            AccountCondition accountCondition = new AccountCondition();
+
+            accountCondition.FormClosed += WhenAccountConditionClosed;
+            accountCondition.Usercode = 1L;
+            accountCondition.AccountId = ac.AccountId;
+
+            OpenNewForm<AccountCondition>(accountCondition);
+        }
+
+        private void WhenAccountConditionClosed(object sender, EventArgs e)
+        {
+            // 새로고침 그런거 ..
+        }
+        #endregion
+
+        #region "현재 콤보박스에 선택된 계좌 들고오기"
+
+        private Account GetSelectedAccount()
+        {
+
+            Account name = cb_SelectAccount.SelectedItem as Account;
+
+            if (name != null)
+            {
+                accountService.SelectAccountById(1L, name.AccountId);
+                // 굳이 이 과정이 필요한가 싶긴함.. 나중에 수정 필요
+            }
+            return name;
+        }
+
+        #endregion
+
+        #region "거래내역 세팅 메소드"
+
+        private void AccountLogSetting()
+        {
+            DataTable dt = AccountLogInit();
+
+        }
+        private void AccountLogSetting(Account account)
+        {
+            DataTable dt = AccountLogInit();
+
+            txt_Amount.Text = string.Format("{0:#,##0}", account.Amount);
+
+            var sortedLogs = account.Log.OrderBy(log => log.DateTime).ToList(); // 정렬
+
+            foreach (AccountLog item in sortedLogs)
+            {
+                dt.Rows.Add("sample", item.DateTime, item.AccountLogType, string.Format("{0:#,##0}", item.Amount), string.Format("{0:#,##0}", item.Total), item.Description);
+            }
+
+        }
+        private DataTable AccountLogInit()
+        {
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("id", typeof(string));
+            dt.Columns.Add("날짜", typeof(DateTime));
+            dt.Columns.Add("입/출금", typeof(AccountLogType));
+            dt.Columns.Add("금액", typeof(string));
+            dt.Columns.Add("잔액", typeof(string));
+            dt.Columns.Add("비고", typeof(string));
+
+            grid_accountLog.DataSource = dt;
+
+
+
+            return dt;
+        }
+
+        #endregion
+
+        #region "이자 계산시 단위 콤보박스 설정"
+        private void SetCalProfitTabPeriod()
+        {
+            SetEnumToCombo<Period>(cb_CalProfitTab_Period);
+            cb_CalProfitTab_Period.SelectedIndex = 0;
+        }
+        #endregion
+
+        #region "혹시 모를 리프레쉬 버튼"
+        private void bt_Refresh_Click(object sender, EventArgs e)
+        {
+            SelectAccounts();
+            AccountLogSetting();
+
+            
+        }
+        private void bt_Refresh_log_Click(object sender, EventArgs e)
+        {
+            Account ac = GetSelectedAccount();
+
+            if (ac is null) return;
+            AccountLogSetting(ac);
         }
 
         #endregion
@@ -188,13 +258,39 @@ namespace TESTAPP
 
         #endregion
 
+        #region "동적 조건 추가 리셋"
+        private void bt_ResetCondition_Click(object sender, EventArgs e)
+        {
+            ResetCondition();
+        }
+
+        #endregion
+
         #region "계좌 추가 폼 관련"
         private void bt_AddAcount_Click(object sender, EventArgs e)
         {
-            AddAcount addAcount = new AddAcount();
 
-            addAcount.FormClosed += WhenAddAcountClosed;
-            OpenNewForm<AddAcount>(addAcount);
+            var sat = new SelectAccountTypeDialog();
+            sat.ShowDialog();
+
+            if (sat.Result is null) return;
+            
+            AccountType type = (AccountType)sat.Result;
+
+            switch (type)
+            {
+                case AccountType.자유입출금:
+                    break;
+                case AccountType.저축성예금:
+                    break;
+                case AccountType.직접입력:
+                    AddAcount addAcount = new AddAcount();
+
+                    addAcount.FormClosed += WhenAddAcountClosed;
+                    OpenNewForm<AddAcount>(addAcount);
+                    break;
+
+            }
         }
 
         private void WhenAddAcountClosed(object sender, EventArgs e)
@@ -240,47 +336,6 @@ namespace TESTAPP
 
         #endregion
 
-        #region "거래내역 세팅 메소드"
-
-        private void AccountLogSetting()
-        {
-            DataTable dt = AccountLogInit();
-
-        }
-        private void AccountLogSetting(Account account)
-        {
-            DataTable dt = AccountLogInit();
-
-            txt_Amount.Text = string.Format("{0:#,##0}", account.Amount);
-
-            var sortedLogs = account.Log.OrderBy(log => log.DateTime).ToList(); // 정렬
-
-            foreach (AccountLog item in sortedLogs)
-            {
-                dt.Rows.Add("sample", item.DateTime, item.AccountLogType, string.Format("{0:#,##0}", item.Amount), string.Format("{0:#,##0}", item.Total), item.Description);
-            }
-
-        }
-        private DataTable AccountLogInit()
-        {
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("id", typeof(string));
-            dt.Columns.Add("날짜", typeof(DateTime));
-            dt.Columns.Add("입/출금", typeof(AccountLogType));
-            dt.Columns.Add("금액", typeof(string));
-            dt.Columns.Add("잔액", typeof(string));
-            dt.Columns.Add("비고", typeof(string));
-
-            grid_accountLog.DataSource = dt;
-
-           
-
-            return dt;
-        }
-
-        #endregion
-
         #region "이자 계산 정보 초기화 및 세팅"
         private void InitCalProfitTabValue()
         {
@@ -315,32 +370,6 @@ namespace TESTAPP
                  .Sum();
 
             return pc + ac;
-        }
-        #endregion
-
-        #region "우대 이율 조건 보기"
-        private void bt_CalProfitTab_Available_Click(object sender, EventArgs e)
-        {
-            Account ac = GetSelectedAccount();
-
-            if (ac is null)
-            {
-                MessageBox.Show("계좌를 먼저 선택해 주십시오");
-                return;
-            }
-
-            AccountCondition accountCondition = new AccountCondition();
-
-            accountCondition.FormClosed += WhenAccountConditionClosed;
-            accountCondition.Usercode = 1L;
-            accountCondition.AccountId = ac.AccountId;
-
-            OpenNewForm<AccountCondition>(accountCondition);
-        }
-
-        private void WhenAccountConditionClosed(object sender, EventArgs e)
-        {
-            // 새로고침 그런거 ..
         }
         #endregion
 
@@ -380,7 +409,7 @@ namespace TESTAPP
             form.afterPlans = GetAferPlan();
             form.period = (Period)cb_CalProfitTab_Period.SelectedItem;
 
-            form.Show();
+            form.ShowDialog();
         }
 
         #endregion
@@ -434,9 +463,14 @@ namespace TESTAPP
                 dtp.Value = DateTime.Now;
             }
         }
-        #endregion
 
         #endregion
 
+        #endregion
+
+        private void toolTip1_Popup(object sender, PopupEventArgs e)
+        {
+
+        }
     }
 }
