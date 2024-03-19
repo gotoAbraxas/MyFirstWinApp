@@ -81,7 +81,7 @@ namespace TESTAPP
         }
         private void SetTxtAccountType()
         {
-            if (cb_AccountType.SelectedIndex == cb_AccountType.Items.IndexOf("기타"))
+            if (cb_AccountType.SelectedIndex == cb_AccountType.Items.IndexOf("직접입력"))
             {
                 txt_AccountType.Enabled = true;
                 txt_AccountType.Visible = true;

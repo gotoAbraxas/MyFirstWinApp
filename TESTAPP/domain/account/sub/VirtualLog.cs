@@ -8,10 +8,11 @@ namespace TESTAPP.domain.account.sub
 {
     public enum Period
     {
+        내역,
         일단위,
         월단위,
         년단위,
-        내역
+
     }
 
     public struct VirtualDto
@@ -45,6 +46,12 @@ namespace TESTAPP.domain.account.sub
         public DateTime DateTime { get; set; }
         public string Description { get; set; }
 
+    }
+    public struct AfterPlanDateRatio
+    {
+        public AccountLogType AccountLogType { get; set; }
+        public decimal Amount { get; set; }
+        public double Ratio { get; set; }
     }
 
     public struct VirtualLogConditionaly

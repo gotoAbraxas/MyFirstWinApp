@@ -86,20 +86,22 @@
             // txt_View_income
             // 
             this.txt_View_income.Location = new System.Drawing.Point(760, 85);
-            this.txt_View_income.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txt_View_income.Margin = new System.Windows.Forms.Padding(2);
             this.txt_View_income.Name = "txt_View_income";
             this.txt_View_income.ReadOnly = true;
             this.txt_View_income.Size = new System.Drawing.Size(196, 21);
             this.txt_View_income.TabIndex = 5;
+            this.txt_View_income.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // txt_View_withdraw
             // 
             this.txt_View_withdraw.Location = new System.Drawing.Point(760, 163);
-            this.txt_View_withdraw.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txt_View_withdraw.Margin = new System.Windows.Forms.Padding(2);
             this.txt_View_withdraw.Name = "txt_View_withdraw";
             this.txt_View_withdraw.ReadOnly = true;
             this.txt_View_withdraw.Size = new System.Drawing.Size(196, 21);
             this.txt_View_withdraw.TabIndex = 6;
+            this.txt_View_withdraw.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lb_View_interest
             // 
@@ -114,11 +116,12 @@
             // txt_View_interest
             // 
             this.txt_View_interest.Location = new System.Drawing.Point(760, 240);
-            this.txt_View_interest.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txt_View_interest.Margin = new System.Windows.Forms.Padding(2);
             this.txt_View_interest.Name = "txt_View_interest";
             this.txt_View_interest.ReadOnly = true;
             this.txt_View_interest.Size = new System.Drawing.Size(196, 21);
             this.txt_View_interest.TabIndex = 8;
+            this.txt_View_interest.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lb_View_Amount
             // 
@@ -133,11 +136,12 @@
             // txt_View_Amount
             // 
             this.txt_View_Amount.Location = new System.Drawing.Point(760, 316);
-            this.txt_View_Amount.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txt_View_Amount.Margin = new System.Windows.Forms.Padding(2);
             this.txt_View_Amount.Name = "txt_View_Amount";
             this.txt_View_Amount.ReadOnly = true;
             this.txt_View_Amount.Size = new System.Drawing.Size(196, 21);
             this.txt_View_Amount.TabIndex = 10;
+            this.txt_View_Amount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // ViewVirtualLog
             // 

@@ -85,7 +85,6 @@ namespace TESTAPP.domain.account
         // 단리
         private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
         {
-            // 이후에 입/출금 계획 받아서 적용할 예정
             DateTime until = GetNextDate(start);
             if (until.CompareTo(end) > 0)
             {
