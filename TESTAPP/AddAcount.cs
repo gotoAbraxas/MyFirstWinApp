@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using System.Xml.Serialization;
 using TESTAPP.account.service;
 using TESTAPP.domain.account;
@@ -21,8 +24,7 @@ namespace TESTAPP
         private readonly string txt_Condition_ed = "txt_Condition_ed";
         private readonly string txt_Condition_interest = "txt_Condition_interest";
         private readonly string bt_Condition_interest = "bt_Condition_interest";
-
-        List<Control> ConditionControler = new List<Control>();
+        Dictionary<string,Control> ConditionControler = new Dictionary<string,Control>();
         private AccountService accountService;
 
         private enum AddConditionType
@@ -99,7 +101,8 @@ namespace TESTAPP
         private void SetAccountType()
         {
             SetEnumToCombo<AccountType>(cb_AccountType);
-            cb_AccountType.SelectedIndex = 0;
+            //cb_AccountType.SelectedIndex = 5;
+            cb_AccountType.SelectedItem = AccountType.직접입력;
         }
 
         #endregion
@@ -108,7 +111,7 @@ namespace TESTAPP
         private void SetSettleType()
         {
             SetEnumToCombo<SettleType>(cb_SettleType);
-            cb_SettleType.SelectedIndex = 0;
+            cb_SettleType.SelectedItem = SettleType.단리;
         }
         #endregion
 
@@ -117,7 +120,7 @@ namespace TESTAPP
         {
             // 이자 주기 
             SetEnumToCombo<SettlePeriodType>(cb_SettlePeriod);
-            cb_SettlePeriod.SelectedIndex = 0;
+            cb_SettlePeriod.SelectedItem = SettlePeriodType.일;
         }
 
         #endregion
@@ -225,7 +228,7 @@ namespace TESTAPP
         private void SetAddCondition()
         {
             SetEnumToCombo<AddConditionType>(cb_AddCondition);
-            cb_AddCondition.SelectedIndex = 0;
+            cb_AddCondition.SelectedItem = AddConditionType.금액;
         }
 
         #endregion
@@ -253,11 +256,13 @@ namespace TESTAPP
 
         private void AddAmountCondition()
         {
+
             FlowLayoutPanel layout = new FlowLayoutPanel();
 
+            string id = Guid.NewGuid().ToString();
+            Button cancel = DeleteCondition(id);
             Button bt = PlusMinusBt();
-
-            DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, width: flp_Condition.Width - 10, height: 35);
+            DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, width: flp_Condition.Width - 10, name: id, height: 35);
 
             DynamicLabelInsert(this, new Label(), layout, $"{AddConditionType.금액}{ConditionControler.Count}", AddConditionType.금액.ToString(), 30, 30);
             DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition_st}{ConditionControler.Count}", 130, 30);
@@ -267,15 +272,19 @@ namespace TESTAPP
             DynamicInsert<Button>(this, bt, layout, $"{bt_Condition_interest}{ConditionControler.Count}", 20, 20);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
-            ConditionControler.Add(layout);
+            DynamicInsert<Button>(this, cancel, layout, id, width: 40, height: 20);
+
+            ConditionControler.Add(id, layout);
 
         }
 
         private void AddPeriodCondion()
         {
             FlowLayoutPanel layout = new FlowLayoutPanel();
-            Button bt = PlusMinusBt();
 
+            string id = Guid.NewGuid().ToString();
+            Button cancel = DeleteCondition(id);
+            Button bt = PlusMinusBt();
             DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, width: flp_Condition.Width - 10, height: 35);
 
             DynamicLabelInsert(this, new Label(), layout, $"{AddConditionType.기간}{ConditionControler.Count}", AddConditionType.기간.ToString(), 30, 30);
@@ -287,7 +296,9 @@ namespace TESTAPP
             DynamicInsert<Button>(this, bt, layout, $"{bt_Condition_interest}{ConditionControler.Count}", 20, 20);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
-            ConditionControler.Add(layout);
+            DynamicInsert<Button>(this, cancel, layout, id, width: 40, height: 20);
+
+            ConditionControler.Add(id, layout);
         }
         private Button PlusMinusBt()
         {
@@ -309,10 +320,29 @@ namespace TESTAPP
             return bt;
         }
 
+        private Button DeleteCondition(string id)
+        {
+            Button cancel = new Button();
+            cancel.Text = "삭제";
+            cancel.Click += (sender, o) =>
+            {
+                ConditionControler.TryGetValue(id, out Control value);
+                this.Controls.Remove(value);  
+                foreach (Control ct in value.Controls)
+                {
+                    ct.Dispose();
+                }
+                value.Dispose();
+                ConditionControler.Remove(id);
+
+            };
+            return cancel;
+        }
+
 
         #endregion
 
-        #region "동적 조건 초기화"
+        #region "동적 조건 삭제/리셋"
         private void bt_Reset_Click(object sender, EventArgs e)
         {
             ResetCondition();
@@ -320,12 +350,21 @@ namespace TESTAPP
 
         private void ResetCondition()
         {
-            foreach (Control control in ConditionControler)
+            foreach (Control control in ConditionControler.Values)
             {
-                this.Controls.Remove(control);
-                control.Dispose();
+                DiposeControl(control);
             }
             ConditionControler.Clear();
+        }
+
+        private void DiposeControl(Control control)
+        {
+            foreach (Control ct in control.Controls)
+            {
+                ct.Dispose();
+            }
+            this.Controls.Remove(control);
+            control.Dispose();
         }
 
         #endregion

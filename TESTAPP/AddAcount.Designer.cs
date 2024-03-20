@@ -192,9 +192,9 @@
             // flp_Condition
             // 
             this.flp_Condition.AutoScroll = true;
-            this.flp_Condition.Location = new System.Drawing.Point(361, 54);
+            this.flp_Condition.Location = new System.Drawing.Point(339, 54);
             this.flp_Condition.Name = "flp_Condition";
-            this.flp_Condition.Size = new System.Drawing.Size(472, 330);
+            this.flp_Condition.Size = new System.Drawing.Size(531, 330);
             this.flp_Condition.TabIndex = 14;
             // 
             // bt_AddCondition

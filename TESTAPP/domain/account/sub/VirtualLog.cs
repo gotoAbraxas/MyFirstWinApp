@@ -47,12 +47,7 @@ namespace TESTAPP.domain.account.sub
         public string Description { get; set; }
 
     }
-    public struct AfterPlanDateRatio
-    {
-        public AccountLogType AccountLogType { get; set; }
-        public decimal Amount { get; set; }
-        public double Ratio { get; set; }
-    }
+    
 
     public struct VirtualLogConditionaly
     {
