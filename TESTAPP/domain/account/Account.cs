@@ -75,7 +75,7 @@ namespace TESTAPP.domain.account
                     SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start, in end, log, in afterPlans);
                     break;
                 case SettleType.복리:
-                    CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start, in end, log, in afterPlans);
+                    CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start, end, log,  afterPlans);
                     break;
                 default:
                     break;
@@ -87,105 +87,112 @@ namespace TESTAPP.domain.account
         // 단리
         private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
         {
-            DateTime until = GetNextDate(start);
-
-            decimal virtualAmount = amount; //* GetAmountRatio(start, start, end); // 현재는 이 결과를 쓰지 않음.
-
-            if (until.CompareTo(end) > 0)
-            {
-                ReflectAfterPlan(amount, ref virtualAmount , start, end, log, afterPlans, resultInterest);
-                return; // 재귀 종료
-            }
-
-
-            amount = ReflectAfterPlan(amount,ref virtualAmount, start, until, log, afterPlans, resultInterest);
-
-            decimal changedInterest = Interest;
-
-            changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
-            changedInterest += GetResultPeriodCondion(start); // 조건에 맞게 추가할 이자.
-
-            int date = ConvertSettlePeriodDate(SettlePeriodType);
-            decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
-
-
-            // 지금 적용될 이윤
-            // 몇가지는 조금 엇나가는 계산이 있긴한데 .. 일단 ..  
-
-            decimal thisTimeInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자
-            resultInterest += thisTimeInterest;
-
-            resultAmount = amount + resultInterest;
-
-
-            log.Add(new VirtualLog()
-            {
-                AccountLogType = AccountLogType.입금,
-                DateTime = until,
-                Description = "이자",
-                Amount = thisTimeInterest,
-                Total = resultAmount
-            });
-
-            SimpleInterest(ref amount, ref resultInterest, ref resultAmount, until, in end, log, afterPlans);
-        }
-
-
-
-        // 복리
-        private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log, in List<AfterPlan> afterPlans)
-        {
-
-            DateTime until = GetNextDate(start);
 
             decimal virtualAmount = amount; //* GetAmountRatio(start, start, end); // 이게 좀 대대적인 ..
+            DateTime until = start;
 
-            if (until.CompareTo(end) > 0)
+            while (until.CompareTo(end) <= 0)
             {
-                ReflectAfterPlan(amount, ref virtualAmount, until, end, log, afterPlans, resultInterest);
-                return; // 재귀 종료
+
+                DateTime loopStart = start;
+                until = GetNextDate(start);
+
+                decimal changedInterest = Interest;
+
+                // amount = 실제 금액, virtualAmount = 기간이 반영된 상태
+                amount = ReflectAfterPlan(amount, ref virtualAmount, loopStart, until, log, afterPlans, resultInterest);
+
+                changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
+                changedInterest += GetResultPeriodCondion(loopStart); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
+
+                int date = ConvertSettlePeriodDate(SettlePeriodType);
+
+                decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
+
+                decimal thisTimeInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자 <- 이게 바뀌어야함.
+                /*
+                 * 이번 타임 이자 이걸 어떻게 바꿀 꺼냐면, 총 세가지를 더한 값을 넣어줄거임.
+                 * 1. 시작기간부터 잘 반영된 금액
+                 * 2. 도중에 입금된 금액(이건 비율을 가져오려면 조금 신경써야할 부분이 있음)
+                 * 3. 도중에 출금된 금액(이것도 입금 기간부터 끝 기간까지가 역으로 환산되는 금액임)
+                 * 
+                 */
+
+                resultInterest += thisTimeInterest;
+
+                resultAmount = amount + resultInterest;
+
+                log.Add(new VirtualLog()
+                {
+                    AccountLogType = AccountLogType.입금,
+                    DateTime = start,
+                    Description = "이자",
+                    Amount = thisTimeInterest,
+                    Total = resultAmount
+                });
+
+                if (until.CompareTo(end) > 0)
+                {
+                    ReflectAfterPlan(amount, ref virtualAmount, loopStart, end, log, afterPlans, resultInterest);
+                    break; // 재귀 종료
+                }
             }
-
-            decimal changedInterest = Interest;
-
-            // amount = 실제 금액, virtualAmount = 기간이 반영된 상태
-            amount = ReflectAfterPlan(amount, ref virtualAmount, start, until, log, afterPlans, resultInterest);
-
-            changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
-            changedInterest += GetResultPeriodCondion(start); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
-
-            int date = ConvertSettlePeriodDate(SettlePeriodType);
-
-            decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
-
-            decimal thisTimeInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자 <- 이게 바뀌어야함.
-            /*
-             * 이번 타임 이자 이걸 어떻게 바꿀 꺼냐면, 총 세가지를 더한 값을 넣어줄거임.
-             * 1. 시작기간부터 잘 반영된 금액
-             * 2. 도중에 입금된 금액(이건 비율을 가져오려면 조금 신경써야할 부분이 있음)
-             * 3. 도중에 출금된 금액(이것도 입금 기간부터 끝 기간까지가 역으로 환산되는 금액임)
-             * 
-             */
-
-            resultInterest += thisTimeInterest;
-
-            resultAmount = amount + thisTimeInterest;
-            amount += thisTimeInterest;
-
-            log.Add(new VirtualLog()
-            {
-                AccountLogType = AccountLogType.입금,
-                DateTime = until,
-                Description = "이자",
-                Amount = thisTimeInterest,
-                Total = resultAmount
-            });
-
-
-            CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until, in end, log, afterPlans);
-
         }
 
+        private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans)
+        {
+            decimal virtualAmount = amount; //* GetAmountRatio(start, start, end); // 이게 좀 대대적인 ..
+            DateTime until = GetNextDate(start);
+
+            while (until.CompareTo(end) <= 0)
+            {
+
+                DateTime loopStart = until;
+                until = GetNextDate(until);
+
+                decimal changedInterest = Interest;
+
+                // amount = 실제 금액, virtualAmount = 기간이 반영된 상태
+                amount = ReflectAfterPlan(amount, ref virtualAmount, loopStart, until, log, afterPlans, resultInterest);
+
+                changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
+                changedInterest += GetResultPeriodCondion(loopStart); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
+
+                int date = ConvertSettlePeriodDate(SettlePeriodType);
+
+                decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
+
+                decimal thisTimeInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자 <- 이게 바뀌어야함.
+                /*
+                 * 이번 타임 이자 이걸 어떻게 바꿀 꺼냐면, 총 세가지를 더한 값을 넣어줄거임.
+                 * 1. 시작기간부터 잘 반영된 금액
+                 * 2. 도중에 입금된 금액(이건 비율을 가져오려면 조금 신경써야할 부분이 있음)
+                 * 3. 도중에 출금된 금액(이것도 입금 기간부터 끝 기간까지가 역으로 환산되는 금액임)
+                 * 
+                 */
+
+                resultInterest += thisTimeInterest;
+
+                resultAmount = amount + thisTimeInterest;
+                amount += thisTimeInterest;
+
+                log.Add(new VirtualLog()
+                {
+                    AccountLogType = AccountLogType.입금,
+                    DateTime = loopStart,
+                    Description = "이자",
+                    Amount = thisTimeInterest,
+                    Total = resultAmount
+                });
+
+                if (until.CompareTo(end) > 0)
+                {
+                    ReflectAfterPlan(amount, ref virtualAmount, loopStart, end, log, afterPlans, resultInterest);
+                    break; // 재귀 종료
+                }
+            }
+        }
+      
         private decimal GetAmountRatio(DateTime start, DateTime standard, DateTime end)
         {
             const int closingHour = 17; // 이건 나중에 계좌 정산 시간으로 넘겨도 되겠다.
