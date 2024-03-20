@@ -15,6 +15,9 @@ namespace TESTAPP.domain.account.sub
 
     }
 
+
+
+
     public struct VirtualDto
     {
         public DateTime Now { get; set; }

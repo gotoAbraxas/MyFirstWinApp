@@ -82,13 +82,13 @@ namespace TESTAPP.domain.account
             }
         }
 
-        // 두개가 매우 유사해서 합칠 수 있을거같은데 ...
+        // 매우 유사하지만 분리해두는 것이 이후에 편하다.
         // 단리
         private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
         {
             DateTime until = GetNextDate(start);
 
-            decimal virtualAmount = amount * GetAmountRatio(start, start, end); // 이게 좀 대대적인 ..
+            decimal virtualAmount = amount * GetAmountRatio(start, start, end); // 현재는 이 결과를 쓰지 않음.
 
             if (until.CompareTo(end) > 0)
             {
@@ -111,8 +111,8 @@ namespace TESTAPP.domain.account
             // 지금 적용될 이윤
             // 몇가지는 조금 엇나가는 계산이 있긴한데 .. 일단 ..  
 
-            decimal nowInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자
-            resultInterest += nowInterest;
+            decimal thisTimeInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자
+            resultInterest += thisTimeInterest;
 
             resultAmount = amount + resultInterest;
 
@@ -122,7 +122,7 @@ namespace TESTAPP.domain.account
                 AccountLogType = AccountLogType.입금,
                 DateTime = until,
                 Description = "이자",
-                Amount = nowInterest,
+                Amount = thisTimeInterest,
                 Total = resultAmount
             });
 
@@ -134,10 +134,10 @@ namespace TESTAPP.domain.account
         // 복리
         private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log, in List<AfterPlan> afterPlans)
         {
-            
+
             DateTime until = GetNextDate(start);
 
-            decimal virtualAmount = amount * GetAmountRatio(start, start,end); // 이게 좀 대대적인 ..
+            decimal virtualAmount = amount * GetAmountRatio(start, start, end); // 이게 좀 대대적인 ..
 
             if (until.CompareTo(end) > 0)
             {
@@ -157,7 +157,7 @@ namespace TESTAPP.domain.account
 
             decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
 
-            decimal nowInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자 <- 이게 바뀌어야함.
+            decimal thisTimeInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자 <- 이게 바뀌어야함.
             /*
              * 이번 타임 이자 이걸 어떻게 바꿀 꺼냐면, 총 세가지를 더한 값을 넣어줄거임.
              * 1. 시작기간부터 잘 반영된 금액
@@ -166,24 +166,22 @@ namespace TESTAPP.domain.account
              * 
              */
 
-            resultInterest += nowInterest;
+            resultInterest += thisTimeInterest;
 
-            resultAmount = amount + nowInterest;
-
-            amount += nowInterest;  // 딱 이거 하나 다르면 그냥 .. if 해도? 근데 또 책임분리 면에선...
-
+            resultAmount = amount + thisTimeInterest;
+            amount += thisTimeInterest;
 
             log.Add(new VirtualLog()
             {
                 AccountLogType = AccountLogType.입금,
                 DateTime = until,
                 Description = "이자",
-                Amount = nowInterest,
+                Amount = thisTimeInterest,
                 Total = resultAmount
             });
 
 
-            CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until,in end, log, afterPlans);
+            CompoundInterest(ref amount, ref resultInterest, ref resultAmount, until, in end, log, afterPlans);
 
         }
 
@@ -208,6 +206,7 @@ namespace TESTAPP.domain.account
 
             DateTime lasttime = new DateTime(standard.Year, 12, 31);
 
+            // 이건 조금 손봐야하는 개념이다 .
             if (SettlePeriodType == SettlePeriodType.년 && standard.Hour > closingHour)
             {
                 return (decimal)(lasttime.DayOfYear - standard.DayOfYear) / end.DayOfYear;
@@ -286,7 +285,7 @@ namespace TESTAPP.domain.account
             DateTime now = DateTime.Now.Date;
             decimal result = 0;
             List<decimal> resultPeriodConditions = periodConditions
-                                    .Where((condition) => start.CompareTo(now.AddMonths(condition.StartValue)) > 0 && condition.Applyed)
+                                    .Where((condition) => condition.CompareDateEnter(start,now) &&condition.CompareDatePass(start,now)  && condition.Applyed)
                                     .Select((condition) => condition.ChangedValue).ToList();
 
             foreach (decimal item in resultPeriodConditions)

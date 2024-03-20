@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 
 namespace TESTAPP.domain.account.sub
 {
+
+    internal struct AmountConditionOfInterestDto
+    {
+        public string Start;
+        public string End;
+        public string Interest;
+        public int Sign;
+
+    }
     internal class AmountConditionOfInterest
     {
         public decimal StartValue { get; set; }
