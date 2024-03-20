@@ -82,7 +82,7 @@ namespace TESTAPP
             this.accountTab.Location = new System.Drawing.Point(36, 55);
             this.accountTab.Name = "accountTab";
             this.accountTab.SelectedIndex = 0;
-            this.accountTab.Size = new System.Drawing.Size(888, 476);
+            this.accountTab.Size = new System.Drawing.Size(916, 476);
             this.accountTab.TabIndex = 2;
             // 
             // myAccountTab
@@ -90,7 +90,7 @@ namespace TESTAPP
             this.myAccountTab.Location = new System.Drawing.Point(4, 22);
             this.myAccountTab.Name = "myAccountTab";
             this.myAccountTab.Padding = new System.Windows.Forms.Padding(3);
-            this.myAccountTab.Size = new System.Drawing.Size(880, 450);
+            this.myAccountTab.Size = new System.Drawing.Size(908, 450);
             this.myAccountTab.TabIndex = 0;
             this.myAccountTab.Text = "내 계좌";
             this.myAccountTab.UseVisualStyleBackColor = true;
@@ -123,7 +123,7 @@ namespace TESTAPP
             this.calProfitTab.Location = new System.Drawing.Point(4, 22);
             this.calProfitTab.Name = "calProfitTab";
             this.calProfitTab.Padding = new System.Windows.Forms.Padding(3);
-            this.calProfitTab.Size = new System.Drawing.Size(880, 450);
+            this.calProfitTab.Size = new System.Drawing.Size(908, 450);
             this.calProfitTab.TabIndex = 1;
             this.calProfitTab.Text = "이자 계산해보기";
             this.calProfitTab.UseVisualStyleBackColor = true;
@@ -142,7 +142,7 @@ namespace TESTAPP
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(228, 376);
+            this.label3.Location = new System.Drawing.Point(228, 390);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(67, 12);
             this.label3.TabIndex = 31;
@@ -151,7 +151,7 @@ namespace TESTAPP
             // cb_CalProfitTab_Period
             // 
             this.cb_CalProfitTab_Period.FormattingEnabled = true;
-            this.cb_CalProfitTab_Period.Location = new System.Drawing.Point(160, 372);
+            this.cb_CalProfitTab_Period.Location = new System.Drawing.Point(160, 386);
             this.cb_CalProfitTab_Period.Name = "cb_CalProfitTab_Period";
             this.cb_CalProfitTab_Period.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.cb_CalProfitTab_Period.Size = new System.Drawing.Size(61, 20);
@@ -296,7 +296,7 @@ namespace TESTAPP
             // lb_tmp_02
             // 
             this.lb_tmp_02.AutoSize = true;
-            this.lb_tmp_02.Location = new System.Drawing.Point(390, 315);
+            this.lb_tmp_02.Location = new System.Drawing.Point(390, 324);
             this.lb_tmp_02.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_tmp_02.Name = "lb_tmp_02";
             this.lb_tmp_02.Size = new System.Drawing.Size(29, 12);
@@ -306,7 +306,7 @@ namespace TESTAPP
             // lb_tmp_01
             // 
             this.lb_tmp_01.AutoSize = true;
-            this.lb_tmp_01.Location = new System.Drawing.Point(197, 314);
+            this.lb_tmp_01.Location = new System.Drawing.Point(197, 323);
             this.lb_tmp_01.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_tmp_01.Name = "lb_tmp_01";
             this.lb_tmp_01.Size = new System.Drawing.Size(29, 12);
@@ -315,7 +315,7 @@ namespace TESTAPP
             // 
             // dt_From
             // 
-            this.dt_From.Location = new System.Drawing.Point(37, 310);
+            this.dt_From.Location = new System.Drawing.Point(37, 319);
             this.dt_From.MinDate = new System.DateTime(2024, 3, 15, 0, 0, 0, 0);
             this.dt_From.Name = "dt_From";
             this.dt_From.Size = new System.Drawing.Size(156, 21);
@@ -325,7 +325,7 @@ namespace TESTAPP
             // 
             // dt_To
             // 
-            this.dt_To.Location = new System.Drawing.Point(229, 310);
+            this.dt_To.Location = new System.Drawing.Point(229, 319);
             this.dt_To.Name = "dt_To";
             this.dt_To.Size = new System.Drawing.Size(153, 21);
             this.dt_To.TabIndex = 8;
@@ -333,7 +333,7 @@ namespace TESTAPP
             // 
             // bt_Calculate
             // 
-            this.bt_Calculate.Location = new System.Drawing.Point(342, 364);
+            this.bt_Calculate.Location = new System.Drawing.Point(342, 378);
             this.bt_Calculate.Name = "bt_Calculate";
             this.bt_Calculate.Size = new System.Drawing.Size(101, 37);
             this.bt_Calculate.TabIndex = 7;
@@ -356,7 +356,7 @@ namespace TESTAPP
             this.flowLayoutPanel.AutoScroll = true;
             this.flowLayoutPanel.Location = new System.Drawing.Point(458, 62);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
-            this.flowLayoutPanel.Size = new System.Drawing.Size(382, 247);
+            this.flowLayoutPanel.Size = new System.Drawing.Size(422, 282);
             this.flowLayoutPanel.TabIndex = 1;
             // 
             // tranHis
@@ -370,7 +370,7 @@ namespace TESTAPP
             this.tranHis.Location = new System.Drawing.Point(4, 22);
             this.tranHis.Name = "tranHis";
             this.tranHis.Padding = new System.Windows.Forms.Padding(3);
-            this.tranHis.Size = new System.Drawing.Size(880, 450);
+            this.tranHis.Size = new System.Drawing.Size(908, 450);
             this.tranHis.TabIndex = 2;
             this.tranHis.Text = "거래내역";
             this.tranHis.UseVisualStyleBackColor = true;
@@ -435,7 +435,7 @@ namespace TESTAPP
             this.grid_accountLog.ReadOnly = true;
             this.grid_accountLog.RowHeadersWidth = 62;
             this.grid_accountLog.RowTemplate.Height = 23;
-            this.grid_accountLog.Size = new System.Drawing.Size(806, 339);
+            this.grid_accountLog.Size = new System.Drawing.Size(854, 339);
             this.grid_accountLog.TabIndex = 2;
             // 
             // bt_AddAcount
@@ -481,7 +481,7 @@ namespace TESTAPP
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(956, 555);
+            this.ClientSize = new System.Drawing.Size(978, 555);
             this.Controls.Add(this.bt_Refresh);
             this.Controls.Add(this.lb_SelectAccount);
             this.Controls.Add(this.cb_SelectAccount);
