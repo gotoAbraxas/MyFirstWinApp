@@ -137,9 +137,15 @@ namespace TESTAPP
 
             if (name != null)
             {
-                accountService.SelectAccountById(1L, name.AccountId);
                 // 굳이 이 과정이 필요한가 싶긴함.. 나중에 수정 필요
+                accountService.SelectAccountById(1L, name.AccountId);
+
+                //스택 터짐 방지
+                ValidDate(name.SettlePeriodType);
             }
+
+
+
             return name;
         }
 
@@ -496,7 +502,39 @@ namespace TESTAPP
 
         #endregion
 
+        #region "일단위 연산 스택 오버플로우 방지"
+        private void cb_CalProfitTab_Period_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if ((Period)cb_CalProfitTab_Period.SelectedItem == Period.일단위)
+            {
+                if (dt_To.Value.CompareTo(DateTime.Now.AddYears(3)) > 0)
+                {
+                    MessageBox.Show("일 단위는 \n3년이 설정 가능한 최대 날짜입니다.");
+                }
+
+                dt_To.MaxDate = DateTime.Now.AddYears(3);
+            }
+            else
+            {
+                dt_To.MaxDate = DateTime.Now.AddYears(20);
+            }
+        }
+        private void ValidDate(SettlePeriodType type)
+        {
+            if (type == SettlePeriodType.일)
+            {
+                dt_To.MaxDate = DateTime.Now.AddYears(3);
+            }
+            else
+            {
+                dt_To.MaxDate = DateTime.Now.AddYears(15);
+            }
+        }
+
         #endregion
+
+        #endregion
+
 
     }
 }

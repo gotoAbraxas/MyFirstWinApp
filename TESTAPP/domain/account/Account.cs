@@ -83,12 +83,13 @@ namespace TESTAPP.domain.account
         }
 
         // 매우 유사하지만 분리해두는 것이 이후에 편하다.
+        // 파라미터를 dto로 관리할까
         // 단리
         private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
         {
             DateTime until = GetNextDate(start);
 
-            decimal virtualAmount = amount * GetAmountRatio(start, start, end); // 현재는 이 결과를 쓰지 않음.
+            decimal virtualAmount = amount; //* GetAmountRatio(start, start, end); // 현재는 이 결과를 쓰지 않음.
 
             if (until.CompareTo(end) > 0)
             {
@@ -137,7 +138,7 @@ namespace TESTAPP.domain.account
 
             DateTime until = GetNextDate(start);
 
-            decimal virtualAmount = amount * GetAmountRatio(start, start, end); // 이게 좀 대대적인 ..
+            decimal virtualAmount = amount; //* GetAmountRatio(start, start, end); // 이게 좀 대대적인 ..
 
             if (until.CompareTo(end) > 0)
             {
@@ -261,7 +262,7 @@ namespace TESTAPP.domain.account
                 }
 
                 amount += amountChange;
-                virtualAmount += amountChange * GetAmountRatio(start,afterPlan.DateTime,end);
+                virtualAmount += amountChange; //* GetAmountRatio(start,afterPlan.DateTime,end);
                 if (amount < 0)
                 {
                     throw new Exception("잔액이 0 이하로 되는 경우가 존재합니다.");
