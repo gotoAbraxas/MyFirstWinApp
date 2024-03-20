@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using TESTAPP.domain.account.iFace;
 using TESTAPP.domain.account.sub;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 using static TESTAPP.common.component.Dynamic;
 
 namespace TESTAPP.domain.account
@@ -85,16 +86,18 @@ namespace TESTAPP.domain.account
         // 단리
         private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
         {
-            // 이후에 입/출금 계획 받아서 적용할 예정
             DateTime until = GetNextDate(start);
+
+            decimal virtualAmount = amount * GetAmountRatio(start, start, end); // 이게 좀 대대적인 ..
+
             if (until.CompareTo(end) > 0)
             {
-                ReflectAfterPlan(amount, start, end, log, afterPlans, resultInterest);
+                ReflectAfterPlan(amount, ref virtualAmount , start, end, log, afterPlans, resultInterest);
                 return; // 재귀 종료
             }
 
 
-            amount = ReflectAfterPlan(amount, start, until, log, afterPlans, resultInterest);
+            amount = ReflectAfterPlan(amount,ref virtualAmount, start, until, log, afterPlans, resultInterest);
 
             decimal changedInterest = Interest;
 
@@ -131,18 +134,21 @@ namespace TESTAPP.domain.account
         // 복리
         private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log, in List<AfterPlan> afterPlans)
         {
-
+            
             DateTime until = GetNextDate(start);
+
+            decimal virtualAmount = amount * GetAmountRatio(start, start,end); // 이게 좀 대대적인 ..
 
             if (until.CompareTo(end) > 0)
             {
-                ReflectAfterPlan(amount, until, end, log, afterPlans, resultInterest);
+                ReflectAfterPlan(amount, ref virtualAmount, until, end, log, afterPlans, resultInterest);
                 return; // 재귀 종료
             }
 
             decimal changedInterest = Interest;
 
-            amount = ReflectAfterPlan(amount, start, until, log, afterPlans, resultInterest);
+            // amount = 실제 금액, virtualAmount = 기간이 반영된 상태
+            amount = ReflectAfterPlan(amount, ref virtualAmount, start, until, log, afterPlans, resultInterest);
 
             changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
             changedInterest += GetResultPeriodCondion(start); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
@@ -181,6 +187,39 @@ namespace TESTAPP.domain.account
 
         }
 
+        private decimal GetAmountRatio(DateTime start, DateTime standard, DateTime end)
+        {
+            const int closingHour = 17; // 이건 나중에 계좌 정산 시간으로 넘겨도 되겠다.
+            const int today = 1;
+            // 이거 전부 분리할까.
+            
+            if (SettlePeriodType == SettlePeriodType.일 && standard.Hour > closingHour) return 0;
+            else if (SettlePeriodType == SettlePeriodType.일) return 1;
+
+            DateTime monthStart = new DateTime(start.Year, start.Month, 1);
+            if (SettlePeriodType == SettlePeriodType.개월 && standard.Hour > closingHour)
+            {
+                return (decimal)(standard.DayOfYear - monthStart.DayOfYear) / (end.DayOfYear - start.DayOfYear + 1);
+            }
+            else if(SettlePeriodType == SettlePeriodType.개월)
+            {
+                return (decimal)(standard.DayOfYear - monthStart.DayOfYear + today) / (end.DayOfYear - start.DayOfYear + 1);
+            }
+
+            DateTime lasttime = new DateTime(standard.Year, 12, 31);
+
+            if (SettlePeriodType == SettlePeriodType.년 && standard.Hour > closingHour)
+            {
+                return (decimal)(lasttime.DayOfYear - standard.DayOfYear) / end.DayOfYear;
+            }
+            else if (SettlePeriodType == SettlePeriodType.년)
+            {
+                return (decimal)(lasttime.DayOfYear - standard.DayOfYear + today) / end.DayOfYear;
+            }
+
+            return 0;
+        }
+
 
 
         private DateTime GetNextDate(DateTime dt)
@@ -200,12 +239,11 @@ namespace TESTAPP.domain.account
             }
             return dt;
         }
-        private decimal ReflectAfterPlan(decimal amount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans,decimal resultInterest)
+        private decimal ReflectAfterPlan(decimal amount,ref decimal virtualAmount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans,decimal resultInterest)
         {
             var ac = afterPlans
                 .Where((item) => (start.CompareTo(item.DateTime) < 0) && (item.DateTime.CompareTo(end) <= 0))
                 .OrderBy((item)=>item.DateTime).ToList();
-
 
             foreach (var afterPlan in ac)
             {
@@ -224,6 +262,7 @@ namespace TESTAPP.domain.account
                 }
 
                 amount += amountChange;
+                virtualAmount += amountChange * GetAmountRatio(start,afterPlan.DateTime,end);
                 if (amount < 0)
                 {
                     throw new Exception("잔액이 0 이하로 되는 경우가 존재합니다.");
@@ -237,7 +276,6 @@ namespace TESTAPP.domain.account
                     Amount = afterPlan.Amount,
                     Total = amount + resultInterest
                 });
-
             }
             return amount;
         }

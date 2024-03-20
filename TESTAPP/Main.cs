@@ -18,9 +18,7 @@ namespace TESTAPP
         #region "속성
 
         private AccountService accountService;
-
-        List<Control> ConditionControler = new List<Control>();
-
+        Dictionary<string,Control> ConditionControler = new Dictionary<string,Control>();
         private readonly string txt_Condition = "txt_Condition";
         private readonly string dtp_Condition = "dtp_Condition";
         private readonly string lb_Condition = "lb_Condition";
@@ -78,16 +76,6 @@ namespace TESTAPP
             SetCalProfitTabValue(ac);
 
             ResetCondition();
-        }
-
-        private void ResetCondition()
-        {
-            foreach (Control control in ConditionControler)
-            {
-                this.Controls.Remove(control);
-                control.Dispose();
-            }
-            ConditionControler.Clear();
         }
 
         #endregion
@@ -202,7 +190,7 @@ namespace TESTAPP
         private void SetCalProfitTabPeriod()
         {
             SetEnumToCombo<Period>(cb_CalProfitTab_Period);
-            cb_CalProfitTab_Period.SelectedIndex = 0;
+            cb_CalProfitTab_Period.SelectedItem = Period.내역;
         }
         #endregion
 
@@ -235,6 +223,8 @@ namespace TESTAPP
         private void AddCondition()
         {
             FlowLayoutPanel layout = new FlowLayoutPanel();
+            string id = Guid.NewGuid().ToString();
+            Button cancel = DeleteCondition(id);
 
             DateTime standard = DateTime.Now.Date.AddDays(1);
             DateTimePicker dtp = new DateTimePicker();
@@ -243,25 +233,65 @@ namespace TESTAPP
 
             ComboBox cb = new ComboBox();
             SetEnumToCombo<AccountLogType>(cb);
-            cb.SelectedIndex = 0;
+            cb.SelectedItem = AccountLogType.입금;
             cb.DropDownStyle = ComboBoxStyle.DropDownList; // 나중엔 콤보박스도 따로 만들면 좋긴할듯 .?
-
+    
             DynamicInsert<FlowLayoutPanel>(this, layout, flowLayoutPanel, width: flowLayoutPanel.Width-10, height: 40);
 
             DynamicInsert<DateTimePicker>(this, dtp, layout, $"{dtp_Condition}{ConditionControler.Count}", 110, 30);
             DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition}{ConditionControler.Count}", 120, 30);
             DynamicLabelInsert(this, new Label(), layout, $"{lb_Condition}{ConditionControler.Count}", "원", 25, 30);
             DynamicInsert<ComboBox>(this, cb, layout, $"{cb_Condition}{ConditionControler.Count}", 50, 30);
-            ConditionControler.Add(layout);
+            DynamicInsert<Button>(this, cancel, layout, id, width: 40, height: 20);
+
+            ConditionControler.Add(id,layout);
         }
 
+        private Button DeleteCondition(string id)
+        {
+            Button cancel = new Button();
+            cancel.Text = "삭제";
+            cancel.Click += (sender, o) =>
+            {
+                ConditionControler.TryGetValue(id, out Control value);
+                this.Controls.Remove(value);
+                foreach (Control ct in value.Controls)
+                {
+                    ct.Dispose();
+                }
+                value.Dispose();
+                ConditionControler.Remove(id);
+
+            };
+            return cancel;
+        }
 
         #endregion
 
-        #region "동적 조건 추가 리셋"
+        #region "동적 조건 추가 삭제/리셋"
+
         private void bt_ResetCondition_Click(object sender, EventArgs e)
         {
             ResetCondition();
+        }
+
+        private void ResetCondition()
+        {
+            foreach (Control control in ConditionControler.Values)
+            {
+                DiposeControl(control);
+            }
+            ConditionControler.Clear();
+        }
+
+        private void DiposeControl(Control control)
+        {
+            foreach (Control ct in control.Controls)
+            {
+                ct.Dispose();
+            }
+            this.Controls.Remove(control);
+            control.Dispose();
         }
 
         #endregion
@@ -468,9 +498,5 @@ namespace TESTAPP
 
         #endregion
 
-        private void toolTip1_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
     }
 }

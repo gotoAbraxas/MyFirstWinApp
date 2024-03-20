@@ -87,7 +87,7 @@
             this.cb_AccountType.FormattingEnabled = true;
             this.cb_AccountType.Location = new System.Drawing.Point(127, 17);
             this.cb_AccountType.Name = "cb_AccountType";
-            this.cb_AccountType.Size = new System.Drawing.Size(75, 20);
+            this.cb_AccountType.Size = new System.Drawing.Size(97, 20);
             this.cb_AccountType.TabIndex = 2;
             this.cb_AccountType.SelectedIndexChanged += new System.EventHandler(this.cb_AccountType_SelectedIndexChanged);
             // 
@@ -103,7 +103,7 @@
             // txt_AccountType
             // 
             this.txt_AccountType.Enabled = false;
-            this.txt_AccountType.Location = new System.Drawing.Point(209, 16);
+            this.txt_AccountType.Location = new System.Drawing.Point(232, 17);
             this.txt_AccountType.Name = "txt_AccountType";
             this.txt_AccountType.Size = new System.Drawing.Size(76, 21);
             this.txt_AccountType.TabIndex = 4;
@@ -192,9 +192,9 @@
             // flp_Condition
             // 
             this.flp_Condition.AutoScroll = true;
-            this.flp_Condition.Location = new System.Drawing.Point(361, 54);
+            this.flp_Condition.Location = new System.Drawing.Point(339, 54);
             this.flp_Condition.Name = "flp_Condition";
-            this.flp_Condition.Size = new System.Drawing.Size(472, 330);
+            this.flp_Condition.Size = new System.Drawing.Size(531, 330);
             this.flp_Condition.TabIndex = 14;
             // 
             // bt_AddCondition

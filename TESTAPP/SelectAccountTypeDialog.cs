@@ -17,6 +17,7 @@ namespace TESTAPP
         저축성예금,
         MMW,
         MMF,
+        RP,
         직접입력,
 
 
@@ -35,7 +36,7 @@ namespace TESTAPP
         private void Init()
         {
             SetEnumToCombo<AccountType>(cb_AccountTypeList);
-            cb_AccountTypeList.SelectedIndex = 0;
+            cb_AccountTypeList.SelectedItem = AccountType.자유입출금;
 
         }
 
