@@ -205,8 +205,8 @@ namespace TESTAPP
         {
             SelectAccounts();
             AccountLogSetting();
+            InitCalProfitTabValue();
 
-            
         }
         private void bt_Refresh_log_Click(object sender, EventArgs e)
         {
@@ -505,19 +505,14 @@ namespace TESTAPP
         #region "일단위 연산 스택 오버플로우 방지"
         private void cb_CalProfitTab_Period_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if ((Period)cb_CalProfitTab_Period.SelectedItem == Period.일단위)
-            {
-                if (dt_To.Value.CompareTo(DateTime.Now.AddYears(3)) > 0)
-                {
-                    MessageBox.Show("일 단위는 \n3년이 설정 가능한 최대 날짜입니다.");
-                }
 
-                dt_To.MaxDate = DateTime.Now.AddYears(3);
-            }
-            else
-            {
-                dt_To.MaxDate = DateTime.Now.AddYears(20);
-            }
+            Account ac = GetSelectedAccount();
+
+            if (ac != null) return;
+
+            ValidDate(ac.SettlePeriodType);
+
+
         }
         private void ValidDate(SettlePeriodType type)
         {
@@ -527,7 +522,18 @@ namespace TESTAPP
             }
             else
             {
-                dt_To.MaxDate = DateTime.Now.AddYears(15);
+                if ((Period)cb_CalProfitTab_Period.SelectedItem == Period.일단위)
+                {
+                    if (dt_To.Value.CompareTo(DateTime.Now.AddYears(3)) > 0)
+                    {
+                        MessageBox.Show("일 단위는 \n3년이 설정 가능한 최대 날짜입니다.");
+                    }
+                    dt_To.MaxDate = DateTime.Now.AddYears(3);
+                }
+                else
+                {
+                    dt_To.MaxDate = DateTime.Now.AddYears(20);
+                }
             }
         }
 
