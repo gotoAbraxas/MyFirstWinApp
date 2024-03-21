@@ -137,9 +137,15 @@ namespace TESTAPP
 
             if (name != null)
             {
-                accountService.SelectAccountById(1L, name.AccountId);
                 // 굳이 이 과정이 필요한가 싶긴함.. 나중에 수정 필요
+                accountService.SelectAccountById(1L, name.AccountId);
+
+                //스택 터짐 방지
+                ValidDate(name.SettlePeriodType);
             }
+
+
+
             return name;
         }
 
@@ -199,8 +205,8 @@ namespace TESTAPP
         {
             SelectAccounts();
             AccountLogSetting();
+            InitCalProfitTabValue();
 
-            
         }
         private void bt_Refresh_log_Click(object sender, EventArgs e)
         {
@@ -454,12 +460,11 @@ namespace TESTAPP
                 aps.Add(new AfterPlan()
                 {
                     AccountLogType = (AccountLogType) GetControl<ComboBox>(this, $"{cb_Condition}{i}").SelectedItem,
-                    Amount = decimal.Parse(GetTxtAmountPretty(this, $"{txt_Condition}{i}")),
+                    Amount = decimal.TryParse(GetTxtAmountPretty(this, $"{txt_Condition}{i}"),out decimal result) ? result : 0,
                     DateTime = GetControl<DateTimePicker>(this, $"{dtp_Condition}{i}").Value.Date,
                     Description = "입/출금 계획"
                 });
             }
-
             aps = aps.OrderBy((item)=> item.DateTime).ToList();
 
             return aps;
@@ -496,7 +501,46 @@ namespace TESTAPP
 
         #endregion
 
+        #region "일단위 연산 스택 오버플로우 방지 .. 잠시 보류 코드 수정함."
+        private void cb_CalProfitTab_Period_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+
+            Account ac = GetSelectedAccount();
+
+            if (ac is null) return;
+
+            ValidDate(ac.SettlePeriodType);
+
+
+        }
+        private void ValidDate(SettlePeriodType type)
+        {
+            /*
+            if (type == SettlePeriodType.일)
+            {
+                dt_To.MaxDate = DateTime.Now.AddYears(3);
+            }
+            else
+            {
+                if ((Period)cb_CalProfitTab_Period.SelectedItem == Period.일단위)
+                {
+                    if (dt_To.Value.CompareTo(DateTime.Now.AddYears(3)) > 0)
+                    {
+                        MessageBox.Show("일 단위는 \n3년이 설정 가능한 최대 날짜입니다.");
+                    }
+                    dt_To.MaxDate = DateTime.Now.AddYears(3);
+                }
+                else
+                {
+                    dt_To.MaxDate = DateTime.Now.AddYears(20);
+                }
+            }*/
+        }
+
         #endregion
+
+        #endregion
+
 
     }
 }

@@ -145,13 +145,13 @@ namespace TESTAPP.common.component
             {
                 decimal number = (decimal.Parse(value) / 100) + 1;
                 decimal cubeRoot = (decimal)Math.Pow((double)number, remain / share);
-                approximation = (Math.Round(cubeRoot * 100, 6) - 100);
+                approximation = (Math.Round(cubeRoot * 100, 8) - 100);
             }
             else
             {
                 decimal number = decimal.Parse(value);
                 decimal interestResult = number * (decimal)(remain / share);
-                approximation = (Math.Round(interestResult, 6));
+                approximation = (Math.Round(interestResult, 8));
             }
             return approximation; 
         }
@@ -164,7 +164,7 @@ namespace TESTAPP.common.component
             switch (type)
             {
                 case SettlePeriodType.일:
-                    share = 365;
+                    share = 365-105;
                     break;
                 case SettlePeriodType.개월:
                     share = 12;

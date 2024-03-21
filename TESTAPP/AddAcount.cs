@@ -24,6 +24,8 @@ namespace TESTAPP
         private readonly string txt_Condition_ed = "txt_Condition_ed";
         private readonly string txt_Condition_interest = "txt_Condition_interest";
         private readonly string bt_Condition_interest = "bt_Condition_interest";
+        private readonly string bt_Condition_period_start = "bt_Condition_period_start";
+        private readonly string bt_Condition_period_end = "bt_Condition_period_end";
         Dictionary<string,Control> ConditionControler = new Dictionary<string,Control>();
         private AccountService accountService;
 
@@ -32,9 +34,7 @@ namespace TESTAPP
             금액,
             기간,
             기타
-        }
-
-        
+        }     
 
         #endregion
 
@@ -159,6 +159,8 @@ namespace TESTAPP
         private void ReflectRelatedValue(object sender, EventArgs e)
         {
             if (!double.TryParse(txt_SettlePeriod.Text, out double period)) return;
+
+
             int share = ConvertSettlePeriodDate((SettlePeriodType)cb_SettlePeriod.SelectedItem);
 
             if (decimal.TryParse(txt_Interest.Text, out _))
@@ -285,14 +287,16 @@ namespace TESTAPP
             string id = Guid.NewGuid().ToString();
             Button cancel = DeleteCondition(id);
             Button bt = PlusMinusBt();
+            Button start = PeriodBt();
+            Button end = PeriodBt();
             DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, width: flp_Condition.Width - 10, height: 35);
 
             DynamicLabelInsert(this, new Label(), layout, $"{AddConditionType.기간}{ConditionControler.Count}", AddConditionType.기간.ToString(), 30, 30);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_st}{ConditionControler.Count}", 35, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "개월", 30, 30);
+            DynamicInsert<Button>(this, start, layout, $"{bt_Condition_period_start}{ConditionControler.Count}", width: 40, height: 25);
             DynamicLabelInsert(this, new Label(), layout, "", "~", 20, 30);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_ed}{ConditionControler.Count}", 35, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "개월", 30, 30);
+            DynamicInsert<Button>(this, end, layout, $"{bt_Condition_period_end}{ConditionControler.Count}", width: 40, height: 25);
             DynamicInsert<Button>(this, bt, layout, $"{bt_Condition_interest}{ConditionControler.Count}", 20, 20);
             DynamicInsert<TextBox>(this, new TextBox(), layout, $"{txt_Condition_interest}{ConditionControler.Count}", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
@@ -315,6 +319,30 @@ namespace TESTAPP
                 else
                 {
                     bt.Text = "+";
+                }
+            };
+            return bt;
+        }
+
+        private Button PeriodBt()
+        {
+            Button bt = new Button
+            {
+                Text = AddDateType.개월.ToString()
+            };
+            bt.Click += (sender, o) =>
+            {
+                if (bt.Text.Equals(AddDateType.개월.ToString()))
+                {
+                    bt.Text = AddDateType.년.ToString();
+                }
+                else if(bt.Text.Equals(AddDateType.년.ToString()))
+                {
+                    bt.Text = AddDateType.일.ToString();
+                }
+                else
+                {
+                    bt.Text = AddDateType.개월.ToString();
                 }
             };
             return bt;
@@ -426,43 +454,87 @@ namespace TESTAPP
             {
                 if (GetControlValue<Label>(this, $"{AddConditionType.기간}{i}") == AddConditionType.기간.ToString())
                 {
-                    GetConditionValues(i, out string start, out string end, out string interest, out int sign);
+                   var dto = GetPeriodConditionValues(i);
 
-                    SetPeriodConditions(periodConditions, start, end, interest,sign);
+                    SetPeriodConditions(periodConditions, dto);
 
                 }
                 else if (GetControlValue<Label>(this, $"{AddConditionType.금액}{i}") == AddConditionType.금액.ToString())
                 {
-                    GetConditionValues(i, out string start, out string end, out string interest,out int sign);
+                   var dto =  GetAmountConditionValues(i);
 
-                    SetAmountConditions(amountConditions, start, end, interest, sign);
+                    SetAmountConditions(amountConditions, dto);
                 }
             }
         }
-        private void GetConditionValues(int i, out string start, out string end, out string interest,out int sign)
+        private AmountConditionOfInterestDto GetAmountConditionValues(int i)
         {
-            start = GetControlValue<TextBox>(this, $"{txt_Condition_st}{i}");
-            end = GetControlValue<TextBox>(this, $"{txt_Condition_ed}{i}");
-            interest = GetControlValue<TextBox>(this, $"{txt_Condition_interest}{i}");
-            sign = GetControl<Button>(this, $"{bt_Condition_interest}{i}").Text.Equals("+") ? 1 : -1;
+           string start = GetControlValue<TextBox>(this, $"{txt_Condition_st}{i}");
+           string end = GetControlValue<TextBox>(this, $"{txt_Condition_ed}{i}");
+           string interest = GetControlValue<TextBox>(this, $"{txt_Condition_interest}{i}");
+           int sign = GetControl<Button>(this, $"{bt_Condition_interest}{i}").Text.Equals("+") ? 1 : -1;
+
+            return new AmountConditionOfInterestDto()
+            {
+                Sign = sign,
+                Start = start,
+                End = end,
+                Interest = interest,
+            };
+        }
+        private PeriodConditionOfInterestDto GetPeriodConditionValues(int i)
+        {
+            string start = GetControlValue<TextBox>(this, $"{txt_Condition_st}{i}");
+            string startPeriodType = GetControlValue<Button>(this, $"{bt_Condition_period_start}{i}");
+            string end = GetControlValue<TextBox>(this, $"{txt_Condition_ed}{i}");
+            string endPeriodType = GetControlValue<Button>(this, $"{bt_Condition_period_end}{i}");
+            string interest = GetControlValue<TextBox>(this, $"{txt_Condition_interest}{i}");
+            int sign = GetControl<Button>(this, $"{bt_Condition_interest}{i}").Text.Equals("+") ? 1 : -1;
+
+            return new PeriodConditionOfInterestDto()
+            {
+                Start = start,
+                StartPeriod = startPeriodType,
+                End = end,
+                EndPeriod = endPeriodType,
+                Interest = interest,
+                Sign = sign
+            };
         }
 
 
         // 이거 두개 잘하면 합침 .. 
-        private void SetPeriodConditions(List<PeriodConditionOfInterest> periodConditions, string start, string end, string interest, int sign)
+        private void SetPeriodConditions(List<PeriodConditionOfInterest> periodConditions, PeriodConditionOfInterestDto dto)
         {
 
+
+            int translate(string type)
+            {
+                switch (type)
+                {
+                    case "일":
+                        return 1;
+                    case "개월":
+                        return 30;
+                    case "년":
+                        return 365;
+                }
+                return 1;
+            }
+
             // 조건 식은 따로 메소드로 빼는 것도 괜찮아보임
-            if (int.TryParse(start, out int startValue)
-                && int.TryParse(end, out int endValue)
-                && decimal.TryParse(interest, out decimal interestValue)
-                && startValue < endValue)
+            if (int.TryParse(dto.Start, out int startValue)
+                && int.TryParse(dto.End, out int endValue)
+                && decimal.TryParse(dto.Interest, out decimal interestValue)
+                && startValue*translate(dto.StartPeriod) < endValue*translate(dto.EndPeriod))
             {
                 PeriodConditionOfInterest condition = new PeriodConditionOfInterest()
                 {
                     StartValue = startValue,
+                    StartDateType = (AddDateType)Enum.Parse(typeof(AddDateType), dto.StartPeriod),
                     EndValue = endValue,
-                    ChangedValue = (interestValue / 100) * sign,
+                    EndDateType = (AddDateType)Enum.Parse(typeof(AddDateType), dto.EndPeriod),
+                    ChangedValue = (interestValue / 100) * dto.Sign,
                 };
                 periodConditions.Add(condition);
             }
@@ -472,18 +544,18 @@ namespace TESTAPP
             }
         }
 
-        private void SetAmountConditions(List<AmountConditionOfInterest> amountConditions, string start, string end, string interest,int sign)
+        private void SetAmountConditions(List<AmountConditionOfInterest> amountConditions, AmountConditionOfInterestDto dto)
         {
-            if (decimal.TryParse(start, out decimal startValue) 
-                && decimal.TryParse(end, out decimal endValue) 
-                && decimal.TryParse(interest, out decimal interestValue)
+            if (decimal.TryParse(dto.Start, out decimal startValue) 
+                && decimal.TryParse(dto.End, out decimal endValue) 
+                && decimal.TryParse(dto.Interest, out decimal interestValue)
                 && startValue < endValue)
             {
                 AmountConditionOfInterest condition = new AmountConditionOfInterest()
                 {
                     StartValue = startValue,
                     EndValue = endValue,
-                    ChangedValue = (interestValue / 100) * sign,
+                    ChangedValue = (interestValue / 100) * dto.Sign,
                 };
                 amountConditions.Add(condition);
             }

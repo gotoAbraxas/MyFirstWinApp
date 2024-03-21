@@ -45,19 +45,21 @@
             // 
             this.dgv_virtualView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_virtualView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_virtualView.Location = new System.Drawing.Point(35, 28);
+            this.dgv_virtualView.Location = new System.Drawing.Point(26, 34);
+            this.dgv_virtualView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgv_virtualView.Name = "dgv_virtualView";
             this.dgv_virtualView.ReadOnly = true;
             this.dgv_virtualView.RowHeadersWidth = 62;
             this.dgv_virtualView.RowTemplate.Height = 23;
-            this.dgv_virtualView.Size = new System.Drawing.Size(705, 375);
+            this.dgv_virtualView.Size = new System.Drawing.Size(1074, 570);
             this.dgv_virtualView.TabIndex = 0;
             // 
             // bt_Ok
             // 
-            this.bt_Ok.Location = new System.Drawing.Point(445, 419);
+            this.bt_Ok.Location = new System.Drawing.Point(636, 632);
+            this.bt_Ok.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.bt_Ok.Name = "bt_Ok";
-            this.bt_Ok.Size = new System.Drawing.Size(72, 22);
+            this.bt_Ok.Size = new System.Drawing.Size(103, 33);
             this.bt_Ok.TabIndex = 1;
             this.bt_Ok.Text = "확인";
             this.bt_Ok.UseVisualStyleBackColor = true;
@@ -66,88 +68,80 @@
             // lb_View_withdraw
             // 
             this.lb_View_withdraw.AutoSize = true;
-            this.lb_View_withdraw.Location = new System.Drawing.Point(762, 134);
-            this.lb_View_withdraw.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_View_withdraw.Location = new System.Drawing.Point(1128, 201);
             this.lb_View_withdraw.Name = "lb_View_withdraw";
-            this.lb_View_withdraw.Size = new System.Drawing.Size(57, 12);
+            this.lb_View_withdraw.Size = new System.Drawing.Size(86, 18);
             this.lb_View_withdraw.TabIndex = 3;
             this.lb_View_withdraw.Text = "출금 총액";
             // 
             // lb_View_income
             // 
             this.lb_View_income.AutoSize = true;
-            this.lb_View_income.Location = new System.Drawing.Point(762, 51);
-            this.lb_View_income.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_View_income.Location = new System.Drawing.Point(1128, 76);
             this.lb_View_income.Name = "lb_View_income";
-            this.lb_View_income.Size = new System.Drawing.Size(57, 12);
+            this.lb_View_income.Size = new System.Drawing.Size(86, 18);
             this.lb_View_income.TabIndex = 4;
             this.lb_View_income.Text = "입금 총액";
             // 
             // txt_View_income
             // 
-            this.txt_View_income.Location = new System.Drawing.Point(760, 85);
-            this.txt_View_income.Margin = new System.Windows.Forms.Padding(2);
+            this.txt_View_income.Location = new System.Drawing.Point(1124, 128);
             this.txt_View_income.Name = "txt_View_income";
             this.txt_View_income.ReadOnly = true;
-            this.txt_View_income.Size = new System.Drawing.Size(196, 21);
+            this.txt_View_income.Size = new System.Drawing.Size(240, 28);
             this.txt_View_income.TabIndex = 5;
             this.txt_View_income.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // txt_View_withdraw
             // 
-            this.txt_View_withdraw.Location = new System.Drawing.Point(760, 163);
-            this.txt_View_withdraw.Margin = new System.Windows.Forms.Padding(2);
+            this.txt_View_withdraw.Location = new System.Drawing.Point(1124, 244);
             this.txt_View_withdraw.Name = "txt_View_withdraw";
             this.txt_View_withdraw.ReadOnly = true;
-            this.txt_View_withdraw.Size = new System.Drawing.Size(196, 21);
+            this.txt_View_withdraw.Size = new System.Drawing.Size(240, 28);
             this.txt_View_withdraw.TabIndex = 6;
             this.txt_View_withdraw.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lb_View_interest
             // 
             this.lb_View_interest.AutoSize = true;
-            this.lb_View_interest.Location = new System.Drawing.Point(764, 211);
-            this.lb_View_interest.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_View_interest.Location = new System.Drawing.Point(1128, 316);
             this.lb_View_interest.Name = "lb_View_interest";
-            this.lb_View_interest.Size = new System.Drawing.Size(57, 12);
+            this.lb_View_interest.Size = new System.Drawing.Size(86, 18);
             this.lb_View_interest.TabIndex = 7;
             this.lb_View_interest.Text = "이자 총액";
             // 
             // txt_View_interest
             // 
-            this.txt_View_interest.Location = new System.Drawing.Point(760, 240);
-            this.txt_View_interest.Margin = new System.Windows.Forms.Padding(2);
+            this.txt_View_interest.Location = new System.Drawing.Point(1124, 360);
             this.txt_View_interest.Name = "txt_View_interest";
             this.txt_View_interest.ReadOnly = true;
-            this.txt_View_interest.Size = new System.Drawing.Size(196, 21);
+            this.txt_View_interest.Size = new System.Drawing.Size(240, 28);
             this.txt_View_interest.TabIndex = 8;
             this.txt_View_interest.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lb_View_Amount
             // 
             this.lb_View_Amount.AutoSize = true;
-            this.lb_View_Amount.Location = new System.Drawing.Point(764, 285);
-            this.lb_View_Amount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_View_Amount.Location = new System.Drawing.Point(1132, 428);
             this.lb_View_Amount.Name = "lb_View_Amount";
-            this.lb_View_Amount.Size = new System.Drawing.Size(29, 12);
+            this.lb_View_Amount.Size = new System.Drawing.Size(44, 18);
             this.lb_View_Amount.TabIndex = 9;
             this.lb_View_Amount.Text = "잔액";
             // 
             // txt_View_Amount
             // 
-            this.txt_View_Amount.Location = new System.Drawing.Point(760, 316);
-            this.txt_View_Amount.Margin = new System.Windows.Forms.Padding(2);
+            this.txt_View_Amount.Location = new System.Drawing.Point(1124, 474);
             this.txt_View_Amount.Name = "txt_View_Amount";
             this.txt_View_Amount.ReadOnly = true;
-            this.txt_View_Amount.Size = new System.Drawing.Size(196, 21);
+            this.txt_View_Amount.Size = new System.Drawing.Size(240, 28);
             this.txt_View_Amount.TabIndex = 10;
             this.txt_View_Amount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // ViewVirtualLog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(978, 461);
+            this.ClientSize = new System.Drawing.Size(1397, 692);
             this.Controls.Add(this.txt_View_Amount);
             this.Controls.Add(this.lb_View_Amount);
             this.Controls.Add(this.txt_View_interest);
@@ -158,6 +152,7 @@
             this.Controls.Add(this.lb_View_withdraw);
             this.Controls.Add(this.bt_Ok);
             this.Controls.Add(this.dgv_virtualView);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ViewVirtualLog";
             this.Text = "ViewCounditionLog";
             this.Load += new System.EventHandler(this.ViewCounditionLog_Load);

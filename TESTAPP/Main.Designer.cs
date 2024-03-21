@@ -156,6 +156,7 @@ namespace TESTAPP
             this.cb_CalProfitTab_Period.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.cb_CalProfitTab_Period.Size = new System.Drawing.Size(61, 20);
             this.cb_CalProfitTab_Period.TabIndex = 30;
+            this.cb_CalProfitTab_Period.SelectionChangeCommitted += new System.EventHandler(this.cb_CalProfitTab_Period_SelectionChangeCommitted);
             // 
             // bt_CalProfitTab_Available
             // 

@@ -72,7 +72,7 @@ namespace TESTAPP
 
             DynamicLabelInsert(this, new Label(), layout, "", "금액", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", start, 120, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "~", 10, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "~", 15, 30);
             DynamicLabelInsert(this, new Label(), layout, "", end, 120, 30);
             DynamicLabelInsert(this, lb, layout, "", lb.Text, 10, 30);
             DynamicLabelInsert(this, new Label(), layout, "", interest, 15, 30);
@@ -81,8 +81,10 @@ namespace TESTAPP
         }
         private void DrawPeriodCondition(PeriodConditionOfInterest periodCondition)
         {
-            string start = $"{periodCondition.StartValue}개월";
-            string end = $"{periodCondition.EndValue}개월";
+            string start = $"{periodCondition.StartValue}";
+            string startPeriodType = $"{periodCondition.StartDateType }";
+            string end = $"{periodCondition.EndValue}";
+            string endPeriodType = $"{periodCondition.EndDateType}";
             string interest = $"{Math.Abs(Math.Round(periodCondition.ChangedValue * 100, 0))}";
 
 
@@ -102,8 +104,10 @@ namespace TESTAPP
 
             DynamicLabelInsert(this, new Label(), layout, "", "기간", 35, 30);
             DynamicLabelInsert(this, new Label(), layout, "", start, 120, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "~", 10, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", startPeriodType, 35, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", "~", 15, 30);
             DynamicLabelInsert(this, new Label(), layout, "", end, 120, 30);
+            DynamicLabelInsert(this, new Label(), layout, "", endPeriodType, 35, 30);
             DynamicLabelInsert(this, lb, layout, "", lb.Text, 10, 30);
             DynamicLabelInsert(this, new Label(), layout, "", interest, 15, 30);
             DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);

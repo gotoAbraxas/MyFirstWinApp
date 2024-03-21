@@ -87,7 +87,7 @@ namespace TESTAPP.account.service
             throw new NotImplementedException();
         }
 
-        // 시작 금액/ 시작 이윤, 변경될 이윤 (금액, 기간) 단위 기간 /최종 기간, 
+        // 비즈니스를 서비스에 둘지말지 고민
 
         #endregion
     }

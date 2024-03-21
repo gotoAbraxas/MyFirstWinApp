@@ -9,11 +9,14 @@ namespace TESTAPP.domain.account.sub
     public enum Period
     {
         내역,
-        일단위,
+        //일단위,
         월단위,
         년단위,
 
     }
+
+
+
 
     public struct VirtualDto
     {
@@ -51,12 +54,14 @@ namespace TESTAPP.domain.account.sub
 
     public struct VirtualLogConditionaly
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
+        
+        public AccountLogType? accountLogType { get; set; }
         public DateTime? Start { get; set; }
         public DateTime? End { get; set; }
         public decimal Deposit { get; set; }
         public decimal Withdraw { get; set; }
-        public decimal interest { get; set; }
+        public decimal? TotalTransaction { get; set; }
         public string Description { get; set; }
 
         public decimal? Total { get; set; }

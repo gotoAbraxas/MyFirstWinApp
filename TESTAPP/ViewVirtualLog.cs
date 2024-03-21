@@ -118,7 +118,7 @@ namespace TESTAPP
             // 이 작업을 서비스에 정의 ? 아니면 ..
             //날짜 갭 차이에 대한 원금 변화 반영, 근데 이것도 비즈니스 로직으로 본다면.. 내부로 옮기고 서비스를 타는게 나을듯
 
-
+            // dto 로 만들어서 보내기.
             try
             {
                 if (from.CompareTo(now) > 0)
@@ -171,9 +171,10 @@ namespace TESTAPP
             dt.Columns.Add("id", typeof(string));
             dt.Columns.Add("From", typeof(DateTime));
             dt.Columns.Add("To", typeof(DateTime));
-            dt.Columns.Add("입금 총액", typeof(string));
-            dt.Columns.Add("출금 총액", typeof(string));
-            dt.Columns.Add("이자 총액", typeof(string));
+            dt.Columns.Add("거래 구분", typeof(string));
+            dt.Columns.Add("거래 금액", typeof(string));
+            dt.Columns.Add("입금 액", typeof(string));
+            dt.Columns.Add("출금 액", typeof(string));
             dt.Columns.Add("거래후잔액", typeof(string));
             dt.Columns.Add("비고", typeof(string));
 
@@ -181,9 +182,9 @@ namespace TESTAPP
             
             dgv_virtualView.DataBindingComplete += (sender, o) =>
             {
-                dgv_virtualView.Columns["입금 총액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                dgv_virtualView.Columns["출금 총액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                dgv_virtualView.Columns["이자 총액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dgv_virtualView.Columns["입금 액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dgv_virtualView.Columns["출금 액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dgv_virtualView.Columns["거래 금액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 dgv_virtualView.Columns["거래후잔액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             };
             
@@ -224,93 +225,114 @@ namespace TESTAPP
 
         private void Calculate(DateTime standard, DateTime start, DateTime end, Period period)
         {
-            DateTime until = AddDate(start, period);
 
-            decimal income = 0;
-            decimal withdraw = 0;
-            decimal interest = 0;
-            decimal? total = null;
-            GetResult(start, until, out income, out withdraw, out interest, out total);
+            DateTime until = start;
+
+            decimal? total = 0;
 
 
-            bool IsExistence = false;
-            if (income > 0)
+            while (until.CompareTo(end) <= 0)
             {
-                VirtualLogsformally.Add(
-                    new VirtualLogformally()
-                    {
-                        Start = start.ToShortDateString(),
-                        End = until.ToShortDateString(),
-                        Amount = income,
-                        Description = "입금"
-                    }
-                );
-                IsExistence = true;
-            }
+                decimal? totalTransation = 0;
+                DateTime loopStart = until;
+                until = AddDate(until, period);
 
-            if (withdraw > 0)
-            {
-                VirtualLogsformally.Add(
-                    new VirtualLogformally()
-                    {
-                        Start = IsExistence ? "" : start.ToShortDateString(),
-                        End = IsExistence ? "" : until.ToShortDateString(),
-                        Amount = withdraw,
-                        Description = "출금"
-                    }
-                );
-                IsExistence = true;
-            }
+                GetResult(loopStart, until, out decimal income, out decimal withdraw, out decimal interest);
 
-            if (interest > 0)
-            {
-                VirtualLogsformally.Add(
-                   new VirtualLogformally()
-                   {
-                       Start = IsExistence ? "" : start.ToShortDateString(),
-                       End = IsExistence ? "" : until.ToShortDateString(),
-                       Amount = interest,
-                       Description = "이자"
-                   }
-               );
-                IsExistence = true;
-            }
-
-            virtualLogsConditionaly.Add(
-                new VirtualLogConditionaly()
+                bool IsExistence = false;
+                if (income > 0)
                 {
-                    Start = start,
-                    End = until,
-                    interest = interest,
-                    Deposit = income,
-                    Total = total,
-                    Withdraw = withdraw
+
+                    total += income;
+                    totalTransation += income;
+                    virtualLogsConditionaly.Add(
+                        new VirtualLogConditionaly()
+                        {
+                            Start = loopStart,
+                            End = until,
+                            accountLogType = AccountLogType.입금,
+                            TotalTransaction = income,
+                            Deposit = income,
+                            Total = total,
+                            Withdraw = 0,
+                            Description="일반 입금"
+                                                        
+                        }
+                    );
+                    IsExistence = true;
                 }
-            );
 
-            if (IsExistence)
-            {
-                var last = VirtualLogsformally.Last();
-                last.Total = total;
-            }
+                if (withdraw > 0)
+                {
+                    total -= withdraw;
+                    totalTransation += withdraw;
 
-            if (until.CompareTo(end) > 0) return;
+                    virtualLogsConditionaly.Add(
+                        new VirtualLogConditionaly()
+                        {
+                            Start = loopStart,
+                            End = until,
+                            accountLogType = AccountLogType.출금,
+                            TotalTransaction = withdraw,
+                            Deposit = 0,
+                            Total = total,
+                            Withdraw = withdraw,
+                            Description = "일반 출금"
 
-            if (period == Period.일단위) // 아 이거 맘에 안든다.
-            {
-                Calculate(standard, until, end, period);
-            }
-            else
-            {
-                Calculate(standard, until.AddDays(1), end, period);
+                        }
+                    );
+                    IsExistence = true;
+                }
 
+                if (interest > 0)
+                {
+                    total += interest;
+                    totalTransation += interest;
+
+                    virtualLogsConditionaly.Add(
+                        new VirtualLogConditionaly()
+                        {
+                            Start = loopStart,
+                            End = until,
+                            accountLogType = AccountLogType.입금,
+                            TotalTransaction = interest,
+                            Deposit = interest,
+                            Total = total,
+                            Withdraw = 0,
+                            Description = "결산 이자"
+
+                        }
+                    );
+                    IsExistence = true;
+                }
+
+                if (IsExistence)
+                {
+                    virtualLogsConditionaly.Add(
+                            new VirtualLogConditionaly()
+                            {
+
+                                TotalTransaction = totalTransation,
+                                Deposit = interest + income,
+                                Withdraw = withdraw,
+                                Description = "소계"
+
+                            });
+                }
+
+                
+                until = until.AddDays(1); //(period == Period.일단위 ? until : until.AddDays(1));
+
+                if (until.CompareTo(end) > 0) break;
+                
             }
         }
 
-        private void GetResult(DateTime start, DateTime until, out decimal income, out decimal withdraw, out decimal interest, out decimal? total)
+
+        private void GetResult(DateTime start, DateTime until, out decimal income, out decimal withdraw, out decimal interest)
         {
             var table = virtualLog
-                            .Where((log) => start.CompareTo(log.DateTime.Date) <= 0 && log.DateTime.Date.CompareTo(until) < 0);
+                            .Where((log) => start.CompareTo(log.DateTime.Date) <= 0 && log.DateTime.Date.CompareTo(until) <= 0);
 
 
             var value = table.Where((log) => !log.Description.Equals("이자"));
@@ -324,21 +346,18 @@ namespace TESTAPP
 
             interest = table.Where((log) => log.Description.Equals("이자"))
                  .Select(log => log.Amount).Sum();
-            // 여기서 에러 생길수도
-            total = virtualLog
-                .Where((log) => log.DateTime.Date.CompareTo(until) < 0)
-                .OrderBy((log) => log.DateTime)
-                .Select((log) => log.Total)
-                .LastOrDefault();
+
         }
 
         private DateTime AddDate(DateTime start, Period period)
         {
+            /*
             if (period == Period.일단위)
             {
                 return start.AddDays(1);
-            }
-            else if (period == Period.월단위)
+            }*/
+
+            if (period == Period.월단위)
             {
 
                 DateTime dt = start.AddMonths(1);
@@ -361,14 +380,23 @@ namespace TESTAPP
             foreach (var item in virtualLogsConditionaly)
             {
                 dt.Rows.Add(
-                    "sample",
+                    item.Id,
                     item.Start,
                     item.End,
+                    item.accountLogType,
+                    PrettyValue(item.TotalTransaction),
                     PrettyValue(item.Deposit),
                     PrettyValue(item.Withdraw),
-                    PrettyValue(item.interest),
                     PrettyValue(item.Total),
                     item.Description);
+            }
+
+            foreach (DataGridViewRow row in dgv_virtualView.Rows)
+            {
+                if (row.Cells["비고"].Value != null && row.Cells["비고"].Value.ToString() == "소계")
+                {
+                    row.DefaultCellStyle.BackColor = Color.LightYellow; // 특정 데이터가 들어있는 행의 배경색을 노란색으로 변경
+                }
             }
         }
 
