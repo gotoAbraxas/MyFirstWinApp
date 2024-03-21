@@ -460,12 +460,11 @@ namespace TESTAPP
                 aps.Add(new AfterPlan()
                 {
                     AccountLogType = (AccountLogType) GetControl<ComboBox>(this, $"{cb_Condition}{i}").SelectedItem,
-                    Amount = decimal.Parse(GetTxtAmountPretty(this, $"{txt_Condition}{i}")),
+                    Amount = decimal.TryParse(GetTxtAmountPretty(this, $"{txt_Condition}{i}"),out decimal result) ? result : 0,
                     DateTime = GetControl<DateTimePicker>(this, $"{dtp_Condition}{i}").Value.Date,
                     Description = "입/출금 계획"
                 });
             }
-
             aps = aps.OrderBy((item)=> item.DateTime).ToList();
 
             return aps;
@@ -508,7 +507,7 @@ namespace TESTAPP
 
             Account ac = GetSelectedAccount();
 
-            if (ac != null) return;
+            if (ac is null) return;
 
             ValidDate(ac.SettlePeriodType);
 

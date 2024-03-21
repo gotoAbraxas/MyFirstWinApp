@@ -159,6 +159,8 @@ namespace TESTAPP
         private void ReflectRelatedValue(object sender, EventArgs e)
         {
             if (!double.TryParse(txt_SettlePeriod.Text, out double period)) return;
+
+
             int share = ConvertSettlePeriodDate((SettlePeriodType)cb_SettlePeriod.SelectedItem);
 
             if (decimal.TryParse(txt_Interest.Text, out _))
