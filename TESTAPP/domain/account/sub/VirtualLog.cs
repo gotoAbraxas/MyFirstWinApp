@@ -9,7 +9,7 @@ namespace TESTAPP.domain.account.sub
     public enum Period
     {
         내역,
-        일단위,
+        //일단위,
         월단위,
         년단위,
 

@@ -224,93 +224,89 @@ namespace TESTAPP
 
         private void Calculate(DateTime standard, DateTime start, DateTime end, Period period)
         {
-            DateTime until = AddDate(start, period);
 
-            decimal income = 0;
-            decimal withdraw = 0;
-            decimal interest = 0;
-            decimal? total = null;
-            GetResult(start, until, out income, out withdraw, out interest, out total);
+            DateTime until = start;
 
-
-            bool IsExistence = false;
-            if (income > 0)
+            while (until.CompareTo(end) <= 0)
             {
-                VirtualLogsformally.Add(
-                    new VirtualLogformally()
-                    {
-                        Start = start.ToShortDateString(),
-                        End = until.ToShortDateString(),
-                        Amount = income,
-                        Description = "입금"
-                    }
-                );
-                IsExistence = true;
-            }
+                DateTime loopStart = until;
+                until = AddDate(until, period);
 
-            if (withdraw > 0)
-            {
-                VirtualLogsformally.Add(
-                    new VirtualLogformally()
-                    {
-                        Start = IsExistence ? "" : start.ToShortDateString(),
-                        End = IsExistence ? "" : until.ToShortDateString(),
-                        Amount = withdraw,
-                        Description = "출금"
-                    }
-                );
-                IsExistence = true;
-            }
+                GetResult(loopStart, until, out decimal income, out decimal withdraw, out decimal interest, out decimal? total);
 
-            if (interest > 0)
-            {
-                VirtualLogsformally.Add(
-                   new VirtualLogformally()
-                   {
-                       Start = IsExistence ? "" : start.ToShortDateString(),
-                       End = IsExistence ? "" : until.ToShortDateString(),
-                       Amount = interest,
-                       Description = "이자"
-                   }
-               );
-                IsExistence = true;
-            }
-
-            virtualLogsConditionaly.Add(
-                new VirtualLogConditionaly()
+                bool IsExistence = false;
+                if (income > 0)
                 {
-                    Start = start,
-                    End = until,
-                    interest = interest,
-                    Deposit = income,
-                    Total = total,
-                    Withdraw = withdraw
+                    VirtualLogsformally.Add(
+                        new VirtualLogformally()
+                        {
+                            Start = loopStart.ToShortDateString(),
+                            End = until.ToShortDateString(),
+                            Amount = income,
+                            Description = "입금"
+                        }
+                    );
+                    IsExistence = true;
                 }
-            );
 
-            if (IsExistence)
-            {
-                var last = VirtualLogsformally.Last();
-                last.Total = total;
-            }
+                if (withdraw > 0)
+                {
+                    VirtualLogsformally.Add(
+                        new VirtualLogformally()
+                        {
+                            Start = IsExistence ? "" : loopStart.ToShortDateString(),
+                            End = IsExistence ? "" : until.ToShortDateString(),
+                            Amount = withdraw,
+                            Description = "출금"
+                        }
+                    );
+                    IsExistence = true;
+                }
 
-            if (until.CompareTo(end) > 0) return;
+                if (interest > 0)
+                {
+                    VirtualLogsformally.Add(
+                       new VirtualLogformally()
+                       {
+                           Start = IsExistence ? "" : loopStart.ToShortDateString(),
+                           End = IsExistence ? "" : until.ToShortDateString(),
+                           Amount = interest,
+                           Description = "이자"
+                       }
+                   );
+                    IsExistence = true;
+                }
 
-            if (period == Period.일단위) // 아 이거 맘에 안든다.
-            {
-                Calculate(standard, until, end, period);
-            }
-            else
-            {
-                Calculate(standard, until.AddDays(1), end, period);
+                virtualLogsConditionaly.Add(
+                    new VirtualLogConditionaly()
+                    {
+                        Start = loopStart,
+                        End = until,
+                        interest = interest,
+                        Deposit = income,
+                        Total = total,
+                        Withdraw = withdraw
+                    }
+                );
 
+                if (IsExistence)
+                {
+                    var last = VirtualLogsformally.Last();
+                    last.Total = total;
+                }
+
+                until = until.AddDays(1); //(period == Period.일단위 ? until : until.AddDays(1));
+
+                if (until.CompareTo(end) > 0) break;
+                
             }
         }
+
 
         private void GetResult(DateTime start, DateTime until, out decimal income, out decimal withdraw, out decimal interest, out decimal? total)
         {
             var table = virtualLog
-                            .Where((log) => start.CompareTo(log.DateTime.Date) <= 0 && log.DateTime.Date.CompareTo(until) < 0);
+                            .Where((log) => start.CompareTo(log.DateTime.Date) <= 0 && log.DateTime.Date.CompareTo(until) <= 0);
 
 
             var value = table.Where((log) => !log.Description.Equals("이자"));
@@ -334,11 +330,13 @@ namespace TESTAPP
 
         private DateTime AddDate(DateTime start, Period period)
         {
+            /*
             if (period == Period.일단위)
             {
                 return start.AddDays(1);
-            }
-            else if (period == Period.월단위)
+            }*/
+
+            if (period == Period.월단위)
             {
 
                 DateTime dt = start.AddMonths(1);

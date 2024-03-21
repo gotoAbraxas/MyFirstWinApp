@@ -94,8 +94,8 @@ namespace TESTAPP.domain.account
             while (until.CompareTo(end) <= 0)
             {
 
-                DateTime loopStart = start;
-                until = GetNextDate(start);
+                DateTime loopStart = until;
+                until = GetNextDate(until);
 
                 decimal changedInterest = Interest;
 
@@ -125,7 +125,7 @@ namespace TESTAPP.domain.account
                 log.Add(new VirtualLog()
                 {
                     AccountLogType = AccountLogType.입금,
-                    DateTime = start,
+                    DateTime = until,
                     Description = "이자",
                     Amount = thisTimeInterest,
                     Total = resultAmount
@@ -142,7 +142,7 @@ namespace TESTAPP.domain.account
         private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans)
         {
             decimal virtualAmount = amount; //* GetAmountRatio(start, start, end); // 이게 좀 대대적인 ..
-            DateTime until = GetNextDate(start);
+            DateTime until = start;
 
             while (until.CompareTo(end) <= 0)
             {
@@ -179,7 +179,7 @@ namespace TESTAPP.domain.account
                 log.Add(new VirtualLog()
                 {
                     AccountLogType = AccountLogType.입금,
-                    DateTime = loopStart,
+                    DateTime = until,
                     Description = "이자",
                     Amount = thisTimeInterest,
                     Total = resultAmount

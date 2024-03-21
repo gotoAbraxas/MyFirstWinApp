@@ -516,6 +516,7 @@ namespace TESTAPP
         }
         private void ValidDate(SettlePeriodType type)
         {
+            /*
             if (type == SettlePeriodType.일)
             {
                 dt_To.MaxDate = DateTime.Now.AddYears(3);
@@ -534,7 +535,7 @@ namespace TESTAPP
                 {
                     dt_To.MaxDate = DateTime.Now.AddYears(20);
                 }
-            }
+            }*/
         }
 
         #endregion
