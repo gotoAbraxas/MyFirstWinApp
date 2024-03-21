@@ -48,20 +48,18 @@ namespace TESTAPP
             
             CopyLog();
 
-            AfterInit();
+            GetVirualLogResult();
 
             DataTable dt = new DataTable();
             if (period == Period.내역)
             {
-            AccountLogInit(dt);
-            GetResult(dt);
+            VirtualLogTableInit(dt);
+            SetVirtualLogResult(dt);
             }
             else 
             {
-            //AccountLogformallyInit(dt);
-
-            AccountLogConditionInit(dt);
-            GetResultConditionaly(dt);
+            VirtualLogTableConditionInit(dt);
+            SetVirtualLogResultConditionaly(dt);
             }
 
             CombineResult();
@@ -102,7 +100,7 @@ namespace TESTAPP
         #endregion
 
         #region "원본 내역 가져오기"
-        private void AfterInit()
+        private void GetVirualLogResult()
         {
 
 
@@ -140,7 +138,7 @@ namespace TESTAPP
         #endregion
 
         #region "테이블 세팅"
-        private void AccountLogInit(DataTable dt)
+        private void VirtualLogTableInit(DataTable dt)
         {
             dt.Columns.Add("id", typeof(string));
             dt.Columns.Add("날짜", typeof(DateTime));
@@ -165,7 +163,7 @@ namespace TESTAPP
             };
         }
 
-        private void AccountLogConditionInit(DataTable dt)
+        private void VirtualLogTableConditionInit(DataTable dt)
         {
 
             dt.Columns.Add("id", typeof(string));
@@ -216,7 +214,7 @@ namespace TESTAPP
         #endregion
 
         #region "조건에 맞는 검색"
-        private void GetResultConditionaly(DataTable dt)
+        private void SetVirtualLogResultConditionaly(DataTable dt)
         {
             Calculate(VirtualDto.From, VirtualDto.From, VirtualDto.Until, period);
 
@@ -351,11 +349,6 @@ namespace TESTAPP
 
         private DateTime AddDate(DateTime start, Period period)
         {
-            /*
-            if (period == Period.일단위)
-            {
-                return start.AddDays(1);
-            }*/
 
             if (period == Period.월단위)
             {
@@ -400,24 +393,10 @@ namespace TESTAPP
             }
         }
 
-        private void SetDataFormally(DataTable dt)
-        {
-            foreach (var item in VirtualLogsformally)
-            {
-                dt.Rows.Add(
-                    "sample",
-                    item.Start,
-                    item.End,
-                    PrettyValue(item.Amount),
-                    PrettyValue(item.Total),
-                    item.Description);
-            }
-        }
-
         #endregion
 
         #region "가상 내역 세팅"
-        private void GetResult(DataTable dt)
+        private void SetVirtualLogResult(DataTable dt)
         {
             foreach (var item in virtualLog.OrderBy(log => log.DateTime))
             {
@@ -430,7 +409,7 @@ namespace TESTAPP
         #region "최종 결과값 세팅"
         private void CombineResult()
         {// 근데 이 작업은 로그를 첨 더할때 하면되긴함 .. 굳이 이렇게 하면 성능이 떨어지는데 고민임
-
+            // 근데 역할을 구분하는것도 맞긴함.
             var Get = virtualLog.Where((data) => data.AccountLogType.Equals(AccountLogType.입금));
 
             decimal? TotalInterest = Get.Where((data) => data.Description == "이자").Select((data) => data.Amount).Sum();
