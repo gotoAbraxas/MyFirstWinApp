@@ -15,8 +15,7 @@ using static TESTAPP.common.component.Dynamic;
 namespace TESTAPP.domain.account
 {
     // 이건 나중에 써볼 수 있을듯
-    delegate void CalulatorInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end);
-
+    delegate void InterestCalculater(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount,  List<VirtualLog> log, List<AfterPlan> afterPlans, DateTime start, DateTime end);
     enum SettleType
     {
         단리,
@@ -71,167 +70,31 @@ namespace TESTAPP.domain.account
 
         public void GetResult(ref decimal amount,ref decimal resultInterest,ref decimal resultAmount,DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
         {
+
+            InterestCalculater loof;
             switch (SettleType)
             {
                 case SettleType.단리:
-                    SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start, in end, log, in afterPlans);
+                    loof = SimpleLoof;
+                    //SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start, end, log, afterPlans);
+                    CalculateInterest(ref amount, ref resultInterest, ref resultAmount, start, end, log, afterPlans, loof);
                     break;
                 case SettleType.복리:
-
-                    //CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start, end, log, afterPlans);
-                    CompoundInterestVer2(ref amount, ref resultInterest, ref resultAmount, start, end, log,  afterPlans);
+                    loof = CompoundLoof;
+                    //CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start, end, log,  afterPlans);
+                    CalculateInterest(ref amount, ref resultInterest, ref resultAmount, start, end, log, afterPlans, loof);
                     break;
                 default:
                     break;
             }
         }
 
-        // 매우 유사하지만 분리해두는 것이 이후에 편하다.
-        // 파라미터를 dto로 관리할까
-        // 단리
-        private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start,in DateTime end,List<VirtualLog> log,in List<AfterPlan> afterPlans)
-        {
-
-            decimal virtualAmount = amount; //* GetAmountRatio(start, start, end); // 이게 좀 대대적인 ..
-            DateTime until = start;
-
-            DateTime loopSection = start;
-
-            while (until.CompareTo(end) <= 0)
-            {
-
-                DateTime loopStart = until;
-                until = GetNextDate(until);
-                /*
-                if(SettlePeriodType == SettlePeriodType.일 
-                    && (loopStart.DayOfWeek == DayOfWeek.Sunday 
-                    || loopStart.DayOfWeek == DayOfWeek.Saturday))
-                {
-                    continue;
-                }*/
-
-                decimal changedInterest = Interest;
-
-                // amount = 실제 금액, virtualAmount = 기간이 반영된 상태
-                amount = ReflectAfterPlan(amount, ref virtualAmount, loopStart, until, log, afterPlans, resultInterest);
-
-                changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
-                changedInterest += GetResultPeriodCondion(loopStart); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
-
-                int date = ConvertSettlePeriodDate(SettlePeriodType);
-
-                decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
-
-                decimal thisTimeInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자 <- 이게 바뀌어야함.
-
-                resultInterest += thisTimeInterest;
-
-                resultAmount = amount + resultInterest;
-
-                log.Add(new VirtualLog()
-                {
-                    AccountLogType = AccountLogType.입금,
-                    DateTime = until,
-                    Description = "이자",
-                    Amount = thisTimeInterest,
-                    Total = resultAmount
-                });
-
-                if (until.CompareTo(end) > 0)
-                {
-                    ReflectAfterPlan(amount, ref virtualAmount, loopStart, end, log, afterPlans, resultInterest);
-                    break; //루프 종료
-                }
-            }
-        }
-
-        private bool ttessstt(ref DateTime value, DateTime until, SettlePeriodType type,int SettlePeriod)
-        {
-            if (type == SettlePeriodType.일)
-            {
-                return value.CompareTo(until.AddDays(SettlePeriod)) == 0;
-            }
-            else if(type == SettlePeriodType.개월)
-            {
-                return value.CompareTo(until.AddMonths(SettlePeriod)) == 0;
-            }
-            else if(type == SettlePeriodType.년)
-            {
-                return value.CompareTo(until.AddYears(SettlePeriod)) == 0;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /*
-         *  이건 나중에 쓸일은 있을듯.
-                if (SettlePeriodType == SettlePeriodType.일
-                    && loopStart.DayOfWeek == DayOfWeek.Sunday
-                    && loopStart.DayOfWeek == DayOfWeek.Saturday)
-                {
-                    continue;
-                }*/
-        
-
         private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans)
         {
-            decimal virtualAmount = amount; //* GetAmountRatio(start, start, end); // 이게 좀 대대적인 ..
-            DateTime until = start;
-
-            while (until.CompareTo(end) <= 0)
-            {
-
-                DateTime loopStart = until;
-                until = GetNextDate(until);
-
-                if (until.CompareTo(end) > 0)
-                {
-                    ReflectAfterPlan(amount, ref virtualAmount, loopStart, end, log, afterPlans, resultInterest);
-                    break; // 루프 종료
-                }
-
-                // 이 밑 부분을 전부 while 돌려야한다.        
-                decimal changedInterest = Interest;
-
-                // amount = 실제 금액, virtualAmount = 기간이 반영된 상태
-                amount = ReflectAfterPlan(amount, ref virtualAmount, loopStart, until, log, afterPlans, resultInterest);
-
-                changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
-                changedInterest += GetResultPeriodCondion(loopStart); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
-
-                int date = ConvertSettlePeriodDate(SettlePeriodType);
-
-                decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)SettlePeriod, date);
-
-                decimal thisTimeInterest = GetResultInterestAmount(amount, convertValue); // 이번 타임 이자 <- 이게 바뀌어야함.
-                
-
-                resultInterest += thisTimeInterest;
-
-                resultAmount = amount + thisTimeInterest;
-                amount += thisTimeInterest;
-
-                // 로그는 여기서 넣고
-                log.Add(new VirtualLog()
-                {
-                    AccountLogType = AccountLogType.입금,
-                    DateTime = until,
-                    Description = "이자",
-                    Amount = thisTimeInterest,
-                    Total = resultAmount
-                });
-
-            }
-        }
-        private void CompoundInterestVer2(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans)
-        {
-            decimal virtualAmount = amount; //* GetAmountRatio(start, start, end); // 이게 좀 대대적인 ..
             DateTime until = start;
 
             decimal result = amount;
-
+            resultAmount = amount;
             while (until.CompareTo(end) < 0)
             {
 
@@ -240,13 +103,11 @@ namespace TESTAPP.domain.account
 
                 if (until.CompareTo(end) >= 0)
                 {
-                    ReflectAfterPlan(amount, ref virtualAmount, loopStart, end, log, afterPlans, resultInterest);
+                    ReflectAfterPlan(amount, loopStart, end, log, afterPlans, resultInterest);
                     break; // 루프 종료
                 }
 
-                decimal thisTimeInterest = 0;
-
-                Loof(ref result, ref resultInterest, ref resultAmount, log, afterPlans, ref virtualAmount, loopStart, until, ref thisTimeInterest);
+                CompoundLoof(ref result, ref resultInterest, ref resultAmount, log, afterPlans, loopStart, until);
 
                 if(resultInterest > 0)
                 {
@@ -263,18 +124,9 @@ namespace TESTAPP.domain.account
         }
 
 
-        private DateTime VoidWeekend(DateTime time)
-        {
-            if(time.DayOfWeek == DayOfWeek.Sunday) return time.AddDays(1);
-            if (time.DayOfWeek == DayOfWeek.Saturday) return time.AddDays(2);
-            return time;
-
-        }
-
-        private void Loof(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, List<VirtualLog> log, List<AfterPlan> afterPlans, ref decimal virtualAmount, DateTime loopStart, DateTime until, ref decimal thisTimeInterest)
+        private void CompoundLoof(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, List<VirtualLog> log, List<AfterPlan> afterPlans, DateTime loopStart, DateTime until)
         {
             resultInterest = 0;
-            resultAmount = amount;
             DateTime start = loopStart;
             // 초기화
             do
@@ -286,7 +138,7 @@ namespace TESTAPP.domain.account
                 decimal changedInterest = Interest;
 
                 // amount = 실제 금액, virtualAmount = 기간이 반영된 상태
-                amount = ReflectAfterPlan(amount, ref virtualAmount, standard, loopStart, log, afterPlans, resultInterest);
+                amount = ReflectAfterPlan(amount, standard, loopStart, log, afterPlans, resultInterest);
 
                 if (standard.DayOfWeek == DayOfWeek.Sunday || standard.DayOfWeek == DayOfWeek.Saturday)
                 {
@@ -300,12 +152,10 @@ namespace TESTAPP.domain.account
                 changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
                 changedInterest += GetResultPeriodCondion(standard); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
 
-                int date = ConvertSettlePeriodDate(SettlePeriodType);
                 const int weekdayOfyear = 260 ;
-                decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), GetWeekday(start, until), weekdayOfyear) / GetWeekday(start, until);
-
-                thisTimeInterest = GetResultInterestAmount(amount, convertValue);
-
+                int day = GetWeekday(start, until);
+                decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)day, weekdayOfyear) / day;
+                decimal thisTimeInterest = GetResultInterestAmount(amount, convertValue);
                 resultInterest += thisTimeInterest;
 
                 resultAmount  += thisTimeInterest;
@@ -317,6 +167,128 @@ namespace TESTAPP.domain.account
                 }
 
             } while (loopStart.CompareTo(until) < 0);
+
+        }
+
+        private void SimpleInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans)
+        {
+            DateTime until = start;
+
+            decimal result = amount;
+            resultAmount = amount;
+
+            while (until.CompareTo(end) < 0)
+            {
+
+                DateTime loopStart = until;
+                until = GetNextDate(until);
+
+                if (until.CompareTo(end) >= 0)
+                {
+                    ReflectAfterPlan(amount, loopStart, end, log, afterPlans, resultInterest);
+                    break; // 루프 종료
+                }
+
+                // 이걸 만약에 db로 옮긴다면 ?? 쉽지 않을듯
+                SimpleLoof(ref result, ref resultInterest, ref resultAmount, log, afterPlans, loopStart, until);
+
+                if (resultInterest > 0)
+                {
+                    log.Add(new VirtualLog()
+                    {
+                        AccountLogType = AccountLogType.입금,
+                        DateTime = VoidWeekend(until),
+                        Description = "이자",
+                        Amount = resultInterest,
+                        Total = resultAmount
+                    });
+                }
+            }
+        }
+
+        private void SimpleLoof(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, List<VirtualLog> log, List<AfterPlan> afterPlans, DateTime loopStart, DateTime until)
+        {
+            resultInterest = 0;
+            DateTime start = loopStart;
+            // 초기화
+            do
+            {
+                DateTime standard = loopStart;
+
+                loopStart = loopStart.AddDays(1);
+
+                decimal changedInterest = Interest;
+
+                // amount = 실제 금액, virtualAmount = 기간이 반영된 상태
+                amount = ReflectAfterPlan(amount, standard, loopStart, log, afterPlans, resultInterest);
+
+                if (standard.DayOfWeek == DayOfWeek.Sunday || standard.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    continue;
+                }
+
+                changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
+                changedInterest += GetResultPeriodCondion(standard); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
+
+                const int weekdayOfyear = 260;
+                int day = GetWeekday(start, until);
+                decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)day, weekdayOfyear) / day;
+
+                decimal thisTimeInterest = GetResultInterestAmount(amount, convertValue);
+
+                resultInterest += thisTimeInterest;
+
+                resultAmount += thisTimeInterest;
+
+                if (loopStart.CompareTo(until) >= 0)
+                {
+                    break;
+                }
+
+            } while (loopStart.CompareTo(until) < 0);
+
+        }
+
+        private void CalculateInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans, InterestCalculater GetInterestResult)
+        {
+            DateTime until = start;
+
+            decimal result = amount;
+            resultAmount = amount;
+
+            // 이게 각 회차별 루프
+            while (until.CompareTo(end) < 0)
+            {
+                DateTime loopStart = until;
+                until = GetNextDate(until);
+
+                if (until.CompareTo(end) >= 0)
+                {
+                    ReflectAfterPlan(amount, loopStart, end, log, afterPlans, resultInterest);
+                    break; // 루프 종료
+                }
+                // 이건 각 기간을 평일 기준으로 이자 쌓는 로직
+                GetInterestResult(ref result, ref resultInterest, ref resultAmount, log, afterPlans, loopStart, until);
+
+                if (resultInterest > 0)
+                {
+                    log.Add(new VirtualLog()
+                    {
+                        AccountLogType = AccountLogType.입금,
+                        DateTime = VoidWeekend(until),
+                        Description = "이자",
+                        Amount = resultInterest,
+                        Total = resultAmount
+                    });
+                }
+            }
+        }
+
+        private DateTime VoidWeekend(DateTime time)
+        {
+            if (time.DayOfWeek == DayOfWeek.Sunday) return time.AddDays(1);
+            if (time.DayOfWeek == DayOfWeek.Saturday) return time.AddDays(2);
+            return time;
 
         }
 
@@ -332,42 +304,6 @@ namespace TESTAPP.domain.account
             int result = days + weekdays;
             return days + weekdays;
         }
-
-        private decimal GetAmountRatio(DateTime start, DateTime standard, DateTime end)
-        {
-            const int closingHour = 17; // 이건 나중에 계좌 정산 시간으로 넘겨도 되겠다.
-            const int today = 1;
-            // 이거 전부 분리할까.
-            
-            if (SettlePeriodType == SettlePeriodType.일 && standard.Hour > closingHour) return 0;
-            else if (SettlePeriodType == SettlePeriodType.일) return 1;
-
-            DateTime monthStart = new DateTime(start.Year, start.Month, 1);
-            if (SettlePeriodType == SettlePeriodType.개월 && standard.Hour > closingHour)
-            {
-                return (decimal)(standard.DayOfYear - monthStart.DayOfYear) / (end.DayOfYear - start.DayOfYear + 1);
-            }
-            else if(SettlePeriodType == SettlePeriodType.개월)
-            {
-                return (decimal)(standard.DayOfYear - monthStart.DayOfYear + today) / (end.DayOfYear - start.DayOfYear + 1);
-            }
-
-            DateTime lasttime = new DateTime(standard.Year, 12, 31);
-
-            // 이건 조금 손봐야하는 개념이다 .
-            if (SettlePeriodType == SettlePeriodType.년 && standard.Hour > closingHour)
-            {
-                return (decimal)(lasttime.DayOfYear - standard.DayOfYear) / end.DayOfYear;
-            }
-            else if (SettlePeriodType == SettlePeriodType.년)
-            {
-                return (decimal)(lasttime.DayOfYear - standard.DayOfYear + today) / end.DayOfYear;
-            }
-
-            return 0;
-        }
-
-
 
         private DateTime GetNextDate(DateTime dt)
         {
@@ -386,7 +322,7 @@ namespace TESTAPP.domain.account
             }
             return dt;
         }
-        private decimal ReflectAfterPlan(decimal amount,ref decimal virtualAmount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans,decimal resultInterest)
+        private decimal ReflectAfterPlan(decimal amount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans,decimal resultInterest)
         {
             var ac = afterPlans
                 .Where((item) => (start.CompareTo(item.DateTime) <= 0) && (item.DateTime.CompareTo(end) < 0))
@@ -409,7 +345,7 @@ namespace TESTAPP.domain.account
                 }
 
                 amount += amountChange;
-                virtualAmount += amountChange; //* GetAmountRatio(start,afterPlan.DateTime,end);
+
                 if (amount < 0)
                 {
                     throw new Exception("잔액이 0 이하로 되는 경우가 존재합니다.");

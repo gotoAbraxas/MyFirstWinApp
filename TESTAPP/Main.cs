@@ -501,7 +501,7 @@ namespace TESTAPP
 
         #endregion
 
-        #region "일단위 연산 스택 오버플로우 방지"
+        #region "일단위 연산 스택 오버플로우 방지 .. 잠시 보류 코드 수정함."
         private void cb_CalProfitTab_Period_SelectionChangeCommitted(object sender, EventArgs e)
         {
 
