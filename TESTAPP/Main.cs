@@ -470,10 +470,16 @@ namespace TESTAPP
 
             return aps;
         }
-        #endregion
 
         #endregion
 
+        #endregion
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DateTime now = DateTime.Now.Date;
+            DateTime from = dt_From.Value.Date;
+            DateTime until = dt_To.Value.Date;
+        }
     }
 }

@@ -31,6 +31,9 @@ namespace TESTAPP
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.accountTab = new System.Windows.Forms.TabControl();
             this.myAccountTab = new System.Windows.Forms.TabPage();
             this.calProfitTab = new System.Windows.Forms.TabPage();
@@ -68,10 +71,14 @@ namespace TESTAPP
             this.cb_SelectAccount = new System.Windows.Forms.ComboBox();
             this.lb_SelectAccount = new System.Windows.Forms.Label();
             this.bt_Refresh = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.accountTab.SuspendLayout();
+            this.myAccountTab.SuspendLayout();
             this.calProfitTab.SuspendLayout();
             this.tranHis.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid_accountLog)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // accountTab
@@ -87,6 +94,8 @@ namespace TESTAPP
             // 
             // myAccountTab
             // 
+            this.myAccountTab.Controls.Add(this.chart1);
+            this.myAccountTab.Controls.Add(this.button1);
             this.myAccountTab.Location = new System.Drawing.Point(4, 22);
             this.myAccountTab.Name = "myAccountTab";
             this.myAccountTab.Padding = new System.Windows.Forms.Padding(3);
@@ -475,6 +484,32 @@ namespace TESTAPP
             this.bt_Refresh.UseVisualStyleBackColor = true;
             this.bt_Refresh.Click += new System.EventHandler(this.bt_Refresh_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(30, 35);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(63, 32);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // chart1
+            // 
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
+            this.chart1.Location = new System.Drawing.Point(134, 202);
+            this.chart1.Name = "chart1";
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
+            this.chart1.Size = new System.Drawing.Size(518, 156);
+            this.chart1.TabIndex = 1;
+            this.chart1.Text = "chart1";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -489,11 +524,13 @@ namespace TESTAPP
             this.Text = "Main";
             this.Load += new System.EventHandler(this.Main_Load);
             this.accountTab.ResumeLayout(false);
+            this.myAccountTab.ResumeLayout(false);
             this.calProfitTab.ResumeLayout(false);
             this.calProfitTab.PerformLayout();
             this.tranHis.ResumeLayout(false);
             this.tranHis.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid_accountLog)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -537,6 +574,8 @@ namespace TESTAPP
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cb_CalProfitTab_Period;
         private System.Windows.Forms.Button bt_ResetCondition;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
     }
 }
 
