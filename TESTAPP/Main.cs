@@ -132,20 +132,13 @@ namespace TESTAPP
 
         private Account GetSelectedAccount()
         {
-
             Account name = cb_SelectAccount.SelectedItem as Account;
 
             if (name != null)
             {
                 // 굳이 이 과정이 필요한가 싶긴함.. 나중에 수정 필요
                 accountService.SelectAccountById(1L, name.AccountId);
-
-                //스택 터짐 방지
-                ValidDate(name.SettlePeriodType);
             }
-
-
-
             return name;
         }
 
@@ -389,18 +382,18 @@ namespace TESTAPP
             txt_CalProfitTab_InterestType.Text = $"{account.SettleType}";
             txt_CalProfitTab_InterestPeriod.Text = $"{account.SettlePeriod}{account.SettlePeriodType}";
             txt_CalProfitTab_Amount.Text = $"{string.Format("{0:#,##0}", account.Amount)} 원";
-            txt_CalProfitTab_UpperLimit.Text = account.checkUpperLimitWellInterest ? $"{string.Format("{0:#,##0}", account.UpperLimitWellInterest)} 원" : "없음";
+            txt_CalProfitTab_UpperLimit.Text = account.CheckUpperLimitWellInterest ? $"{string.Format("{0:#,##0}", account.UpperLimitWellInterest)} 원" : "없음";
             txt_CalProfitTab_Available.Text = $"{(MaxInterest(account) + account.Interest) * 100}%";
         }
 
         private decimal MaxInterest(Account account)
         {
 
-            decimal pc = account.periodConditions
+            decimal pc = account.PeriodConditions
                  .Where((condition) => condition.Applyed)
                  .Select((condition) => condition.ChangedValue)
                  .Sum();
-            decimal ac = account.amountConditions
+            decimal ac = account.AmountConditions
                  .Where((condition) => condition.Applyed)
                  .Select((condition) => condition.ChangedValue)
                  .Sum();
@@ -429,21 +422,29 @@ namespace TESTAPP
                 return;
             }
 
-            ViewVirtualLog form = new ViewVirtualLog();
-            form.StartPosition = FormStartPosition.CenterScreen;
-
-            form.VirtualDto = new VirtualDto
+            if (dt_From.Value.Date.CompareTo(dt_To.Value.Date) >= 0)
             {
-                Now = now,
-                From = from,
-                Until = until,
-                AccountId = account.AccountId,
-                UserCode = account.UserCode,
+                MessageBox.Show("시작기간은 끝 기간을 넘어설 수 없습니다.");
+                return;
+            }
 
+            ViewVirtualLog form = new ViewVirtualLog
+            {
+                StartPosition = FormStartPosition.CenterScreen,
+
+                VirtualDto = new VirtualDto
+                {
+                    Now = now,
+                    From = from,
+                    Until = until,
+                    AccountId = account.AccountId,
+                    UserCode = account.UserCode,
+
+                },
+
+                afterPlans = GetAferPlan(),
+                period = (Period)cb_CalProfitTab_Period.SelectedItem
             };
-
-            form.afterPlans = GetAferPlan();
-            form.period = (Period)cb_CalProfitTab_Period.SelectedItem;
 
             form.ShowDialog();
         }
@@ -469,74 +470,6 @@ namespace TESTAPP
 
             return aps;
         }
-        #endregion
-
-        #region "검증"
-        private void dt_From_ValueChanged(object sender, EventArgs e)
-        {
-            ValidateDateTime(sender);
-        }
-
-        private void dt_To_ValueChanged(object sender, EventArgs e)
-        {
-            ValidateDateTime(sender);
-        }
-
-        private void ValidateDateTime(object sender)
-        {
-            var dtp = sender as DateTimePicker;
-
-            if (dt_From.Value.Date.CompareTo(dt_To.Value.Date) > 0)
-            {
-                MessageBox.Show("시작기간은 끝 기간을 넘어설 수 없습니다.");
-                dtp.Value = DateTime.Now;
-            }
-
-            if (DateTime.Now.Date.CompareTo(dt_From.Value.Date) > 0)
-            {
-                MessageBox.Show("기간은 오늘 이후로만 선택 가능합니다.");
-                dtp.Value = DateTime.Now;
-            }
-        }
-
-        #endregion
-
-        #region "일단위 연산 스택 오버플로우 방지 .. 잠시 보류 코드 수정함."
-        private void cb_CalProfitTab_Period_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-
-            Account ac = GetSelectedAccount();
-
-            if (ac is null) return;
-
-            ValidDate(ac.SettlePeriodType);
-
-
-        }
-        private void ValidDate(SettlePeriodType type)
-        {
-            /*
-            if (type == SettlePeriodType.일)
-            {
-                dt_To.MaxDate = DateTime.Now.AddYears(3);
-            }
-            else
-            {
-                if ((Period)cb_CalProfitTab_Period.SelectedItem == Period.일단위)
-                {
-                    if (dt_To.Value.CompareTo(DateTime.Now.AddYears(3)) > 0)
-                    {
-                        MessageBox.Show("일 단위는 \n3년이 설정 가능한 최대 날짜입니다.");
-                    }
-                    dt_To.MaxDate = DateTime.Now.AddYears(3);
-                }
-                else
-                {
-                    dt_To.MaxDate = DateTime.Now.AddYears(20);
-                }
-            }*/
-        }
-
         #endregion
 
         #endregion

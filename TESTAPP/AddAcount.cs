@@ -438,10 +438,10 @@ namespace TESTAPP
                 SettlePeriodType = (SettlePeriodType)cb_SettlePeriod.SelectedItem,
                 SettleType = (SettleType)cb_SettleType.SelectedItem,
                 UserCode = 1L, // 임시로 이렇게 할 예정,
-                checkUpperLimitWellInterest = ch_CheckPreferent.Checked && decimal.Parse(txt_Preferent.Text.Replace(",", "")) > 0,
+                CheckUpperLimitWellInterest = ch_CheckPreferent.Checked && decimal.Parse(txt_Preferent.Text.Replace(",", "")) > 0,
                 UpperLimitWellInterest = ch_CheckPreferent.Checked ? decimal.Parse(txt_Preferent.Text.Replace(",", "")) : 0,
-                amountConditions = amountConditions,
-                periodConditions = periodConditions, // 이 둘은 나중에 또 따로 관리
+                AmountConditions = amountConditions,
+                PeriodConditions = periodConditions, // 이 둘은 나중에 또 따로 관리
             };
 
         }

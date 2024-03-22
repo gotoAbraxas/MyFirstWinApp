@@ -38,11 +38,11 @@ namespace TESTAPP
             Account ac = account.SelectAccountById(Usercode, AccountId);
 
             
-           foreach(AmountConditionOfInterest amountCondition in ac.amountConditions)
+           foreach(AmountConditionOfInterest amountCondition in ac.AmountConditions)
             {
                 DrawAmountCondition(amountCondition);
             }
-            foreach (PeriodConditionOfInterest periodCondition in ac.periodConditions)
+            foreach (PeriodConditionOfInterest periodCondition in ac.PeriodConditions)
             {
                 DrawPeriodCondition(periodCondition);
             }

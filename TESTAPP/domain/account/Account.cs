@@ -28,6 +28,20 @@ namespace TESTAPP.domain.account
         개월,
         년
     }
+    public class AccountVirtuallogDto // 나중에 쓰자...
+    {
+
+        public bool Insert {  get; set; }
+        public decimal Amount { get; set; }
+        public decimal ResultInterest { get; set; }
+        public decimal ResultAmount { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public List<VirtualLog> Log { get; set; }
+        public List<AfterPlan> AfterPlans { get; set; }
+    }
+
+
     internal class Account : IAccount
     {
         #region "생성자"
@@ -47,15 +61,15 @@ namespace TESTAPP.domain.account
         public decimal Amount { get; set; } = 0; // 통장잔액
         public List<AccountLog> Log { get; set; } = new List<AccountLog>(); // 거래 기록
 
-        public List<AmountConditionOfInterest> amountConditions { get; set; } // 
-        public List<PeriodConditionOfInterest> periodConditions { get; set; }
+        public List<AmountConditionOfInterest> AmountConditions { get; set; } // 
+        public List<PeriodConditionOfInterest> PeriodConditions { get; set; }
         public SettleType SettleType { get; set; } // 정산 타입
         public int SettlePeriod { get; set; } // 정산 주기
 
         
         public SettlePeriodType SettlePeriodType { get; set; } // 정산 단위
 
-        public bool checkUpperLimitWellInterest { get; set; } // 
+        public bool CheckUpperLimitWellInterest { get; set; } // 
         public decimal UpperLimitWellInterest { get; set; } // 우대금리 최대 금액 기본 null
 
         #endregion
@@ -300,8 +314,8 @@ namespace TESTAPP.domain.account
             int remainingDays = totalDays % 7; // 남은 요일
 
             // 나머지가 1부터 5까지인 경우 평일로 간주하여 카운트
-            int weekdays = remainingDays <= 5 ? remainingDays : 5; // 5,6 두가지 경우가 전부 있는데 일단 .. 패스
-            int result = days + weekdays;
+            // 여기서 만약 주말이 껴있는 경우는 오차로 넘김
+            int weekdays = remainingDays <= 5 ? remainingDays : 5;
             return days + weekdays;
         }
 
@@ -368,7 +382,7 @@ namespace TESTAPP.domain.account
         {
             DateTime now = DateTime.Now.Date;
             decimal result = 0;
-            List<decimal> resultPeriodConditions = periodConditions
+            List<decimal> resultPeriodConditions = PeriodConditions
                                     .Where((condition) => condition.CompareDateEnter(start,now) &&condition.CompareDatePass(start,now)  && condition.Applyed)
                                     .Select((condition) => condition.ChangedValue).ToList();
 
@@ -384,7 +398,7 @@ namespace TESTAPP.domain.account
         {
             decimal result = 0;
 
-            List<decimal> resultAmountConditions = amountConditions
+            List<decimal> resultAmountConditions = AmountConditions
                          .Where((condition) => condition.StartValue < tmp&& tmp <= condition.EndValue && condition.Applyed)
                          .Select((condition) => condition.ChangedValue).ToList();
 
@@ -399,7 +413,7 @@ namespace TESTAPP.domain.account
         {
             decimal resultInterest;
 
-            if (checkUpperLimitWellInterest && amount > UpperLimitWellInterest)
+            if (CheckUpperLimitWellInterest && amount > UpperLimitWellInterest)
             {
 
                 decimal rest = amount - UpperLimitWellInterest;

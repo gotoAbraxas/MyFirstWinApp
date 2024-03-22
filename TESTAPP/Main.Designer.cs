@@ -156,7 +156,6 @@ namespace TESTAPP
             this.cb_CalProfitTab_Period.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.cb_CalProfitTab_Period.Size = new System.Drawing.Size(61, 20);
             this.cb_CalProfitTab_Period.TabIndex = 30;
-            this.cb_CalProfitTab_Period.SelectionChangeCommitted += new System.EventHandler(this.cb_CalProfitTab_Period_SelectionChangeCommitted);
             // 
             // bt_CalProfitTab_Available
             // 
@@ -322,7 +321,6 @@ namespace TESTAPP
             this.dt_From.Size = new System.Drawing.Size(156, 21);
             this.dt_From.TabIndex = 9;
             this.dt_From.Value = new System.DateTime(2024, 3, 15, 14, 52, 47, 0);
-            this.dt_From.ValueChanged += new System.EventHandler(this.dt_From_ValueChanged);
             // 
             // dt_To
             // 
@@ -330,7 +328,6 @@ namespace TESTAPP
             this.dt_To.Name = "dt_To";
             this.dt_To.Size = new System.Drawing.Size(153, 21);
             this.dt_To.TabIndex = 8;
-            this.dt_To.ValueChanged += new System.EventHandler(this.dt_To_ValueChanged);
             // 
             // bt_Calculate
             // 
