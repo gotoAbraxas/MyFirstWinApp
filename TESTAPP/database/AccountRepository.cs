@@ -25,8 +25,9 @@ namespace TESTAPP.database
     {
 
         #region "생성자, 싱글톤 구현"
-        private AccountRepository() {
-            TestInit();
+        private AccountRepository() 
+        {
+           TestInit();
         }
 
         private AccountRepository Repository { get; set; }

@@ -44,6 +44,8 @@ namespace TESTAPP
         private void Main_Load(object sender, EventArgs e)
         {
             accountService = new AccountService(); // 나중에 di로 설정 가능하려나.
+            SelectAccounts();
+            SearchCondition();
             SetCalProfitTabPeriod();
             InitDate();
         }
