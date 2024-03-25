@@ -57,7 +57,6 @@ namespace TESTAPP.domain.account
         public string Name { get; set; } // 계좌 이름
         public string Name_AccountId { get; set; } // 최종 식별 코드
         public decimal Interest {  get; set; } // 이율
-        public decimal UnitPeriodInterest { get; set; } // 단위 기간 이율 
         public decimal Amount { get; set; } = 0; // 통장잔액
         public List<AccountLog> Log { get; set; } = new List<AccountLog>(); // 거래 기록
 

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +25,9 @@ namespace TESTAPP.database
     {
 
         #region "생성자, 싱글톤 구현"
-        private AccountRepository() { }
+        private AccountRepository() {
+            TestInit();
+        }
 
         private AccountRepository Repository { get; set; }
 
@@ -41,6 +45,19 @@ namespace TESTAPP.database
         #region "속성"
         public static Dictionary<long, Account> Accounts = new Dictionary<long, Account>();
         #endregion
+
+
+        private void TestInit()
+        {
+            string json = File.ReadAllText("test.json");
+            // JSON 문자열을 C# 객체의 리스트로 역직렬화
+            List<Account> accounts = JsonConvert.DeserializeObject<List<Account>>(json);
+
+            foreach (Account item in accounts)
+            {
+                SaveAccount(item);
+            }
+        }
 
         #region "메서드"
         public Account GetAccountById(long userCode, long accountCode)
