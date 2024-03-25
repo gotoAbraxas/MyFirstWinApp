@@ -52,6 +52,11 @@ namespace TESTAPP.account.service
             return repository.GetAllAccountsById(userCode);
         }
 
+        public Dictionary<long, Account> GetAcountsByIdWithCondition(long userCode,SearchCondition condition)
+        {
+            return repository.GetAllAccountsByIdWithCondition(userCode, condition);
+        }
+
         public Account Deposit(long userCode, long accountCode,decimal amount,AccountLog log)
         {
             Account tmp = SelectAccountById(userCode, accountCode);

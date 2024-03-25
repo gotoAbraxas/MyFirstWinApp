@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -9,6 +11,7 @@ using TESTAPP.account.service;
 using TESTAPP.domain.account;
 using TESTAPP.domain.account.sub;
 using static TESTAPP.common.component.Dynamic;
+using TESTAPP.database;
 
 namespace TESTAPP
 {
@@ -19,10 +22,16 @@ namespace TESTAPP
 
         private AccountService accountService;
         Dictionary<string,Control> ConditionControler = new Dictionary<string,Control>();
+        List<Control> AccountList = new List<Control>();
+
+        SearchCondition Condition = new SearchCondition();
+
         private readonly string txt_Condition = "txt_Condition";
         private readonly string dtp_Condition = "dtp_Condition";
         private readonly string lb_Condition = "lb_Condition";
         private readonly string cb_Condition = "cb_Condition";
+
+        private bool Selected = false;
         #endregion
 
         #region "생성자"
@@ -331,6 +340,20 @@ namespace TESTAPP
             AccountLogSetting();
             InitCalProfitTabValue();
 
+
+            var acList = accountService.GetAcountsById(1L);
+            GetList(acList);
+        }
+
+        private void GetList(Dictionary<long,Account> list)
+        {
+            flp_AccountList.Controls.Clear();
+
+           
+            foreach (var item in list)
+            {
+                Test(item.Value);
+            }
         }
 
         #endregion
@@ -475,11 +498,102 @@ namespace TESTAPP
 
         #endregion
 
+
+        private void Test(Account account)
+        {
+
+            Panel pl = new Panel
+            {
+                Height = 100,
+                Padding = new Padding(0, 10, 0, 0),
+                BackColor = Color.White
+            };
+            //pl.Dock = DockStyle.Fill;
+            Label lb = new Label
+            {
+                Location = new Point(0, 0),
+                BackColor = Color.AliceBlue
+            };
+
+            Label lb2 = new Label
+            {
+                Location = new Point(200, 0),
+                BackColor = Color.AliceBlue
+            };
+            Label lb3 = new Label
+            {
+                Location = new Point(300, 0),
+                BackColor = Color.AliceBlue
+            };
+            DynamicInsert<Panel>(this, pl, flp_AccountList,width:flp_AccountList.Width-10);
+            DynamicLabelInsert(this, lb, pl, name: "일단테스트", text: $"계좌 이름: {account.Name}", width: 140,height:30);
+            DynamicLabelInsert(this, lb2, pl, name: "일단테스트", text: $"이율: {account.Interest *100} %", width: 100,height:20); ;
+            DynamicLabelInsert(this, lb3, pl, name: "일단테스트", text: "우대이율: 4%", width: 100, height:20); ;
+
+
+            CheckBox cb = new CheckBox()
+            {
+                Location = new Point(370, 30),
+            };
+            cb.Text = "적용";
+            DynamicInsert<CheckBox>(this, cb, pl, width: 60, height: 20) ;
+
+            AccountList.Add(pl);
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
-            DateTime now = DateTime.Now.Date;
-            DateTime from = dt_From.Value.Date;
-            DateTime until = dt_To.Value.Date;
+            var acList = accountService.GetAcountsByIdWithCondition(1L, Condition);
+            GetList(acList);
+        }
+
+        private void SearchCondition()
+        {
+            
+           var acList = accountService.GetAcountsByIdWithCondition(1L, Condition) ;
+
+            GetList(acList);
+        }
+
+        private void cb_accountTab_AccountCondition_CheckedChanged(object sender, EventArgs e)
+        {
+            SearchCondition();
+
+        }
+
+        private void cb_accountTab_PeriodCondition_CheckedChanged(object sender, EventArgs e)
+        {
+            SearchCondition();
+        }
+
+        private void bt_accountTab_AccountCondition_Click(object sender, EventArgs e)
+        {
+            if (Condition.AmountCondition)
+            {
+                Condition.AmountCondition = false;
+                bt_accountTab_AccountCondition.ForeColor = Color.Black;
+            }
+            else
+            {
+                Condition.AmountCondition = true;
+                bt_accountTab_AccountCondition.ForeColor = Color.Red;
+            }
+            SearchCondition();
+        }
+
+        private void bt_accountTab_PeriodCondition_Click(object sender, EventArgs e)
+        {
+            if (Condition.PeriodCondition)
+            {
+                Condition.PeriodCondition = false;
+                bt_accountTab_PeriodCondition.ForeColor = Color.Black;
+            }
+            else
+            {
+                Condition.PeriodCondition = true;
+                bt_accountTab_PeriodCondition.ForeColor = Color.Red;
+            }
+            SearchCondition();
         }
     }
 }

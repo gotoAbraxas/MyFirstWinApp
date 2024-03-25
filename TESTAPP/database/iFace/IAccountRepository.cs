@@ -13,7 +13,7 @@ namespace TESTAPP.database.iFace
 
         Account GetAccountById(long userCode, long AccountCode);
         Dictionary<long, Account> GetAllAccountsById(long userCode);
-
+        Dictionary<long, Account> GetAllAccountsByIdWithCondition(long userCode, SearchCondition condition);
         void SaveAccount(Account account); 
    
     }

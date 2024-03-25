@@ -17,7 +17,7 @@ namespace TESTAPP.common.component
     {
 
         #region " 일반적인 컨트롤러 생성"
-        public static void DynamicInsert<V>(Form form, V control, FlowLayoutPanel pannel, string name ="", int width = 40,int height = 60) where V : Control
+        public static void DynamicInsert<V>(Form form, V control, Panel pannel, string name ="", int width = 40,int height = 60) where V : Control
         {
             control.Name = $"{name}";
             control.Parent = form;
@@ -29,7 +29,7 @@ namespace TESTAPP.common.component
         #endregion
 
         #region " 라벨 전용 컨트롤러 생성기"
-        public static void DynamicLabelInsert(Form form, Label control, FlowLayoutPanel pannel,string name="", string text = "", int width = 40, int height = 60) 
+        public static void DynamicLabelInsert(Form form, Label control, Panel pannel,string name="", string text = "", int width = 40, int height = 60) 
         {
             control.TextAlign = ContentAlignment.MiddleRight;
             control.Text = text;
@@ -38,7 +38,7 @@ namespace TESTAPP.common.component
         #endregion
 
         #region "금액 전용 동적 컨트롤러 생성기"
-        public static void DynamicAmountInsert(Form form, TextBox control, FlowLayoutPanel pannel, string name = "", int width = 40, int height = 60)
+        public static void DynamicAmountInsert(Form form, TextBox control, Panel pannel, string name = "", int width = 40, int height = 60)
         {
             control.TextAlign = HorizontalAlignment.Right;
             control.TextChanged += (sender, e) => SetTxtAmountPretty(form, name);

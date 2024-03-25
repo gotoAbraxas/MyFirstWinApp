@@ -31,9 +31,6 @@ namespace TESTAPP
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.accountTab = new System.Windows.Forms.TabControl();
             this.myAccountTab = new System.Windows.Forms.TabPage();
             this.calProfitTab = new System.Windows.Forms.TabPage();
@@ -71,14 +68,23 @@ namespace TESTAPP
             this.cb_SelectAccount = new System.Windows.Forms.ComboBox();
             this.lb_SelectAccount = new System.Windows.Forms.Label();
             this.bt_Refresh = new System.Windows.Forms.Button();
+            this.flp_AccountList = new System.Windows.Forms.FlowLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.bt_accountTab_AccountCondition = new System.Windows.Forms.Button();
+            this.bt_accountTab_PeriodCondition = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             this.accountTab.SuspendLayout();
             this.myAccountTab.SuspendLayout();
             this.calProfitTab.SuspendLayout();
             this.tranHis.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid_accountLog)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // accountTab
@@ -94,8 +100,13 @@ namespace TESTAPP
             // 
             // myAccountTab
             // 
-            this.myAccountTab.Controls.Add(this.chart1);
+            this.myAccountTab.Controls.Add(this.label4);
+            this.myAccountTab.Controls.Add(this.panel1);
+            this.myAccountTab.Controls.Add(this.button4);
+            this.myAccountTab.Controls.Add(this.button3);
+            this.myAccountTab.Controls.Add(this.button2);
             this.myAccountTab.Controls.Add(this.button1);
+            this.myAccountTab.Controls.Add(this.flp_AccountList);
             this.myAccountTab.Location = new System.Drawing.Point(4, 22);
             this.myAccountTab.Name = "myAccountTab";
             this.myAccountTab.Padding = new System.Windows.Forms.Padding(3);
@@ -106,7 +117,10 @@ namespace TESTAPP
             // 
             // calProfitTab
             // 
+            this.calProfitTab.Controls.Add(this.bt_Refresh);
             this.calProfitTab.Controls.Add(this.bt_ResetCondition);
+            this.calProfitTab.Controls.Add(this.cb_SelectAccount);
+            this.calProfitTab.Controls.Add(this.lb_SelectAccount);
             this.calProfitTab.Controls.Add(this.label3);
             this.calProfitTab.Controls.Add(this.cb_CalProfitTab_Period);
             this.calProfitTab.Controls.Add(this.bt_CalProfitTab_Available);
@@ -168,7 +182,7 @@ namespace TESTAPP
             // 
             // bt_CalProfitTab_Available
             // 
-            this.bt_CalProfitTab_Available.Location = new System.Drawing.Point(331, 126);
+            this.bt_CalProfitTab_Available.Location = new System.Drawing.Point(331, 164);
             this.bt_CalProfitTab_Available.Name = "bt_CalProfitTab_Available";
             this.bt_CalProfitTab_Available.Size = new System.Drawing.Size(89, 23);
             this.bt_CalProfitTab_Available.TabIndex = 28;
@@ -178,7 +192,7 @@ namespace TESTAPP
             // 
             // txt_CalProfitTab_Available
             // 
-            this.txt_CalProfitTab_Available.Location = new System.Drawing.Point(150, 128);
+            this.txt_CalProfitTab_Available.Location = new System.Drawing.Point(150, 166);
             this.txt_CalProfitTab_Available.Margin = new System.Windows.Forms.Padding(2);
             this.txt_CalProfitTab_Available.Name = "txt_CalProfitTab_Available";
             this.txt_CalProfitTab_Available.ReadOnly = true;
@@ -189,7 +203,7 @@ namespace TESTAPP
             // lb_CalProfitTab_Available
             // 
             this.lb_CalProfitTab_Available.AutoSize = true;
-            this.lb_CalProfitTab_Available.Location = new System.Drawing.Point(39, 128);
+            this.lb_CalProfitTab_Available.Location = new System.Drawing.Point(39, 166);
             this.lb_CalProfitTab_Available.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_CalProfitTab_Available.Name = "lb_CalProfitTab_Available";
             this.lb_CalProfitTab_Available.Size = new System.Drawing.Size(73, 24);
@@ -200,7 +214,7 @@ namespace TESTAPP
             // lb_CalProfitTab_UpperLimit
             // 
             this.lb_CalProfitTab_UpperLimit.AutoSize = true;
-            this.lb_CalProfitTab_UpperLimit.Location = new System.Drawing.Point(39, 81);
+            this.lb_CalProfitTab_UpperLimit.Location = new System.Drawing.Point(39, 119);
             this.lb_CalProfitTab_UpperLimit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_CalProfitTab_UpperLimit.Name = "lb_CalProfitTab_UpperLimit";
             this.lb_CalProfitTab_UpperLimit.Size = new System.Drawing.Size(61, 24);
@@ -210,7 +224,7 @@ namespace TESTAPP
             // 
             // txt_CalProfitTab_UpperLimit
             // 
-            this.txt_CalProfitTab_UpperLimit.Location = new System.Drawing.Point(150, 81);
+            this.txt_CalProfitTab_UpperLimit.Location = new System.Drawing.Point(150, 119);
             this.txt_CalProfitTab_UpperLimit.Margin = new System.Windows.Forms.Padding(2);
             this.txt_CalProfitTab_UpperLimit.Name = "txt_CalProfitTab_UpperLimit";
             this.txt_CalProfitTab_UpperLimit.ReadOnly = true;
@@ -220,7 +234,7 @@ namespace TESTAPP
             // 
             // txt_CalProfitTab_InterestType
             // 
-            this.txt_CalProfitTab_InterestType.Location = new System.Drawing.Point(150, 169);
+            this.txt_CalProfitTab_InterestType.Location = new System.Drawing.Point(150, 207);
             this.txt_CalProfitTab_InterestType.Margin = new System.Windows.Forms.Padding(2);
             this.txt_CalProfitTab_InterestType.Name = "txt_CalProfitTab_InterestType";
             this.txt_CalProfitTab_InterestType.ReadOnly = true;
@@ -231,7 +245,7 @@ namespace TESTAPP
             // Ib_CalProfitTab_InterestType
             // 
             this.Ib_CalProfitTab_InterestType.AutoSize = true;
-            this.Ib_CalProfitTab_InterestType.Location = new System.Drawing.Point(39, 171);
+            this.Ib_CalProfitTab_InterestType.Location = new System.Drawing.Point(39, 209);
             this.Ib_CalProfitTab_InterestType.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Ib_CalProfitTab_InterestType.Name = "Ib_CalProfitTab_InterestType";
             this.Ib_CalProfitTab_InterestType.Size = new System.Drawing.Size(57, 12);
@@ -241,7 +255,7 @@ namespace TESTAPP
             // 
             // txt_CalProfitTab_Interest
             // 
-            this.txt_CalProfitTab_Interest.Location = new System.Drawing.Point(149, 37);
+            this.txt_CalProfitTab_Interest.Location = new System.Drawing.Point(149, 75);
             this.txt_CalProfitTab_Interest.Margin = new System.Windows.Forms.Padding(2);
             this.txt_CalProfitTab_Interest.Name = "txt_CalProfitTab_Interest";
             this.txt_CalProfitTab_Interest.ReadOnly = true;
@@ -251,7 +265,7 @@ namespace TESTAPP
             // 
             // txt_CalProfitTab_Amount
             // 
-            this.txt_CalProfitTab_Amount.Location = new System.Drawing.Point(150, 248);
+            this.txt_CalProfitTab_Amount.Location = new System.Drawing.Point(150, 286);
             this.txt_CalProfitTab_Amount.Margin = new System.Windows.Forms.Padding(2);
             this.txt_CalProfitTab_Amount.Name = "txt_CalProfitTab_Amount";
             this.txt_CalProfitTab_Amount.ReadOnly = true;
@@ -261,7 +275,7 @@ namespace TESTAPP
             // 
             // txt_CalProfitTab_InterestPeriod
             // 
-            this.txt_CalProfitTab_InterestPeriod.Location = new System.Drawing.Point(150, 207);
+            this.txt_CalProfitTab_InterestPeriod.Location = new System.Drawing.Point(150, 245);
             this.txt_CalProfitTab_InterestPeriod.Margin = new System.Windows.Forms.Padding(2);
             this.txt_CalProfitTab_InterestPeriod.Name = "txt_CalProfitTab_InterestPeriod";
             this.txt_CalProfitTab_InterestPeriod.ReadOnly = true;
@@ -272,7 +286,7 @@ namespace TESTAPP
             // lb_accountTab_Interest
             // 
             this.lb_accountTab_Interest.AutoSize = true;
-            this.lb_accountTab_Interest.Location = new System.Drawing.Point(39, 40);
+            this.lb_accountTab_Interest.Location = new System.Drawing.Point(39, 78);
             this.lb_accountTab_Interest.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_accountTab_Interest.Name = "lb_accountTab_Interest";
             this.lb_accountTab_Interest.Size = new System.Drawing.Size(63, 24);
@@ -283,7 +297,7 @@ namespace TESTAPP
             // lb_CalProfitTab_InterestPeriod
             // 
             this.lb_CalProfitTab_InterestPeriod.AutoSize = true;
-            this.lb_CalProfitTab_InterestPeriod.Location = new System.Drawing.Point(39, 211);
+            this.lb_CalProfitTab_InterestPeriod.Location = new System.Drawing.Point(39, 249);
             this.lb_CalProfitTab_InterestPeriod.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_CalProfitTab_InterestPeriod.Name = "lb_CalProfitTab_InterestPeriod";
             this.lb_CalProfitTab_InterestPeriod.Size = new System.Drawing.Size(85, 12);
@@ -294,7 +308,7 @@ namespace TESTAPP
             // lb_CalProfitTab_Amount
             // 
             this.lb_CalProfitTab_Amount.AutoSize = true;
-            this.lb_CalProfitTab_Amount.Location = new System.Drawing.Point(39, 251);
+            this.lb_CalProfitTab_Amount.Location = new System.Drawing.Point(39, 289);
             this.lb_CalProfitTab_Amount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_CalProfitTab_Amount.Name = "lb_CalProfitTab_Amount";
             this.lb_CalProfitTab_Amount.Size = new System.Drawing.Size(57, 12);
@@ -305,7 +319,7 @@ namespace TESTAPP
             // lb_tmp_02
             // 
             this.lb_tmp_02.AutoSize = true;
-            this.lb_tmp_02.Location = new System.Drawing.Point(390, 324);
+            this.lb_tmp_02.Location = new System.Drawing.Point(390, 336);
             this.lb_tmp_02.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_tmp_02.Name = "lb_tmp_02";
             this.lb_tmp_02.Size = new System.Drawing.Size(29, 12);
@@ -315,7 +329,7 @@ namespace TESTAPP
             // lb_tmp_01
             // 
             this.lb_tmp_01.AutoSize = true;
-            this.lb_tmp_01.Location = new System.Drawing.Point(197, 323);
+            this.lb_tmp_01.Location = new System.Drawing.Point(197, 335);
             this.lb_tmp_01.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_tmp_01.Name = "lb_tmp_01";
             this.lb_tmp_01.Size = new System.Drawing.Size(29, 12);
@@ -324,7 +338,7 @@ namespace TESTAPP
             // 
             // dt_From
             // 
-            this.dt_From.Location = new System.Drawing.Point(37, 319);
+            this.dt_From.Location = new System.Drawing.Point(37, 331);
             this.dt_From.MinDate = new System.DateTime(2024, 3, 15, 0, 0, 0, 0);
             this.dt_From.Name = "dt_From";
             this.dt_From.Size = new System.Drawing.Size(156, 21);
@@ -333,7 +347,7 @@ namespace TESTAPP
             // 
             // dt_To
             // 
-            this.dt_To.Location = new System.Drawing.Point(229, 319);
+            this.dt_To.Location = new System.Drawing.Point(229, 331);
             this.dt_To.Name = "dt_To";
             this.dt_To.Size = new System.Drawing.Size(153, 21);
             this.dt_To.TabIndex = 8;
@@ -459,7 +473,7 @@ namespace TESTAPP
             // 
             this.cb_SelectAccount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_SelectAccount.FormattingEnabled = true;
-            this.cb_SelectAccount.Location = new System.Drawing.Point(101, 14);
+            this.cb_SelectAccount.Location = new System.Drawing.Point(119, 20);
             this.cb_SelectAccount.Name = "cb_SelectAccount";
             this.cb_SelectAccount.Size = new System.Drawing.Size(217, 20);
             this.cb_SelectAccount.TabIndex = 4;
@@ -468,7 +482,7 @@ namespace TESTAPP
             // lb_SelectAccount
             // 
             this.lb_SelectAccount.AutoSize = true;
-            this.lb_SelectAccount.Location = new System.Drawing.Point(13, 19);
+            this.lb_SelectAccount.Location = new System.Drawing.Point(15, 23);
             this.lb_SelectAccount.Name = "lb_SelectAccount";
             this.lb_SelectAccount.Size = new System.Drawing.Size(81, 12);
             this.lb_SelectAccount.TabIndex = 5;
@@ -476,7 +490,7 @@ namespace TESTAPP
             // 
             // bt_Refresh
             // 
-            this.bt_Refresh.Location = new System.Drawing.Point(328, 15);
+            this.bt_Refresh.Location = new System.Drawing.Point(351, 20);
             this.bt_Refresh.Name = "bt_Refresh";
             this.bt_Refresh.Size = new System.Drawing.Size(19, 18);
             this.bt_Refresh.TabIndex = 6;
@@ -484,40 +498,116 @@ namespace TESTAPP
             this.bt_Refresh.UseVisualStyleBackColor = true;
             this.bt_Refresh.Click += new System.EventHandler(this.bt_Refresh_Click);
             // 
+            // flp_AccountList
+            // 
+            this.flp_AccountList.AutoScroll = true;
+            this.flp_AccountList.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.flp_AccountList.Location = new System.Drawing.Point(426, 40);
+            this.flp_AccountList.Name = "flp_AccountList";
+            this.flp_AccountList.Size = new System.Drawing.Size(454, 386);
+            this.flp_AccountList.TabIndex = 3;
+            // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(30, 35);
+            this.button1.Location = new System.Drawing.Point(522, 11);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(63, 32);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
+            this.button1.Size = new System.Drawing.Size(22, 22);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "R";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // chart1
+            // button2
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
-            this.chart1.Location = new System.Drawing.Point(134, 202);
-            this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
-            this.chart1.Size = new System.Drawing.Size(518, 156);
-            this.chart1.TabIndex = 1;
-            this.chart1.Text = "chart1";
+            this.button2.Location = new System.Drawing.Point(842, 11);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(38, 22);
+            this.button2.TabIndex = 5;
+            this.button2.Text = "정렬";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(435, 11);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(70, 21);
+            this.button3.TabIndex = 6;
+            this.button3.Text = "전체선택";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(262, 396);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(84, 29);
+            this.button4.TabIndex = 7;
+            this.button4.Text = "계산해보기";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(23, 40);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(81, 12);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "우대조건 여부";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.bt_accountTab_PeriodCondition);
+            this.panel1.Controls.Add(this.bt_accountTab_AccountCondition);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Location = new System.Drawing.Point(29, 40);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(317, 169);
+            this.panel1.TabIndex = 11;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(31, 21);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(57, 12);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "검색 조건";
+            // 
+            // bt_accountTab_AccountCondition
+            // 
+            this.bt_accountTab_AccountCondition.Location = new System.Drawing.Point(131, 34);
+            this.bt_accountTab_AccountCondition.Name = "bt_accountTab_AccountCondition";
+            this.bt_accountTab_AccountCondition.Size = new System.Drawing.Size(71, 24);
+            this.bt_accountTab_AccountCondition.TabIndex = 11;
+            this.bt_accountTab_AccountCondition.Text = "금액 조건";
+            this.bt_accountTab_AccountCondition.UseVisualStyleBackColor = true;
+            this.bt_accountTab_AccountCondition.Click += new System.EventHandler(this.bt_accountTab_AccountCondition_Click);
+            // 
+            // bt_accountTab_PeriodCondition
+            // 
+            this.bt_accountTab_PeriodCondition.Location = new System.Drawing.Point(217, 34);
+            this.bt_accountTab_PeriodCondition.Name = "bt_accountTab_PeriodCondition";
+            this.bt_accountTab_PeriodCondition.Size = new System.Drawing.Size(71, 24);
+            this.bt_accountTab_PeriodCondition.TabIndex = 12;
+            this.bt_accountTab_PeriodCondition.Text = "기간 조건";
+            this.bt_accountTab_PeriodCondition.UseVisualStyleBackColor = true;
+            this.bt_accountTab_PeriodCondition.Click += new System.EventHandler(this.bt_accountTab_PeriodCondition_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(36, 100);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(38, 12);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "label5";
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(978, 555);
-            this.Controls.Add(this.bt_Refresh);
-            this.Controls.Add(this.lb_SelectAccount);
-            this.Controls.Add(this.cb_SelectAccount);
             this.Controls.Add(this.bt_AddAcount);
             this.Controls.Add(this.accountTab);
             this.Name = "Main";
@@ -525,14 +615,15 @@ namespace TESTAPP
             this.Load += new System.EventHandler(this.Main_Load);
             this.accountTab.ResumeLayout(false);
             this.myAccountTab.ResumeLayout(false);
+            this.myAccountTab.PerformLayout();
             this.calProfitTab.ResumeLayout(false);
             this.calProfitTab.PerformLayout();
             this.tranHis.ResumeLayout(false);
             this.tranHis.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid_accountLog)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -574,8 +665,17 @@ namespace TESTAPP
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cb_CalProfitTab_Period;
         private System.Windows.Forms.Button bt_ResetCondition;
+        private System.Windows.Forms.FlowLayoutPanel flp_AccountList;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button bt_accountTab_PeriodCondition;
+        private System.Windows.Forms.Button bt_accountTab_AccountCondition;
+        private System.Windows.Forms.Label label5;
     }
 }
 

@@ -11,6 +11,14 @@ using TESTAPP.domain.account.sub;
 
 namespace TESTAPP.database
 {
+    internal struct SearchCondition
+    {
+        public string Name {  get; set; }
+        public decimal? LowerInterest { get; set; }
+        public bool AmountCondition { get; set; }
+        public bool PeriodCondition { get; set; }
+    }
+
     internal class AccountRepository : IAccountRepository
     {
 
@@ -65,13 +73,32 @@ namespace TESTAPP.database
             }
         }
 
-        public void SaveAccount(Account account)
+        public Dictionary<long, Account> GetAllAccountsByIdWithCondition(long userCode, SearchCondition condition)
         {
-            lock (this)
+            try
             {
-                Accounts.Add(account.AccountId, account);
+                return Accounts
+                .Where(account => account.Value.UserCode == userCode)
+                .Where(account => condition.LowerInterest is null?  true : account.Value.Interest > condition.LowerInterest)
+                .Where(account => condition.PeriodCondition ? account.Value.PeriodConditions.Count > 0 :true)
+                .Where(account => condition.AmountCondition ? account.Value.AmountConditions.Count > 0 : true)
+                .ToDictionary(account => account.Value.AccountId, account => account.Value);
+
+            }
+            catch (ArgumentException e)
+            {
+                MessageBox.Show("유저코드가 전달이 안되었을 때.");
+                return new Dictionary<long, Account>();
             }
         }
+
+        public void SaveAccount(Account account)
+        {
+
+                Accounts.Add(account.AccountId, account);
+        }
+
+
 
         #endregion
     }
