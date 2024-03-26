@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using TESTAPP.database;
 using TESTAPP.database.iFace;
 using TESTAPP.domain.account;
+using TESTAPP.domain.account.iFace;
 using TESTAPP.domain.account.sub;
 
 namespace TESTAPP.account.service
@@ -54,6 +55,11 @@ namespace TESTAPP.account.service
         public Dictionary<long, Account> GetAcountsById(long userCode)
         { 
             return repository.GetAllAccountsById(userCode);
+        }
+
+        public List<Account> GetAccountByIds(long userCode, List<long> accountCodes)
+        {
+            return repository.GetAccountByIds(userCode,accountCodes);
         }
 
         public Dictionary<long, Account> GetAcountsByIdWithCondition(long userCode,SearchCondition condition)

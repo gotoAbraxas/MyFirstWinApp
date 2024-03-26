@@ -27,8 +27,6 @@ namespace TESTAPP
 
         public List<AfterPlan> afterPlans { get; set; } = new List<AfterPlan>();
         public List<VirtualLogConditionaly> virtualLogsConditionaly { get; set; } = new List<VirtualLogConditionaly>();
-
-        public List<VirtualLogformally> VirtualLogsformally { get; set; } = new List<VirtualLogformally>();
         public Period period { get; set; }
 
         #endregion

@@ -66,15 +66,4 @@ namespace TESTAPP.domain.account.sub
 
         public decimal? Total { get; set; }
     }
-
-    public class VirtualLogformally
-    {
-        public int Id { get; set; }
-        public string Start { get; set; }
-        public string End { get; set; }
-        public decimal? Amount { get; set; }
-        public string Description { get; set; }
-
-        public decimal? Total { get; set; }
-    }
 }

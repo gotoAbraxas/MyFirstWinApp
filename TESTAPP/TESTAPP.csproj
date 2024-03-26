@@ -89,6 +89,12 @@
     <Compile Include="AddAccountLog.Designer.cs">
       <DependentUpon>AddAccountLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="InvestPlanning.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InvestPlanning.Designer.cs">
+      <DependentUpon>InvestPlanning.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AddAccountLog.resx">
       <DependentUpon>AddAccountLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InvestPlanning.resx">
+      <DependentUpon>InvestPlanning.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>

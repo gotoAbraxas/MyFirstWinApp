@@ -77,6 +77,22 @@ namespace TESTAPP.database
             }
         }
 
+        public List<Account> GetAccountByIds(long userCode, List<long> accountCodes)
+        {
+            try
+            {
+                return Accounts
+                    .Where(account => account.Value.UserCode == userCode && accountCodes.Contains( account.Value.AccountId))
+                    .Select((item)=>item.Value)
+                    .ToList();
+            }
+            catch (ArgumentNullException e)
+            {
+                MessageBox.Show("유저코드와 계좌코드가 전달이 안되었을 때.");
+                return new List<Account> { new Account() };
+            }
+        }
+
         public Dictionary<long, Account> GetAllAccountsById(long userCode)
         {
 

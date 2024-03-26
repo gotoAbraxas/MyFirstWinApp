@@ -23,7 +23,7 @@ namespace TESTAPP
         private AccountService accountService;
         private Dictionary<string,Control> ConditionControler = new Dictionary<string,Control>();
         private List<Control> AccountList = new List<Control>();
-        private Dictionary<long,Account> SelectedAccounts = new Dictionary<long,Account>();
+        private List<long> SelectedAccounts = new List<long>();
 
         SearchCondition Condition = new SearchCondition();
 
@@ -346,19 +346,6 @@ namespace TESTAPP
 
             SearchCondition();
         }
-
-        private void GetList(Dictionary<long,Account> list)
-        {
-            flp_AccountList.Controls.Clear();
-            AccountList.Clear();
-
-
-            foreach (var item in list)
-            {
-                DynamicAccount(item.Value);
-            }
-        }
-
         #endregion
 
         #region "로그 폼 관련"
@@ -501,22 +488,87 @@ namespace TESTAPP
 
         #endregion
 
+        #region "검색 조건 설정 후 검색"
+        private void SearchCondition()
+        {
+            var acList = accountService.GetAcountsByIdWithCondition(1L, Condition);
+            SetList(acList);
+        }
 
-        private void DynamicAccount(Account account)
+        private void bt_accountTab_AccountCondition_Click(object sender, EventArgs e)
+        {
+            if (Condition.AmountCondition)
+            {
+                Condition.AmountCondition = false;
+                bt_accountTab_AccountCondition.ForeColor = Color.Black;
+                bt_accountTab_AccountCondition.Font = new Font(this.Font, FontStyle.Regular);
+
+            }
+            else
+            {
+                Condition.AmountCondition = true;
+                bt_accountTab_AccountCondition.ForeColor = Color.Green;
+                bt_accountTab_AccountCondition.Font = new Font(this.Font, FontStyle.Bold);
+
+            }
+            SearchCondition();
+        }
+
+        private void bt_accountTab_PeriodCondition_Click(object sender, EventArgs e)
+        {
+            if (Condition.PeriodCondition)
+            {
+                Condition.PeriodCondition = false;
+                bt_accountTab_PeriodCondition.ForeColor = Color.Black;
+                bt_accountTab_PeriodCondition.Font = new Font(this.Font, FontStyle.Regular);
+
+            }
+            else
+            {
+                Condition.PeriodCondition = true;
+                bt_accountTab_PeriodCondition.ForeColor = Color.Green;
+                bt_accountTab_PeriodCondition.Font = new Font(this.Font, FontStyle.Bold);
+            }
+            SearchCondition();
+        }
+
+
+        #endregion
+
+        #region "조건에 맞게 리스트 만들기"
+        private void SetList(Dictionary<long, Account> list)
+        {
+            flp_AccountList.Controls.Clear();
+            AccountList.Clear();
+
+
+            foreach (var item in list)
+            {
+                DynamicAccountList(item.Value);
+            }
+        }
+
+        #endregion
+
+        #region "계좌 리스트 동적 생성"
+        private void DynamicAccountList(Account account)
         {
 
             Panel panel = new Panel
             {
                 Height = 100,
                 Padding = new Padding(0, 10, 0, 0),
-                BackColor = Color.White
+                BackColor = Color.White,
+                //AutoSize = true,
+                
             };
             //pl.Dock = DockStyle.Fill;
             Label accountName = new Label
             {
                 Location = new Point(60, 0),
                 Padding = new Padding(4,4,0,0),
-                BackColor = Color.AliceBlue
+                Font = new Font("Malgun Gothic", 14, FontStyle.Regular),
+                AutoSize = true,
             };
 
             Label accountInterest = new Label
@@ -536,19 +588,20 @@ namespace TESTAPP
             {
                 Padding = new Padding(4, 4, 0, 0),
                 Location = new Point(0, 0),
+                Text = "선택"
             };
-            if(SelectedAccounts.TryGetValue(account.AccountId,out _)){
+
+            if(SelectedAccounts.Contains(account.AccountId)){
                 selectbox.Checked = true;
             }
-            selectbox.Text = "선택";
-
+            
             selectbox.CheckedChanged += (sender, o) =>
             {
                var cbox =  sender as CheckBox;
-                if (cbox.Checked && !SelectedAccounts.ContainsKey(account.AccountId))
+                if (cbox.Checked && !SelectedAccounts.Contains(account.AccountId))
                 {
                     MarkAccount(account.AccountId,account.Name);
-                    SelectedAccounts.Add(account.AccountId,account);
+                    SelectedAccounts.Add(account.AccountId);
                 }
                 else if(!cbox.Checked)
                 {
@@ -560,7 +613,7 @@ namespace TESTAPP
             ConditionInterest += account.AmountConditions.Where((item) => item.ChangedValue > 0).Select((item) => item.ChangedValue).Sum();
             ConditionInterest += account.PeriodConditions.Where((item) => item.ChangedValue > 0).Select((item) => item.ChangedValue).Sum();
 
-            DynamicInsert<Panel>(panel, flp_AccountList,name:$"{account.AccountId}",width:flp_AccountList.Width-10);
+            DynamicInsert<Panel>(panel, flp_AccountList,name:$"{account.AccountId}",width:flp_AccountList.Width-30);
             DynamicLabelInsert(accountName, panel, name: "일단테스트", text: $"{account.Name}", width: 140,height:30);
             DynamicLabelInsert(accountInterest, panel, name: "일단테스트", text: $"기본: {account.Interest *100} %", width: 100,height:20); ;
             DynamicLabelInsert(accountConditionInterest, panel, name: "일단테스트", text: $"최고: {ConditionInterest * 100} %", width: 100, height:20); ;
@@ -590,23 +643,24 @@ namespace TESTAPP
             Button bt = GetControl<Button>(flp_SelectedAccounts, accountid.ToString());
             flp_SelectedAccounts.Controls.Remove(bt);
         }
+        #endregion
+
+        #region "전체 선택"
 
         private void AllSelect()
         {
-            List<string> tmp = AccountList.Select((item) => item.Name).ToList();
-            int compareTmp = SelectedAccounts.Where((item) => tmp.Contains($"{item.Key}")).ToList().Count;
+            List<string> accountNames = AccountList.Select(item => item.Name).ToList();
+            List<string> selectedAccountKeys = SelectedAccounts.Select(item => item.ToString()).ToList();
 
+            int countMatchingNames = accountNames.Count(name => selectedAccountKeys.Contains(name));
 
-            //
             if (SelectedAccounts.Any()
-                &&tmp.Count == compareTmp
-                && SelectedAccounts.All((item) => tmp.Contains($"{item.Key}")))
+                && accountNames.Count <= countMatchingNames)
             {
                 AccountList.ForEach((item) =>
                 {
                     CheckBox cb = GetControl<CheckBox>(item, $"cb_{item.Name}"); 
-                    cb.Checked = false;
-                   
+                    cb.Checked = false;  
                 });
             }
             else
@@ -614,61 +668,57 @@ namespace TESTAPP
                 AccountList.ForEach((item) =>
                 {
                    CheckBox cb =  GetControl<CheckBox>(item, $"cb_{item.Name}");
-
-                    if ( !cb.Checked ) 
-                    { 
                         cb.Checked = true;
-                    }
                 }); 
             }
         }
 
+        #endregion
 
-        private void button1_Click(object sender, EventArgs e)
+        private void bt_accountTab_Refresh_Click(object sender, EventArgs e)
         {
             var acList = accountService.GetAcountsByIdWithCondition(1L, Condition);
-            GetList(acList);
+            SetList(acList);
         }
 
-        private void SearchCondition()
-        { 
-           var acList = accountService.GetAcountsByIdWithCondition(1L, Condition) ;
-           GetList(acList);
-        }
-
-        private void bt_accountTab_AccountCondition_Click(object sender, EventArgs e)
-        {
-            if (Condition.AmountCondition)
-            {
-                Condition.AmountCondition = false;
-                bt_accountTab_AccountCondition.ForeColor = Color.Black;
-            }
-            else
-            {
-                Condition.AmountCondition = true;
-                bt_accountTab_AccountCondition.ForeColor = Color.Red;
-            }
-            SearchCondition();
-        }
-
-        private void bt_accountTab_PeriodCondition_Click(object sender, EventArgs e)
-        {
-            if (Condition.PeriodCondition)
-            {
-                Condition.PeriodCondition = false;
-                bt_accountTab_PeriodCondition.ForeColor = Color.Black;
-            }
-            else
-            {
-                Condition.PeriodCondition = true;
-                bt_accountTab_PeriodCondition.ForeColor = Color.Red;
-            }
-            SearchCondition();
-        }
-
-        private void button3_Click(object sender, EventArgs e)
+        private void bt_accountTab_AllSelect_Click(object sender, EventArgs e)
         {
             AllSelect();
+        }
+
+        private void txt_accountTab_Amount_TextChanged(object sender, EventArgs e)
+        {
+            SetTxtAmountPretty(this, (sender as TextBox).Name);
+        }
+
+        private void bt_accountTab_MakePlan_Click(object sender, EventArgs e)
+        {
+
+            if(!decimal.TryParse(txt_accountTab_Amount.Text.Replace(",",""),out decimal Amountresult) && Amountresult <= 0)
+            {
+                MessageBox.Show("금액이 잘못되었습니다.");
+                return;
+            }
+            if(!int.TryParse(txt_accountTab_Period.Text,out int PeriodResult)&& PeriodResult <= 0)
+            {
+                MessageBox.Show("기간이 잘못되었습니다.");
+                return;
+            }
+            if (!SelectedAccounts.Any())
+            {
+                MessageBox.Show("선택된 상품이 없습니다.");
+                return;
+            }
+
+
+            InvestPlanning fm = new InvestPlanning
+            {
+                Amounts = Amountresult,
+                Period = PeriodResult,
+                AccountIds = SelectedAccounts
+            };
+
+            OpenNewForm(fm);
         }
     }
 }
