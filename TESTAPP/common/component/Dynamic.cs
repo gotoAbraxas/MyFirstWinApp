@@ -17,32 +17,30 @@ namespace TESTAPP.common.component
     {
 
         #region " 일반적인 컨트롤러 생성"
-        public static void DynamicInsert<V>(Form form, V control, Panel pannel, string name ="", int width = 40,int height = 60) where V : Control
+        public static void DynamicInsert<V>(V control, Control parent, string name ="", int width = 40,int height = 60) where V : Control
         {
             control.Name = $"{name}";
-            control.Parent = form;
             control.Size = new Size(width, height);
-            form.Controls.Add(control);
-            pannel.Controls.Add(control);
+            parent.Controls.Add(control);
         }
 
         #endregion
 
         #region " 라벨 전용 컨트롤러 생성기"
-        public static void DynamicLabelInsert(Form form, Label control, Panel pannel,string name="", string text = "", int width = 40, int height = 60) 
+        public static void DynamicLabelInsert(Label control, Control parent, string name="", string text = "", int width = 40, int height = 60) 
         {
             control.TextAlign = ContentAlignment.MiddleRight;
             control.Text = text;
-            DynamicInsert<Label>(form, control, pannel, name, width, height);
+            DynamicInsert<Label>(control, parent, name, width, height);
         }
         #endregion
 
         #region "금액 전용 동적 컨트롤러 생성기"
-        public static void DynamicAmountInsert(Form form, TextBox control, Panel pannel, string name = "", int width = 40, int height = 60)
+        public static void DynamicAmountInsert(TextBox control, Control parent, string name = "", int width = 40, int height = 60)
         {
             control.TextAlign = HorizontalAlignment.Right;
-            control.TextChanged += (sender, e) => SetTxtAmountPretty(form, name);
-            DynamicInsert<TextBox>(form, control, pannel, name, width, height);
+            control.TextChanged += (sender, e) => SetTxtAmountPretty(parent, name);
+            DynamicInsert<TextBox>(control, parent, name, width, height);
         }
         #endregion
 
@@ -58,9 +56,9 @@ namespace TESTAPP.common.component
         #endregion
 
         #region "이름으로 컨트롤을 가져옴"
-        public static T GetControl<T>(Form form, string name) where T : Control
+        public static T GetControl<T>(Control parent, string name) where T : Control
         {
-            if (form.Controls.Find(name, true).FirstOrDefault() is T control)
+            if (parent.Controls.Find(name, true).FirstOrDefault() is T control)
             {
                 return control;
             }
@@ -69,7 +67,7 @@ namespace TESTAPP.common.component
         #endregion
 
         #region "동적 Text 의 금액을 GET/SET 하는 메소드"
-        public static string GetTxtAmountPretty(Form form, string name)
+        public static string GetTxtAmountPretty(Control form, string name)
         {
             if (form.Controls.Find(name, true).FirstOrDefault() is TextBox control)
             {
@@ -77,7 +75,7 @@ namespace TESTAPP.common.component
             }
             return null;
         }
-        public static void SetTxtAmountPretty(Form form, string name)
+        public static void SetTxtAmountPretty(Control form, string name)
         {
             // 금액 1,000,000 이렇게 찍어주는 로직
             if (form.Controls.Find(name, true).FirstOrDefault() is TextBox control)

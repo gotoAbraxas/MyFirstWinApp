@@ -21,8 +21,9 @@ namespace TESTAPP
         #region "속성
 
         private AccountService accountService;
-        Dictionary<string,Control> ConditionControler = new Dictionary<string,Control>();
-        List<Control> AccountList = new List<Control>();
+        private Dictionary<string,Control> ConditionControler = new Dictionary<string,Control>();
+        private List<Control> AccountList = new List<Control>();
+        private Dictionary<long,Account> SelectedAccounts = new Dictionary<long,Account>();
 
         SearchCondition Condition = new SearchCondition();
 
@@ -246,13 +247,13 @@ namespace TESTAPP
             cb.SelectedItem = AccountLogType.입금;
             cb.DropDownStyle = ComboBoxStyle.DropDownList; // 나중엔 콤보박스도 따로 만들면 좋긴할듯 .?
     
-            DynamicInsert<FlowLayoutPanel>(this, layout, flowLayoutPanel, width: flowLayoutPanel.Width-10, height: 40);
+            DynamicInsert<FlowLayoutPanel>(layout, flowLayoutPanel, width: flowLayoutPanel.Width-10, height: 40);
 
-            DynamicInsert<DateTimePicker>(this, dtp, layout, $"{dtp_Condition}{ConditionControler.Count}", 110, 30);
-            DynamicAmountInsert(this, new TextBox(), layout, $"{txt_Condition}{ConditionControler.Count}", 120, 30);
-            DynamicLabelInsert(this, new Label(), layout, $"{lb_Condition}{ConditionControler.Count}", "원", 25, 30);
-            DynamicInsert<ComboBox>(this, cb, layout, $"{cb_Condition}{ConditionControler.Count}", 50, 30);
-            DynamicInsert<Button>(this, cancel, layout, id, width: 40, height: 20);
+            DynamicInsert<DateTimePicker>(dtp, layout, $"{dtp_Condition}{ConditionControler.Count}", 110, 30);
+            DynamicAmountInsert(new TextBox(), layout, $"{txt_Condition}{ConditionControler.Count}", 120, 30);
+            DynamicLabelInsert(new Label(), layout, $"{lb_Condition}{ConditionControler.Count}", "원", 25, 30);
+            DynamicInsert<ComboBox>(cb, layout, $"{cb_Condition}{ConditionControler.Count}", 50, 30);
+            DynamicInsert<Button>(cancel, layout, id, width: 40, height: 20);
 
             ConditionControler.Add(id,layout);
         }
@@ -343,18 +344,18 @@ namespace TESTAPP
             InitCalProfitTabValue();
 
 
-            var acList = accountService.GetAcountsById(1L);
-            GetList(acList);
+            SearchCondition();
         }
 
         private void GetList(Dictionary<long,Account> list)
         {
             flp_AccountList.Controls.Clear();
+            AccountList.Clear();
 
-           
+
             foreach (var item in list)
             {
-                Test(item.Value);
+                DynamicAccount(item.Value);
             }
         }
 
@@ -501,47 +502,127 @@ namespace TESTAPP
         #endregion
 
 
-        private void Test(Account account)
+        private void DynamicAccount(Account account)
         {
 
-            Panel pl = new Panel
+            Panel panel = new Panel
             {
                 Height = 100,
                 Padding = new Padding(0, 10, 0, 0),
                 BackColor = Color.White
             };
             //pl.Dock = DockStyle.Fill;
-            Label lb = new Label
+            Label accountName = new Label
             {
-                Location = new Point(0, 0),
+                Location = new Point(60, 0),
+                Padding = new Padding(4,4,0,0),
                 BackColor = Color.AliceBlue
             };
 
-            Label lb2 = new Label
+            Label accountInterest = new Label
             {
-                Location = new Point(200, 0),
-                BackColor = Color.AliceBlue
+                Location = new Point(300, 30),
+                Font = new Font("Malgun Gothic", 9, FontStyle.Regular),
             };
-            Label lb3 = new Label
+            Label accountConditionInterest = new Label
             {
                 Location = new Point(300, 0),
-                BackColor = Color.AliceBlue
+                ForeColor = Color.Green,
+                Font = new Font("Malgun Gothic", 11,FontStyle.Bold),
+                AutoSize = true
             };
-            DynamicInsert<Panel>(this, pl, flp_AccountList,width:flp_AccountList.Width-10);
-            DynamicLabelInsert(this, lb, pl, name: "일단테스트", text: $"계좌 이름: {account.Name}", width: 140,height:30);
-            DynamicLabelInsert(this, lb2, pl, name: "일단테스트", text: $"이율: {account.Interest *100} %", width: 100,height:20); ;
-            DynamicLabelInsert(this, lb3, pl, name: "일단테스트", text: "우대이율: 4%", width: 100, height:20); ;
 
-
-            CheckBox cb = new CheckBox()
+            CheckBox selectbox = new CheckBox()
             {
-                Location = new Point(370, 30),
+                Padding = new Padding(4, 4, 0, 0),
+                Location = new Point(0, 0),
             };
-            cb.Text = "적용";
-            DynamicInsert<CheckBox>(this, cb, pl, width: 60, height: 20) ;
+            if(SelectedAccounts.TryGetValue(account.AccountId,out _)){
+                selectbox.Checked = true;
+            }
+            selectbox.Text = "선택";
 
-            AccountList.Add(pl);
+            selectbox.CheckedChanged += (sender, o) =>
+            {
+               var cbox =  sender as CheckBox;
+                if (cbox.Checked && !SelectedAccounts.ContainsKey(account.AccountId))
+                {
+                    MarkAccount(account.AccountId,account.Name);
+                    SelectedAccounts.Add(account.AccountId,account);
+                }
+                else if(!cbox.Checked)
+                {
+                    DeleteAccount(account.AccountId);
+                    SelectedAccounts.Remove(account.AccountId);
+                }
+            };
+            decimal ConditionInterest = account.Interest;
+            ConditionInterest += account.AmountConditions.Where((item) => item.ChangedValue > 0).Select((item) => item.ChangedValue).Sum();
+            ConditionInterest += account.PeriodConditions.Where((item) => item.ChangedValue > 0).Select((item) => item.ChangedValue).Sum();
+
+            DynamicInsert<Panel>(panel, flp_AccountList,name:$"{account.AccountId}",width:flp_AccountList.Width-10);
+            DynamicLabelInsert(accountName, panel, name: "일단테스트", text: $"{account.Name}", width: 140,height:30);
+            DynamicLabelInsert(accountInterest, panel, name: "일단테스트", text: $"기본: {account.Interest *100} %", width: 100,height:20); ;
+            DynamicLabelInsert(accountConditionInterest, panel, name: "일단테스트", text: $"최고: {ConditionInterest * 100} %", width: 100, height:20); ;
+
+            DynamicInsert<CheckBox>(selectbox, panel,name:$"cb_{account.AccountId}", width: 60, height: 20) ;
+
+            AccountList.Add(panel);
         }
+
+        private void MarkAccount(long accountid,string name)
+        {
+            Button bt = new Button
+            {
+                Text = $"{name} X",
+                AutoSize = true
+            };
+            bt.Click += (sender, o) =>
+            {
+                GetControl<CheckBox>(flp_AccountList, $"cb_{accountid}").Checked = false;
+                flp_SelectedAccounts.Controls.Remove(bt);
+            };
+            DynamicInsert<Button>(bt, flp_SelectedAccounts,name:$"{accountid}", width: 50, height: 25);
+        }
+
+        private void DeleteAccount(long accountid)
+        {
+            Button bt = GetControl<Button>(flp_SelectedAccounts, accountid.ToString());
+            flp_SelectedAccounts.Controls.Remove(bt);
+        }
+
+        private void AllSelect()
+        {
+            List<string> tmp = AccountList.Select((item) => item.Name).ToList();
+            int compareTmp = SelectedAccounts.Where((item) => tmp.Contains($"{item.Key}")).ToList().Count;
+
+
+            //
+            if (SelectedAccounts.Any()
+                &&tmp.Count == compareTmp
+                && SelectedAccounts.All((item) => tmp.Contains($"{item.Key}")))
+            {
+                AccountList.ForEach((item) =>
+                {
+                    CheckBox cb = GetControl<CheckBox>(item, $"cb_{item.Name}"); 
+                    cb.Checked = false;
+                   
+                });
+            }
+            else
+            {
+                AccountList.ForEach((item) =>
+                {
+                   CheckBox cb =  GetControl<CheckBox>(item, $"cb_{item.Name}");
+
+                    if ( !cb.Checked ) 
+                    { 
+                        cb.Checked = true;
+                    }
+                }); 
+            }
+        }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -550,22 +631,9 @@ namespace TESTAPP
         }
 
         private void SearchCondition()
-        {
-            
+        { 
            var acList = accountService.GetAcountsByIdWithCondition(1L, Condition) ;
-
-            GetList(acList);
-        }
-
-        private void cb_accountTab_AccountCondition_CheckedChanged(object sender, EventArgs e)
-        {
-            SearchCondition();
-
-        }
-
-        private void cb_accountTab_PeriodCondition_CheckedChanged(object sender, EventArgs e)
-        {
-            SearchCondition();
+           GetList(acList);
         }
 
         private void bt_accountTab_AccountCondition_Click(object sender, EventArgs e)
@@ -596,6 +664,11 @@ namespace TESTAPP
                 bt_accountTab_PeriodCondition.ForeColor = Color.Red;
             }
             SearchCondition();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            AllSelect();
         }
     }
 }

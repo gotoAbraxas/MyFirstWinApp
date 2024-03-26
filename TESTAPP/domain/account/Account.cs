@@ -55,7 +55,7 @@ namespace TESTAPP.domain.account
 
         public long UserCode { get; set; } // 유저 코드 식별자
         public string Name { get; set; } // 계좌 이름
-        public string Name_AccountId { get; set; } // 최종 식별 코드
+        public string Name_AccountId { get; set; } // 최종 식별 코드 // 아 이거 좀 번거롭네.. 
         public decimal Interest {  get; set; } // 이율
         public decimal Amount { get; set; } = 0; // 통장잔액
         public List<AccountLog> Log { get; set; } = new List<AccountLog>(); // 거래 기록

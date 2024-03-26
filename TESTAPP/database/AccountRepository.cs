@@ -27,7 +27,10 @@ namespace TESTAPP.database
         #region "생성자, 싱글톤 구현"
         private AccountRepository() 
         {
-           TestInit();
+
+        #if DEBUG
+            TestInit();
+        #endif
         }
 
         private AccountRepository Repository { get; set; }
@@ -50,7 +53,7 @@ namespace TESTAPP.database
 
         private void TestInit()
         {
-            string json = File.ReadAllText("test.json");
+            string json = File.ReadAllText("test.json", Encoding.UTF8);
             // JSON 문자열을 C# 객체의 리스트로 역직렬화
             List<Account> accounts = JsonConvert.DeserializeObject<List<Account>>(json);
 

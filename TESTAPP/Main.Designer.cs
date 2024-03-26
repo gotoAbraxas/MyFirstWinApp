@@ -33,8 +33,22 @@ namespace TESTAPP
         {
             this.accountTab = new System.Windows.Forms.TabControl();
             this.myAccountTab = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.bt_accountTab_PeriodCondition = new System.Windows.Forms.Button();
+            this.bt_accountTab_AccountCondition = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.flp_AccountList = new System.Windows.Forms.FlowLayoutPanel();
             this.calProfitTab = new System.Windows.Forms.TabPage();
+            this.bt_Refresh = new System.Windows.Forms.Button();
             this.bt_ResetCondition = new System.Windows.Forms.Button();
+            this.cb_SelectAccount = new System.Windows.Forms.ComboBox();
+            this.lb_SelectAccount = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.cb_CalProfitTab_Period = new System.Windows.Forms.ComboBox();
             this.bt_CalProfitTab_Available = new System.Windows.Forms.Button();
@@ -65,26 +79,20 @@ namespace TESTAPP
             this.bt_AddAccountLog = new System.Windows.Forms.Button();
             this.grid_accountLog = new System.Windows.Forms.DataGridView();
             this.bt_AddAcount = new System.Windows.Forms.Button();
-            this.cb_SelectAccount = new System.Windows.Forms.ComboBox();
-            this.lb_SelectAccount = new System.Windows.Forms.Label();
-            this.bt_Refresh = new System.Windows.Forms.Button();
-            this.flp_AccountList = new System.Windows.Forms.FlowLayoutPanel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.bt_accountTab_AccountCondition = new System.Windows.Forms.Button();
-            this.bt_accountTab_PeriodCondition = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
+            this.flp_SelectedAccounts = new System.Windows.Forms.FlowLayoutPanel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.accountTab.SuspendLayout();
             this.myAccountTab.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.calProfitTab.SuspendLayout();
             this.tranHis.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid_accountLog)).BeginInit();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // accountTab
@@ -100,6 +108,14 @@ namespace TESTAPP
             // 
             // myAccountTab
             // 
+            this.myAccountTab.Controls.Add(this.label10);
+            this.myAccountTab.Controls.Add(this.label9);
+            this.myAccountTab.Controls.Add(this.label8);
+            this.myAccountTab.Controls.Add(this.textBox2);
+            this.myAccountTab.Controls.Add(this.label7);
+            this.myAccountTab.Controls.Add(this.textBox1);
+            this.myAccountTab.Controls.Add(this.label6);
+            this.myAccountTab.Controls.Add(this.flp_SelectedAccounts);
             this.myAccountTab.Controls.Add(this.label4);
             this.myAccountTab.Controls.Add(this.panel1);
             this.myAccountTab.Controls.Add(this.button4);
@@ -114,6 +130,112 @@ namespace TESTAPP
             this.myAccountTab.TabIndex = 0;
             this.myAccountTab.Text = "내 계좌";
             this.myAccountTab.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(31, 21);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(57, 12);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "검색 조건";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.bt_accountTab_PeriodCondition);
+            this.panel1.Controls.Add(this.bt_accountTab_AccountCondition);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Location = new System.Drawing.Point(29, 40);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(317, 169);
+            this.panel1.TabIndex = 11;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(36, 100);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(85, 12);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "나중에 더 넣기";
+            // 
+            // bt_accountTab_PeriodCondition
+            // 
+            this.bt_accountTab_PeriodCondition.Location = new System.Drawing.Point(217, 34);
+            this.bt_accountTab_PeriodCondition.Name = "bt_accountTab_PeriodCondition";
+            this.bt_accountTab_PeriodCondition.Size = new System.Drawing.Size(71, 24);
+            this.bt_accountTab_PeriodCondition.TabIndex = 12;
+            this.bt_accountTab_PeriodCondition.Text = "기간 조건";
+            this.bt_accountTab_PeriodCondition.UseVisualStyleBackColor = true;
+            this.bt_accountTab_PeriodCondition.Click += new System.EventHandler(this.bt_accountTab_PeriodCondition_Click);
+            // 
+            // bt_accountTab_AccountCondition
+            // 
+            this.bt_accountTab_AccountCondition.Location = new System.Drawing.Point(131, 34);
+            this.bt_accountTab_AccountCondition.Name = "bt_accountTab_AccountCondition";
+            this.bt_accountTab_AccountCondition.Size = new System.Drawing.Size(71, 24);
+            this.bt_accountTab_AccountCondition.TabIndex = 11;
+            this.bt_accountTab_AccountCondition.Text = "금액 조건";
+            this.bt_accountTab_AccountCondition.UseVisualStyleBackColor = true;
+            this.bt_accountTab_AccountCondition.Click += new System.EventHandler(this.bt_accountTab_AccountCondition_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(23, 40);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(81, 12);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "우대조건 여부";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(546, 406);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(84, 29);
+            this.button4.TabIndex = 7;
+            this.button4.Text = "계산해보기";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(435, 8);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(70, 21);
+            this.button3.TabIndex = 6;
+            this.button3.Text = "전체선택";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(842, 8);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(38, 22);
+            this.button2.TabIndex = 5;
+            this.button2.Text = "정렬";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(522, 8);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(22, 22);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "R";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // flp_AccountList
+            // 
+            this.flp_AccountList.AutoScroll = true;
+            this.flp_AccountList.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.flp_AccountList.Location = new System.Drawing.Point(426, 37);
+            this.flp_AccountList.Name = "flp_AccountList";
+            this.flp_AccountList.Size = new System.Drawing.Size(454, 326);
+            this.flp_AccountList.TabIndex = 3;
             // 
             // calProfitTab
             // 
@@ -152,6 +274,16 @@ namespace TESTAPP
             this.calProfitTab.UseVisualStyleBackColor = true;
             this.calProfitTab.Enter += new System.EventHandler(this.calProfitTab_Enter);
             // 
+            // bt_Refresh
+            // 
+            this.bt_Refresh.Location = new System.Drawing.Point(351, 20);
+            this.bt_Refresh.Name = "bt_Refresh";
+            this.bt_Refresh.Size = new System.Drawing.Size(19, 18);
+            this.bt_Refresh.TabIndex = 6;
+            this.bt_Refresh.Text = "R";
+            this.bt_Refresh.UseVisualStyleBackColor = true;
+            this.bt_Refresh.Click += new System.EventHandler(this.bt_Refresh_Click);
+            // 
             // bt_ResetCondition
             // 
             this.bt_ResetCondition.Location = new System.Drawing.Point(812, 22);
@@ -161,6 +293,25 @@ namespace TESTAPP
             this.bt_ResetCondition.Text = "R";
             this.bt_ResetCondition.UseVisualStyleBackColor = true;
             this.bt_ResetCondition.Click += new System.EventHandler(this.bt_ResetCondition_Click);
+            // 
+            // cb_SelectAccount
+            // 
+            this.cb_SelectAccount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_SelectAccount.FormattingEnabled = true;
+            this.cb_SelectAccount.Location = new System.Drawing.Point(119, 20);
+            this.cb_SelectAccount.Name = "cb_SelectAccount";
+            this.cb_SelectAccount.Size = new System.Drawing.Size(217, 20);
+            this.cb_SelectAccount.TabIndex = 4;
+            this.cb_SelectAccount.SelectedIndexChanged += new System.EventHandler(this.cb_SelectAccount_SelectedIndexChanged);
+            // 
+            // lb_SelectAccount
+            // 
+            this.lb_SelectAccount.AutoSize = true;
+            this.lb_SelectAccount.Location = new System.Drawing.Point(15, 23);
+            this.lb_SelectAccount.Name = "lb_SelectAccount";
+            this.lb_SelectAccount.Size = new System.Drawing.Size(81, 12);
+            this.lb_SelectAccount.TabIndex = 5;
+            this.lb_SelectAccount.Text = "계좌 선택하기";
             // 
             // label3
             // 
@@ -469,139 +620,72 @@ namespace TESTAPP
             this.bt_AddAcount.UseVisualStyleBackColor = true;
             this.bt_AddAcount.Click += new System.EventHandler(this.bt_AddAcount_Click);
             // 
-            // cb_SelectAccount
+            // flp_SelectedAccounts
             // 
-            this.cb_SelectAccount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cb_SelectAccount.FormattingEnabled = true;
-            this.cb_SelectAccount.Location = new System.Drawing.Point(119, 20);
-            this.cb_SelectAccount.Name = "cb_SelectAccount";
-            this.cb_SelectAccount.Size = new System.Drawing.Size(217, 20);
-            this.cb_SelectAccount.TabIndex = 4;
-            this.cb_SelectAccount.SelectedIndexChanged += new System.EventHandler(this.cb_SelectAccount_SelectedIndexChanged);
+            this.flp_SelectedAccounts.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.flp_SelectedAccounts.Location = new System.Drawing.Point(29, 245);
+            this.flp_SelectedAccounts.Name = "flp_SelectedAccounts";
+            this.flp_SelectedAccounts.Size = new System.Drawing.Size(317, 118);
+            this.flp_SelectedAccounts.TabIndex = 13;
             // 
-            // lb_SelectAccount
+            // label6
             // 
-            this.lb_SelectAccount.AutoSize = true;
-            this.lb_SelectAccount.Location = new System.Drawing.Point(15, 23);
-            this.lb_SelectAccount.Name = "lb_SelectAccount";
-            this.lb_SelectAccount.Size = new System.Drawing.Size(81, 12);
-            this.lb_SelectAccount.TabIndex = 5;
-            this.lb_SelectAccount.Text = "계좌 선택하기";
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(92, 415);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(93, 12);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "선택된 상품으로";
             // 
-            // bt_Refresh
+            // textBox1
             // 
-            this.bt_Refresh.Location = new System.Drawing.Point(351, 20);
-            this.bt_Refresh.Name = "bt_Refresh";
-            this.bt_Refresh.Size = new System.Drawing.Size(19, 18);
-            this.bt_Refresh.TabIndex = 6;
-            this.bt_Refresh.Text = "R";
-            this.bt_Refresh.UseVisualStyleBackColor = true;
-            this.bt_Refresh.Click += new System.EventHandler(this.bt_Refresh_Click);
+            this.textBox1.Location = new System.Drawing.Point(191, 411);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(124, 21);
+            this.textBox1.TabIndex = 15;
             // 
-            // flp_AccountList
+            // label7
             // 
-            this.flp_AccountList.AutoScroll = true;
-            this.flp_AccountList.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.flp_AccountList.Location = new System.Drawing.Point(426, 40);
-            this.flp_AccountList.Name = "flp_AccountList";
-            this.flp_AccountList.Size = new System.Drawing.Size(454, 386);
-            this.flp_AccountList.TabIndex = 3;
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(326, 416);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(17, 12);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "원";
             // 
-            // button1
+            // textBox2
             // 
-            this.button1.Location = new System.Drawing.Point(522, 11);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(22, 22);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "R";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.textBox2.Location = new System.Drawing.Point(349, 411);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(37, 21);
+            this.textBox2.TabIndex = 17;
             // 
-            // button2
+            // label8
             // 
-            this.button2.Location = new System.Drawing.Point(842, 11);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(38, 22);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "정렬";
-            this.button2.UseVisualStyleBackColor = true;
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(392, 416);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(57, 12);
+            this.label8.TabIndex = 18;
+            this.label8.Text = "개월 일때";
             // 
-            // button3
+            // label9
             // 
-            this.button3.Location = new System.Drawing.Point(435, 11);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(70, 21);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "전체선택";
-            this.button3.UseVisualStyleBackColor = true;
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(459, 416);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(81, 12);
+            this.label9.TabIndex = 19;
+            this.label9.Text = "최적 투자경로";
             // 
-            // button4
+            // label10
             // 
-            this.button4.Location = new System.Drawing.Point(262, 396);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(84, 29);
-            this.button4.TabIndex = 7;
-            this.button4.Text = "계산해보기";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(23, 40);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 12);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "우대조건 여부";
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.bt_accountTab_PeriodCondition);
-            this.panel1.Controls.Add(this.bt_accountTab_AccountCondition);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(29, 40);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(317, 169);
-            this.panel1.TabIndex = 11;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(31, 21);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(57, 12);
-            this.label4.TabIndex = 12;
-            this.label4.Text = "검색 조건";
-            // 
-            // bt_accountTab_AccountCondition
-            // 
-            this.bt_accountTab_AccountCondition.Location = new System.Drawing.Point(131, 34);
-            this.bt_accountTab_AccountCondition.Name = "bt_accountTab_AccountCondition";
-            this.bt_accountTab_AccountCondition.Size = new System.Drawing.Size(71, 24);
-            this.bt_accountTab_AccountCondition.TabIndex = 11;
-            this.bt_accountTab_AccountCondition.Text = "금액 조건";
-            this.bt_accountTab_AccountCondition.UseVisualStyleBackColor = true;
-            this.bt_accountTab_AccountCondition.Click += new System.EventHandler(this.bt_accountTab_AccountCondition_Click);
-            // 
-            // bt_accountTab_PeriodCondition
-            // 
-            this.bt_accountTab_PeriodCondition.Location = new System.Drawing.Point(217, 34);
-            this.bt_accountTab_PeriodCondition.Name = "bt_accountTab_PeriodCondition";
-            this.bt_accountTab_PeriodCondition.Size = new System.Drawing.Size(71, 24);
-            this.bt_accountTab_PeriodCondition.TabIndex = 12;
-            this.bt_accountTab_PeriodCondition.Text = "기간 조건";
-            this.bt_accountTab_PeriodCondition.UseVisualStyleBackColor = true;
-            this.bt_accountTab_PeriodCondition.Click += new System.EventHandler(this.bt_accountTab_PeriodCondition_Click);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(36, 100);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(38, 12);
-            this.label5.TabIndex = 13;
-            this.label5.Text = "label5";
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(28, 229);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(69, 12);
+            this.label10.TabIndex = 20;
+            this.label10.Text = "선택된 상품";
             // 
             // Main
             // 
@@ -616,13 +700,13 @@ namespace TESTAPP
             this.accountTab.ResumeLayout(false);
             this.myAccountTab.ResumeLayout(false);
             this.myAccountTab.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.calProfitTab.ResumeLayout(false);
             this.calProfitTab.PerformLayout();
             this.tranHis.ResumeLayout(false);
             this.tranHis.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid_accountLog)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -676,6 +760,14 @@ namespace TESTAPP
         private System.Windows.Forms.Button bt_accountTab_PeriodCondition;
         private System.Windows.Forms.Button bt_accountTab_AccountCondition;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.FlowLayoutPanel flp_SelectedAccounts;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }
 

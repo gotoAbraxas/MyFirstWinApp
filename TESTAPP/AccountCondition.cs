@@ -68,15 +68,15 @@ namespace TESTAPP
 
 
             FlowLayoutPanel layout = new FlowLayoutPanel();
-            DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, "", flp_Condition.Width - 10, 35);
+            DynamicInsert<FlowLayoutPanel>(layout, flp_Condition, "", flp_Condition.Width - 10, 35);
 
-            DynamicLabelInsert(this, new Label(), layout, "", "금액", 35, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", start, 120, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "~", 15, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", end, 120, 30);
-            DynamicLabelInsert(this, lb, layout, "", lb.Text, 10, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", interest, 15, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
+            DynamicLabelInsert(new Label(), layout, "", "금액", 35, 30);
+            DynamicLabelInsert(new Label(), layout, "", start, 120, 30);
+            DynamicLabelInsert(new Label(), layout, "", "~", 15, 30);
+            DynamicLabelInsert(new Label(), layout, "", end, 120, 30);
+            DynamicLabelInsert(lb, layout, "", lb.Text, 10, 30);
+            DynamicLabelInsert(new Label(), layout, "", interest, 15, 30);
+            DynamicLabelInsert(new Label(), layout, "", "%", 15, 30);
             //DynamicCheckBox(this, new CheckBox(), layout, amountCondition.Applyed, "적용", 70, 30);
         }
         private void DrawPeriodCondition(PeriodConditionOfInterest periodCondition)
@@ -100,17 +100,17 @@ namespace TESTAPP
             }
 
             FlowLayoutPanel layout = new FlowLayoutPanel();
-            DynamicInsert<FlowLayoutPanel>(this, layout, flp_Condition, "", flp_Condition.Width - 10, 35);
+            DynamicInsert<FlowLayoutPanel>(layout, flp_Condition, "", flp_Condition.Width - 10, 35);
 
-            DynamicLabelInsert(this, new Label(), layout, "", "기간", 35, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", start, 120, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", startPeriodType, 35, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "~", 15, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", end, 120, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", endPeriodType, 35, 30);
-            DynamicLabelInsert(this, lb, layout, "", lb.Text, 10, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", interest, 15, 30);
-            DynamicLabelInsert(this, new Label(), layout, "", "%", 15, 30);
+            DynamicLabelInsert(new Label(), layout, "", "기간", 35, 30);
+            DynamicLabelInsert(new Label(), layout, "", start, 120, 30);
+            DynamicLabelInsert(new Label(), layout, "", startPeriodType, 35, 30);
+            DynamicLabelInsert(new Label(), layout, "", "~", 15, 30);
+            DynamicLabelInsert(new Label(), layout, "", end, 120, 30);
+            DynamicLabelInsert(new Label(), layout, "", endPeriodType, 35, 30);
+            DynamicLabelInsert(lb, layout, "", lb.Text, 10, 30);
+            DynamicLabelInsert(new Label(), layout, "", interest, 15, 30);
+            DynamicLabelInsert(new Label(), layout, "", "%", 15, 30);
            // DynamicCheckBox(this, new CheckBox(), layout, periodCondition.Applyed, "적용", 70, 30);
         }
 
