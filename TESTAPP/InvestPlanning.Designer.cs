@@ -28,13 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(15, 17);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(805, 413);
+            this.flowLayoutPanel1.TabIndex = 0;
             // 
             // InvestPlanning
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(837, 479);
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Name = "InvestPlanning";
             this.Text = "InvestPlanning";
             this.Load += new System.EventHandler(this.InvestPlanning_Load);
@@ -43,5 +52,7 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }
