@@ -141,9 +141,9 @@ namespace TESTAPP.common.component
             decimal approximation;
             if (type == SettleType.복리)
             {
-                decimal number = (decimal.Parse(value) / 100) + 1;
+                decimal number = (decimal.Parse(value)) + 1;
                 decimal cubeRoot = (decimal)Math.Pow((double)number, remain / share);
-                approximation = (Math.Round(cubeRoot * 100, 8) - 100);
+                approximation = (Math.Round(cubeRoot * 1, 10) - 1);
             }
             else
             {

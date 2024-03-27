@@ -106,40 +106,35 @@ namespace TESTAPP
             DateTime from = VirtualDto.From;
             DateTime until = VirtualDto.Until;
 
-
-            decimal amount = account.Amount;
-            decimal resultinterest = 0;
-            decimal resultAmount = 0;
-            bool insertLog = true;
             // 이 작업을 서비스에 정의 ? 아니면 ..
             //날짜 갭 차이에 대한 원금 변화 반영, 근데 이것도 비즈니스 로직으로 본다면.. 내부로 옮기고 서비스를 타는게 나을듯
 
             // dto 로 만들어서 보내기.
+
+            var dto = new AccountVirtuallogDto()
+            {
+                AccountId = account.AccountId,
+                UserCode = 1L,
+                AfterPlans = afterPlans,
+                Amount = account.Amount,
+                Log = virtualLog,
+                Insert = false,
+                ResultAmount = 0,
+                loopInterest = 0
+            };
+
             try
             {
                 if (from.CompareTo(now) > 0) //현재 이 기능은 잠시 수정이 필요함
                 {
-
                     // 결국 dto로 관리해야함 .. 
 
-                    var dto = new AccountVirtuallogDto()
-                    {
-                        AfterPlans = afterPlans,
-                        Amount = account.Amount,
-                        Start = now,
-                        End = from,
-                        Log = virtualLog,
-                        Insert = false,
-                        ResultAmount = 0,
-                        ResultInterest = 0
-                    }; 
                     decimal vResultInterest = 0;
                     decimal vResultAmount = 0;
 
-                    account.GetResult(ref amount, ref resultinterest, ref resultAmount, now, in from, virtualLog, afterPlans);
+                    account.GetResult(dto,now,from);
                 }
-
-                account.GetResult(ref amount, ref resultinterest, ref resultAmount, from, in until, virtualLog, afterPlans);
+                account.GetResult(dto,from,until);
             }
             catch (Exception ex)
             {
