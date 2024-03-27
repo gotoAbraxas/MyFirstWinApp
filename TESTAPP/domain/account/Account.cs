@@ -70,6 +70,7 @@ namespace TESTAPP.domain.account
 
         public bool CheckUpperLimitWellInterest { get; set; } // 
         public decimal UpperLimitWellInterest { get; set; } // 우대금리 최대 금액 기본 null
+        public bool ProtectAccount { get; set; }
 
         #endregion
 
@@ -85,21 +86,21 @@ namespace TESTAPP.domain.account
         {
 
             InterestCalculater loof;
+
             switch (SettleType)
             {
                 case SettleType.단리:
                     loof = SimpleLoof;
-                    //SimpleInterest(ref amount, ref resultInterest, ref resultAmount, start, end, log, afterPlans);
-                    CalculateInterest(ref amount, ref resultInterest, ref resultAmount, start, end, log, afterPlans, loof);
                     break;
                 case SettleType.복리:
                     loof = CompoundLoof;
-                    //CompoundInterest(ref amount, ref resultInterest, ref resultAmount, start, end, log,  afterPlans);
-                    CalculateInterest(ref amount, ref resultInterest, ref resultAmount, start, end, log, afterPlans, loof);
                     break;
                 default:
+                    loof = SimpleLoof;
                     break;
             }
+
+            CalculateInterest(ref amount, ref resultInterest, ref resultAmount, start, end, log, afterPlans, loof);
         }
 
         private void CompoundInterest(ref decimal amount, ref decimal resultInterest, ref decimal resultAmount, DateTime start, DateTime end, List<VirtualLog> log, List<AfterPlan> afterPlans)
@@ -162,8 +163,8 @@ namespace TESTAPP.domain.account
                     continue;
                 }
 
-                changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
-                changedInterest += GetResultPeriodCondion(standard); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
+                changedInterest += GetResultAmountCondition(amount); // 조건에 맞게 추가할 이자
+                changedInterest += GetResultPeriodCondition(standard); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
 
                 const int weekdayOfyear = 260 ;
                 int day = GetWeekday(start, until);
@@ -232,7 +233,6 @@ namespace TESTAPP.domain.account
 
                 decimal changedInterest = Interest;
 
-                // amount = 실제 금액, virtualAmount = 기간이 반영된 상태
                 amount = ReflectAfterPlan(amount, standard, loopStart, log, afterPlans, resultInterest);
 
                 if (standard.DayOfWeek == DayOfWeek.Sunday || standard.DayOfWeek == DayOfWeek.Saturday)
@@ -240,8 +240,8 @@ namespace TESTAPP.domain.account
                     continue;
                 }
 
-                changedInterest += GetResultAmountCondion(amount); // 조건에 맞게 추가할 이자
-                changedInterest += GetResultPeriodCondion(standard); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
+                changedInterest += GetResultAmountCondition(amount); // 조건에 맞게 추가할 이자
+                changedInterest += GetResultPeriodCondition(standard); // 조건에 맞게 추가할 이자. 계산을 시작한 시점부터 얼마나 떨어졌는가.
 
                 const int weekdayOfyear = 260;
                 int day = GetWeekday(start, until);
@@ -377,7 +377,7 @@ namespace TESTAPP.domain.account
         }
 
 
-        private decimal GetResultPeriodCondion(DateTime start)
+        private decimal GetResultPeriodCondition(DateTime start)
         {
             DateTime now = DateTime.Now.Date;
             decimal result = 0;
@@ -393,12 +393,12 @@ namespace TESTAPP.domain.account
             return result;
         }
 
-        private decimal GetResultAmountCondion(decimal tmp)
+        private decimal GetResultAmountCondition(decimal tmp)
         {
             decimal result = 0;
 
             List<decimal> resultAmountConditions = AmountConditions
-                         .Where((condition) => condition.StartValue < tmp&& tmp <= condition.EndValue && condition.Applyed)
+                         .Where((condition) => condition.StartValue <= tmp&& tmp < condition.EndValue && condition.Applyed)
                          .Select((condition) => condition.ChangedValue).ToList();
 
             foreach (decimal item in resultAmountConditions)

@@ -43,7 +43,6 @@ namespace TESTAPP
             this.flp_SelectedAccounts = new System.Windows.Forms.FlowLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
             this.bt_accountTab_PeriodCondition = new System.Windows.Forms.Button();
             this.bt_accountTab_AccountCondition = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -87,6 +86,8 @@ namespace TESTAPP
             this.bt_AddAccountLog = new System.Windows.Forms.Button();
             this.grid_accountLog = new System.Windows.Forms.DataGridView();
             this.bt_AddAcount = new System.Windows.Forms.Button();
+            this.ch_accountTab_AccountProtect = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.accountTab.SuspendLayout();
             this.myAccountTab.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -213,6 +214,7 @@ namespace TESTAPP
             // 
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.ch_accountTab_AccountProtect);
             this.panel1.Controls.Add(this.bt_accountTab_PeriodCondition);
             this.panel1.Controls.Add(this.bt_accountTab_AccountCondition);
             this.panel1.Controls.Add(this.label2);
@@ -220,15 +222,6 @@ namespace TESTAPP
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(317, 169);
             this.panel1.TabIndex = 11;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(23, 75);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(85, 12);
-            this.label5.TabIndex = 13;
-            this.label5.Text = "나중에 더 넣기";
             // 
             // bt_accountTab_PeriodCondition
             // 
@@ -690,6 +683,25 @@ namespace TESTAPP
             this.bt_AddAcount.UseVisualStyleBackColor = true;
             this.bt_AddAcount.Click += new System.EventHandler(this.bt_AddAcount_Click);
             // 
+            // ch_accountTab_AccountProtect
+            // 
+            this.ch_accountTab_AccountProtect.AutoSize = true;
+            this.ch_accountTab_AccountProtect.Location = new System.Drawing.Point(137, 79);
+            this.ch_accountTab_AccountProtect.Name = "ch_accountTab_AccountProtect";
+            this.ch_accountTab_AccountProtect.Size = new System.Drawing.Size(15, 14);
+            this.ch_accountTab_AccountProtect.TabIndex = 14;
+            this.ch_accountTab_AccountProtect.UseVisualStyleBackColor = true;
+            this.ch_accountTab_AccountProtect.CheckedChanged += new System.EventHandler(this.ch_accountTab_AccountProtect_CheckedChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(23, 81);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(97, 12);
+            this.label5.TabIndex = 15;
+            this.label5.Text = "예금자 보호 여부";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -762,7 +774,6 @@ namespace TESTAPP
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button bt_accountTab_PeriodCondition;
         private System.Windows.Forms.Button bt_accountTab_AccountCondition;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.FlowLayoutPanel flp_SelectedAccounts;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txt_accountTab_Amount;
@@ -771,6 +782,8 @@ namespace TESTAPP
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txt_accountTab_Period;
+        private System.Windows.Forms.CheckBox ch_accountTab_AccountProtect;
+        private System.Windows.Forms.Label label5;
     }
 }
 

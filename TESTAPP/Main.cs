@@ -720,5 +720,19 @@ namespace TESTAPP
 
             OpenNewForm(fm);
         }
+
+        private void ch_accountTab_AccountProtect_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (ch_accountTab_AccountProtect.Checked)
+            {
+                Condition.Protected = true;
+            }
+            else
+            {
+                Condition.Protected = false;
+            }
+            SearchCondition();
+        }
     }
 }

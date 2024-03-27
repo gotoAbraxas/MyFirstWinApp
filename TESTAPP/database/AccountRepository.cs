@@ -19,6 +19,8 @@ namespace TESTAPP.database
         public decimal? LowerInterest { get; set; }
         public bool AmountCondition { get; set; }
         public bool PeriodCondition { get; set; }
+
+        public bool Protected { get; set; }
     }
 
     internal class AccountRepository : IAccountRepository
@@ -119,6 +121,7 @@ namespace TESTAPP.database
                 .Where(account => condition.LowerInterest is null?  true : account.Value.Interest > condition.LowerInterest)
                 .Where(account => condition.PeriodCondition ? account.Value.PeriodConditions.Count > 0 :true)
                 .Where(account => condition.AmountCondition ? account.Value.AmountConditions.Count > 0 : true)
+                .Where(account=> condition.Protected ? account.Value.ProtectAccount : true)
                 .ToDictionary(account => account.Value.AccountId, account => account.Value);
 
             }

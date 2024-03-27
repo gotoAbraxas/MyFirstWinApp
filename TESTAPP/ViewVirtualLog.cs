@@ -201,29 +201,6 @@ namespace TESTAPP
             
         }
 
-        private void AccountLogformallyInit(DataTable dt)
-        {
-            dt.Columns.Add("id", typeof(string));
-            dt.Columns.Add("From", typeof(string));
-            dt.Columns.Add("To", typeof(string));
-            dt.Columns.Add("금액", typeof(string));
-            dt.Columns.Add("잔액", typeof(string));
-            dt.Columns.Add("비고", typeof(string));
-
-            dgv_virtualView.DataSource = dt;
-
-            dgv_virtualView.DataBindingComplete += (sender, o) =>
-            {
-                dgv_virtualView.Columns["금액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                dgv_virtualView.Columns["잔액"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-                dgv_virtualView.Columns["금액"].Width = 100;
-                dgv_virtualView.Columns["잔액"].Width = 100;
-                dgv_virtualView.Columns["id"].Width = 60;
-
-            };
-        }
-
         #endregion
 
         #region "조건에 맞는 검색"

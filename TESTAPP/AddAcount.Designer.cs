@@ -59,6 +59,7 @@
             this.ut_standardInterest = new System.Windows.Forms.Label();
             this.tTip_Settle = new System.Windows.Forms.ToolTip(this.components);
             this.bt_Reset = new System.Windows.Forms.Button();
+            this.ch_CheckProtect = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // bt_AddAcount_save
@@ -219,7 +220,7 @@
             // lb_Preferent
             // 
             this.lb_Preferent.AutoSize = true;
-            this.lb_Preferent.Location = new System.Drawing.Point(11, 306);
+            this.lb_Preferent.Location = new System.Drawing.Point(11, 335);
             this.lb_Preferent.Name = "lb_Preferent";
             this.lb_Preferent.Size = new System.Drawing.Size(29, 12);
             this.lb_Preferent.TabIndex = 17;
@@ -228,7 +229,7 @@
             // ch_CheckPreferent
             // 
             this.ch_CheckPreferent.AutoSize = true;
-            this.ch_CheckPreferent.Location = new System.Drawing.Point(14, 281);
+            this.ch_CheckPreferent.Location = new System.Drawing.Point(13, 300);
             this.ch_CheckPreferent.Name = "ch_CheckPreferent";
             this.ch_CheckPreferent.Size = new System.Drawing.Size(132, 16);
             this.ch_CheckPreferent.TabIndex = 18;
@@ -238,7 +239,7 @@
             // 
             // txt_Preferent
             // 
-            this.txt_Preferent.Location = new System.Drawing.Point(126, 302);
+            this.txt_Preferent.Location = new System.Drawing.Point(126, 331);
             this.txt_Preferent.Name = "txt_Preferent";
             this.txt_Preferent.Size = new System.Drawing.Size(144, 21);
             this.txt_Preferent.TabIndex = 19;
@@ -248,7 +249,7 @@
             // lb_Preferent_limit
             // 
             this.lb_Preferent_limit.AutoSize = true;
-            this.lb_Preferent_limit.Location = new System.Drawing.Point(276, 307);
+            this.lb_Preferent_limit.Location = new System.Drawing.Point(276, 336);
             this.lb_Preferent_limit.Name = "lb_Preferent_limit";
             this.lb_Preferent_limit.Size = new System.Drawing.Size(45, 12);
             this.lb_Preferent_limit.TabIndex = 20;
@@ -327,11 +328,22 @@
             this.bt_Reset.UseVisualStyleBackColor = true;
             this.bt_Reset.Click += new System.EventHandler(this.bt_Reset_Click);
             // 
+            // ch_CheckProtect
+            // 
+            this.ch_CheckProtect.AutoSize = true;
+            this.ch_CheckProtect.Location = new System.Drawing.Point(13, 268);
+            this.ch_CheckProtect.Name = "ch_CheckProtect";
+            this.ch_CheckProtect.Size = new System.Drawing.Size(116, 16);
+            this.ch_CheckProtect.TabIndex = 29;
+            this.ch_CheckProtect.Text = "예금자 보호 여부";
+            this.ch_CheckProtect.UseVisualStyleBackColor = true;
+            // 
             // AddAcount
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 470);
+            this.Controls.Add(this.ch_CheckProtect);
             this.Controls.Add(this.bt_Reset);
             this.Controls.Add(this.ut_standardInterest);
             this.Controls.Add(this.txt_standardInterest);
@@ -402,5 +414,6 @@
         private System.Windows.Forms.Label ut_standardInterest;
         private System.Windows.Forms.ToolTip tTip_Settle;
         private System.Windows.Forms.Button bt_Reset;
+        private System.Windows.Forms.CheckBox ch_CheckProtect;
     }
 }

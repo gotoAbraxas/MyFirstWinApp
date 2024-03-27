@@ -431,6 +431,7 @@ namespace TESTAPP
             account = new Account()
             {
                 Name = txt_AccountName.Text,
+                ProtectAccount = ch_CheckProtect.Checked,
                 AccountId = long.Parse(txt_AccountNumber.Text),
                 Name_AccountId = $"{txt_AccountName.Text}_{txt_AccountNumber.Text}",
                 Interest = decimal.Parse(txt_Interest.Text) / 100,
