@@ -69,7 +69,7 @@ namespace TESTAPP.domain.account
         public SettlePeriodType SettlePeriodType { get; set; } // 정산 단위
 
         public bool CheckUpperLimitWellInterest { get; set; } // 
-        public decimal UpperLimitWellInterest { get; set; } // 우대금리 최대 금액 기본 null
+        public decimal UpperLimitWellInterest { get; set; } // 우대금리 최대 금액
         public bool ProtectAccount { get; set; }
 
         #endregion
@@ -107,7 +107,6 @@ namespace TESTAPP.domain.account
         {
             dto.loopInterest = 0;
             DateTime start = loopStart;
-            // 초기화
             do
             {
                 DateTime standard = loopStart;
@@ -328,7 +327,7 @@ namespace TESTAPP.domain.account
             decimal result = 0;
 
             List<decimal> resultAmountConditions = AmountConditions
-                         .Where((condition) => condition.StartValue <= tmp&& tmp < condition.EndValue && condition.Applyed)
+                         .Where((condition) => condition.StartValue <= tmp && tmp < condition.EndValue && condition.Applyed)
                          .Select((condition) => condition.ChangedValue).ToList();
 
             foreach (decimal item in resultAmountConditions)

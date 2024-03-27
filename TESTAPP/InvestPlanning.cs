@@ -10,11 +10,22 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TESTAPP.account.service;
 using TESTAPP.domain.account;
+using TESTAPP.domain.account.sub;
 
 namespace TESTAPP
 {
+
+    public struct AccountDetailData
+    {   public long AccountId { get; set; }
+        public int AmountConditionNumber { get; set; }
+        public int PeriodConditionNumber { get; set; }
+        public decimal Amount { get; set; }
+        public int Score { get; set; }
+
+    }
     public partial class InvestPlanning : Form
     {
+        private Dictionary<long, List<AccountDetailData>> AccountDataDictionary = new Dictionary<long, List<AccountDetailData>>();
 
         private AccountService accountService;
         private List<Account> accounts;
@@ -78,6 +89,48 @@ namespace TESTAPP
         {
 
         }
+
+
+        private void Tttt(Account account)
+        {
+            account.AmountConditions = account.AmountConditions.OrderBy((item)=>item.StartValue).ToList();
+            account.PeriodConditions = account.PeriodConditions.OrderBy((item) => item.StartValue* Multiply(item.StartDateType)).ToList();
+
+            int amountCount = account.AmountConditions.Count;
+            int PeriodCount = account.PeriodConditions.Count;
+
+            for (int amountCondition = 0; amountCondition < amountCount; amountCondition++)
+            {
+                for (int periodCondition = 0; periodCondition < PeriodCount; periodCondition++)
+                {
+
+                    CalculateScore(account, amountCondition, periodCondition);
+
+                }
+
+            }
+           
+        }
+
+        
+        private int Multiply(AddDateType startDateType)
+        {
+            switch (startDateType)
+            {
+                case AddDateType.일: return 1;
+                case AddDateType.개월: return 30;
+                case AddDateType.년: return 365;
+                default: return 30;
+            }
+        }
+
+        private void CalculateScore(Account account, int amountCondition,int peridCondition)
+        {
+
+            decimal interest = 0;
+
+        }
+
 
         // 이자가 나오는 초기 날짜를 미리 계산해서 가져온다.
         private void GetBeginningInterestDays()
