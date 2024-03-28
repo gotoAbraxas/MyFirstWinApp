@@ -36,7 +36,8 @@ namespace TESTAPP
         private Dictionary<long, List<AccountDetailData>> AccountDataDictionary = new Dictionary<long, List<AccountDetailData>>();
 
         private AccountService accountService;
-        private List<Account> accounts;
+
+        private Dictionary<long,List<VirtualLog>> Accountslog = new Dictionary<long, List<VirtualLog>>();
 
         private List<DateTime> InterestDays = new List<DateTime>();
         public decimal Amounts { get; set; }
@@ -51,14 +52,19 @@ namespace TESTAPP
         private void InvestPlanning_Load(object sender, EventArgs e)
         {
             ServiceInit();
-            GetAccountList(); // 계산할 리스트 가져오기
-            GetBeginningInterestDays(); // 이자가 나오는 초기 날짜
-            DesideInvestPlan();         // 여기서 처음에 어디에 투자할지가 나와야함.
-                                        // 여기선 이후 동적 계획법.
-                                        // 테이블 세팅
-                                        // 인쇄.
+            var accounts = GetAccountList(AccountIds); // 계산할 리스트 가져오기
 
-            MessageBox.Show("1");
+            SetAccountslog(accounts);
+            GetBeginningInterestDays(accounts); // 이자가 나오는 초기 날짜
+            InitAccountScores(accounts);         // 여기서 처음에 어디에 투자할지가 나와야함.
+            Invest(accounts);                    // 여기선 이후 동적 계획법.
+                                            // 테이블 세팅
+                                         // 인쇄.
+        }
+
+        private void SetAccountslog(List<Account> accounts)
+        {
+            accounts.ForEach(item => Accountslog.Add(item.AccountId, new List<VirtualLog>()));
         }
 
         private void ServiceInit()
@@ -67,35 +73,117 @@ namespace TESTAPP
 
         }
 
-        private void GetAccountList()
+        private List<Account> GetAccountList(List<long> AccountIds)
         {
-            accounts = accountService.GetAccountByIds(1L, AccountIds);
+            return accountService.GetAccountByIds(1L, AccountIds);
             // 일단 여까진 옴 ... 
         }
 
-        // 돌리기
-        private void Test(DateTime from,DateTime end)
+        private void Invest(List<Account> accounts)
         {
-            DateTime until = from;
-            DateTime start;
-            do
+
+            decimal restAmount = Amounts;
+
+            DateTime now = DateTime.Now.Date;
+            List<AccountDetailData> accountsDetailData = GetAccountsByPriority();
+
+            long nowAccount = 0;
+
+            foreach (AccountDetailData data in accountsDetailData)
             {
-                start = until;
-                until = until.AddDays(1);
+                DateTime until = now.AddMonths(Period);
 
-                // 금액 변화 살펴보기
+                if (nowAccount == data.AccountId || restAmount <= 0) continue;
+                nowAccount = data.AccountId;
 
-                // 변화가 있다면(이자를 받았다면)
+                Account ac = accounts.Where(account => account.AccountId == data.AccountId).First();
 
-                //
+                decimal consume = ApplyAmountCondition(restAmount, data, ac);
 
+                until = ApplyPeriodCondition(data,until, ac);
+
+                Accountslog.TryGetValue(data.AccountId, out List<VirtualLog> value);
+
+                value.Add(new VirtualLog()
+                {
+                    AccountLogType = AccountLogType.입금,
+                    Amount = consume,
+                    DateTime = now,
+                    Total = consume,
+                    Description = "입금"
+                });
+
+
+
+                //accountService.Deposit(1L, item.AccountId, consume, log);
+                // 이건 좀 고민해보자...
+
+                var datas = new AccountVirtuallogDto()
+                {
+                    AccountId = data.AccountId,
+                    UserCode = 1L,
+                    Amount = consume,
+                    AfterPlans = new List<AfterPlan>(),
+                    loopInterest = 0,
+                    ResultAmount = 0,
+                    Log = value
+                };
+
+                ac.GetResult(datas, now, until);
+                restAmount = restAmount - consume;
             }
-            while (until.CompareTo(end) > 0);
+
+            MessageBox.Show("1");
+
         }
 
+        private DateTime ApplyPeriodCondition(AccountDetailData data, DateTime until, Account ac)
+        {
+            if (data.PeriodConditionNumber == -1) return until;
 
+            var periodCondition = ac.PeriodConditions.ElementAt(data.PeriodConditionNumber);
 
-        private void DesideInvestPlan()
+            DateTime currentDate = DateTime.Now.Date;
+            DateTime expiredTime = ac.GetNextPeriodDate(currentDate, periodCondition.EndDateType, periodCondition.EndValue).Date;
+
+            while (expiredTime >= currentDate)
+            {
+                currentDate = ac.GetNextPeriodDate(currentDate, ac.SettlePeriodType, ac.SettlePeriod).Date;
+            }
+            DateTime end = currentDate.AddDays(1);
+
+            return until.CompareTo(end) >= 0 ? end : until.AddDays(1);
+        }
+
+        private decimal ApplyAmountCondition(decimal amount, AccountDetailData item, Account ac)
+        {
+            if (item.AmountConditionNumber != -1)
+            {
+                decimal limitAmount = ac.AmountConditions.ElementAtOrDefault(item.AmountConditionNumber).EndValue;
+                return Math.Min(limitAmount, amount);
+            }
+
+            return amount;
+        }
+
+        private List<AccountDetailData> GetAccountsByPriority()
+        {
+            List<AccountDetailData> tmp = new List<AccountDetailData>();
+
+            foreach (var item in AccountDataDictionary.Values)
+            {
+
+                item.ForEach(x => tmp.Add(x));
+
+            }
+            tmp = tmp.OrderByDescending(x => x.Score)
+                .ThenBy(x => x.AmountConditionNumber)
+                .ThenBy(x => x.PeriodConditionNumber)
+                .ToList();
+            return tmp;
+        }
+
+        private void InitAccountScores(List<Account> accounts)
         {
             accounts.ForEach(account => SetAccountScores(account));
         }
@@ -104,7 +192,7 @@ namespace TESTAPP
         private void SetAccountScores(Account account)
         {
             account.AmountConditions = account.AmountConditions.OrderBy((item)=>item.StartValue).ToList();
-            account.PeriodConditions = account.PeriodConditions.OrderBy((item) => item.StartValue* Multiply(item.StartDateType)).ToList();
+            account.PeriodConditions = account.PeriodConditions.OrderBy((item) => item.StartValue* ConvertDate(item.StartDateType)).ToList();
 
             int amountCount = account.AmountConditions.Count;
             int PeriodCount = account.PeriodConditions.Count;
@@ -121,8 +209,7 @@ namespace TESTAPP
            
         }
 
-        
-        private int Multiply(SettlePeriodType startDateType)
+        private int ConvertDate(SettlePeriodType startDateType)
         {
             switch (startDateType)
             {
@@ -144,33 +231,39 @@ namespace TESTAPP
 
         private AccountDetailData CalulateScore(Account account, int amountCondition, int peridCondition,decimal restAmount,int restDate)
         {
-            decimal score = account.Interest;
-            if (amountCondition != -1)
+            decimal score = 0;
+
+            DateTime now = DateTime.Now.Date;
+            DateTime after = now.AddDays(restDate);
+
+            int dd = (after - now).Days;
+
+            int total = (restDate * ConvertDate(SettlePeriodType.개월));
+            int section = account.SettlePeriod * ConvertDate(account.SettlePeriodType);
+
+            if (section <= total)
             {
-                var condition  = account.AmountConditions.ElementAt(amountCondition);
-
-                if(condition.StartValue < restAmount)
+                score = account.Interest;
+                int count = total /section;
+                double unit = (double)section / ConvertDate(SettlePeriodType.년);
+                if (amountCondition != -1)
                 {
-                    score += account.AmountConditions.ElementAt(amountCondition).ChangedValue;
-                }
-            };
+                    var condition  = account.AmountConditions.ElementAt(amountCondition);
 
-            if (peridCondition != -1)
-            {   int total = (restDate * Multiply(SettlePeriodType.개월));
-                int section = account.SettlePeriod * Multiply(account.SettlePeriodType);
+                    if(condition.StartValue <= restAmount)
+                    {
+                        score += account.AmountConditions.ElementAt(amountCondition).ChangedValue;
+                    }
+                };
 
-                var condition = account.PeriodConditions.ElementAt(peridCondition);
-               
-                if (section < total)
+                if (peridCondition != -1)
                 {
-                    int count = section / total;
-
-                    score  += condition.ChangedValue * (total - condition.StartValue * Multiply(condition.StartDateType)) / total;
+                    var condition = account.PeriodConditions.ElementAt(peridCondition);  
+                    score  += condition.ChangedValue * (total - condition.StartValue * ConvertDate(condition.StartDateType)) / total;
                 }
+
+                score *= (decimal)(count * unit);
             }
-
-            // 여기까진 포멀한 조건이었음 . 이제는 정말 얘가 이자를 몇번 받을 수 있는지를 알아야함.
-
 
             var data = new AccountDetailData()
             {
@@ -200,7 +293,7 @@ namespace TESTAPP
 
 
         // 이자가 나오는 초기 날짜를 미리 계산해서 가져온다.
-        private void GetBeginningInterestDays()
+        private void GetBeginningInterestDays(List<Account> accounts)
         {
             List<Task> tasks = new List<Task>();
 
@@ -213,7 +306,11 @@ namespace TESTAPP
                 Account currentItem = item;
                 DateTime itemNow = now;
                 DateTime itemUntil = until;
-                var task = new Task(() => ExtractInterestDays(currentItem, itemNow, itemUntil));
+                var task = new Task(() =>
+                {
+                    var result = ExtractInterestDays(currentItem, itemNow, itemUntil);
+                    InsertInterestDays(result);
+                });
 
                 tasks.Add(task);
                 task.Start();
@@ -228,25 +325,30 @@ namespace TESTAPP
 
         }
 
-        private void ExtractInterestDays(Account account, DateTime start, DateTime end)
+        private void InsertInterestDays(List<DateTime> result)
         {
-            DateTime loop = start;
-            List<DateTime> tmp = new List<DateTime>();
-            while (loop.CompareTo(end) <= 0)
-            { 
-                loop = account.GetNextInterestDate(loop);
-                DateTime result = VoidWeekend(loop);
-                tmp.Add(result);
-            }
-            lock(this)
+            lock (this)
             {
-                foreach (DateTime item in tmp)
+                foreach (DateTime item in result)
                 {
                     if (InterestDays.Contains(item)) continue;
                     InterestDays.Add(item);
                 }
             }
+        }
 
+        private List<DateTime> ExtractInterestDays(Account account, DateTime start, DateTime end)
+        {
+            DateTime loop = start;
+            List<DateTime> tmp = new List<DateTime>();
+            while (loop.CompareTo(end) <= 0)
+            { 
+                loop = account.GetNextPeriodDate(loop,account.SettlePeriodType,account.SettlePeriod);
+                DateTime result = VoidWeekend(loop);
+                tmp.Add(result);
+            }
+
+            return tmp;
         }
 
         private DateTime VoidWeekend(DateTime time)

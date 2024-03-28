@@ -132,8 +132,9 @@ namespace TESTAPP.domain.account
 
                 const int weekdayOfyear = 260 ;
                  //int day = GetWeekday(start, until); // 이건 잠시 보류. 안쓰게될듯.
-                decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)1.0, weekdayOfyear);
-                decimal thisTimeInterest = GetResultInterestAmount(dto.Amount, convertValue);
+                decimal convertChangedInterest = ConvertInterest(SettleType, changedInterest.ToString(), (double)1.0, weekdayOfyear);
+                decimal convertInterest = ConvertInterest(SettleType, Interest.ToString(), (double)1.0, weekdayOfyear);
+                decimal thisTimeInterest = GetResultInterestAmount(dto.Amount, convertChangedInterest, convertInterest);
                 dto.loopInterest += thisTimeInterest;
 
                 dto.ResultAmount  += thisTimeInterest;
@@ -174,9 +175,9 @@ namespace TESTAPP.domain.account
 
                 const int weekdayOfyear = 260;
                 int day = GetWeekday(start, until);
-                decimal convertValue = ConvertInterest(SettleType, changedInterest.ToString(), (double)day, weekdayOfyear) / day;
-
-                decimal thisTimeInterest = GetResultInterestAmount(dto.Amount, convertValue);
+                decimal convertChangedInterest = ConvertInterest(SettleType, changedInterest.ToString(), (double)day, weekdayOfyear) / day;
+                decimal convertInterest = ConvertInterest(SettleType, Interest.ToString(), (double)1.0, weekdayOfyear);
+                decimal thisTimeInterest = GetResultInterestAmount(dto.Amount, convertChangedInterest, convertInterest);
 
                 dto.loopInterest += thisTimeInterest;
 
@@ -202,7 +203,7 @@ namespace TESTAPP.domain.account
             while (until.CompareTo(end) < 0)
             {
                 DateTime loopStart = until;
-                until = GetNextInterestDate(until);
+                until = GetNextPeriodDate(until,SettlePeriodType,SettlePeriod);
 
                 if (until.CompareTo(end) >= 0)
                 {
@@ -247,20 +248,20 @@ namespace TESTAPP.domain.account
             return days + weekdays;
         }
 
-        public DateTime GetNextInterestDate(DateTime dt)
+        public DateTime GetNextPeriodDate(DateTime dt,SettlePeriodType type,int settlePeriod)
         {
 
-            if (SettlePeriodType == SettlePeriodType.일)
+            if (type == SettlePeriodType.일)
             {
-                return dt.AddDays(SettlePeriod);
+                return dt.AddDays(settlePeriod);
             }
-            else if (SettlePeriodType == SettlePeriodType.개월)
+            else if (type == SettlePeriodType.개월)
             {
-                return dt.AddMonths(SettlePeriod);
+                return dt.AddMonths(settlePeriod);
             }
-            else if (SettlePeriodType == SettlePeriodType.년)
+            else if (type == SettlePeriodType.년)
             {
-                return dt.AddYears(SettlePeriod);
+                return dt.AddYears(settlePeriod);
             }
             return dt;
         }
@@ -337,7 +338,7 @@ namespace TESTAPP.domain.account
 
             return result;
         }
-        private decimal GetResultInterestAmount(decimal amount, decimal changedInterest)
+        private decimal GetResultInterestAmount(decimal amount, decimal changedInterest,decimal interest)
         {
             decimal resultInterest;
 
@@ -346,7 +347,7 @@ namespace TESTAPP.domain.account
 
                 decimal rest = amount - UpperLimitWellInterest;
                 decimal standardInterest = (UpperLimitWellInterest * changedInterest);
-                decimal restInterest = rest * Interest;
+                decimal restInterest = rest * interest;
 
                 resultInterest = (standardInterest + restInterest);
             }

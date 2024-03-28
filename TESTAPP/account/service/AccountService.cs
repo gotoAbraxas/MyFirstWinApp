@@ -73,6 +73,7 @@ namespace TESTAPP.account.service
 
             tmp.AddLog(log);
             tmp.Amount += amount;
+            log.Total = tmp.Amount;
 
             return tmp;
 
@@ -86,6 +87,7 @@ namespace TESTAPP.account.service
             {
                 tmp.AddLog(log);
                 tmp.Amount -= amount;
+                log.Total = tmp.Amount;
                 return tmp;
             }
             else

@@ -112,7 +112,6 @@ namespace TESTAPP
                 DateTime = DateTime.Now,
                 Description = ""
 
-
             };
             if (type == AccountLogType.입금)
             {
@@ -127,8 +126,7 @@ namespace TESTAPP
         {
             log.AccountLogType = AccountLogType.입금;
 
-            Account ac = account.Deposit(Usercode, AccountId, amount, log);
-            log.Total = ac.Amount;
+            account.Deposit(Usercode, AccountId, amount, log);
 
 
         }
@@ -139,7 +137,6 @@ namespace TESTAPP
             try
             {
                 Account ac = account.Withdraw(Usercode, AccountId, amount, log);
-                log.Total = ac.Amount;
             }
             catch (Exception ex)
             {
