@@ -119,8 +119,8 @@ namespace TESTAPP
         private void SetInterestPeriod()
         {
             // 이자 주기 
-            SetEnumToCombo<SettlePeriodType>(cb_SettlePeriod);
-            cb_SettlePeriod.SelectedItem = SettlePeriodType.일;
+            SetEnumToCombo<domain.account.SettlePeriodType>(cb_SettlePeriod);
+            cb_SettlePeriod.SelectedItem = domain.account.SettlePeriodType.일;
         }
 
         #endregion
@@ -135,7 +135,7 @@ namespace TESTAPP
             if (double.TryParse(txt_SettlePeriod.Text, out double period)
                 && decimal.TryParse(tb.Text, out _))
             {
-                int share = ConvertSettlePeriodDate((SettlePeriodType)cb_SettlePeriod.SelectedItem);
+                int share = ConvertSettlePeriodDate((domain.account.SettlePeriodType)cb_SettlePeriod.SelectedItem);
 
                 SetInterestDynamic(tb, share, period, txt_Interest);
 
@@ -149,7 +149,7 @@ namespace TESTAPP
             if (double.TryParse(txt_SettlePeriod.Text, out double period)
                 && decimal.TryParse(tb.Text, out _))
             {
-                int share = ConvertSettlePeriodDate((SettlePeriodType)cb_SettlePeriod.SelectedItem);
+                int share = ConvertSettlePeriodDate((domain.account.SettlePeriodType)cb_SettlePeriod.SelectedItem);
 
                 SetInterestDynamic(tb, period, share, txt_standardInterest);
 
@@ -161,7 +161,7 @@ namespace TESTAPP
             if (!double.TryParse(txt_SettlePeriod.Text, out double period)) return;
 
 
-            int share = ConvertSettlePeriodDate((SettlePeriodType)cb_SettlePeriod.SelectedItem);
+            int share = ConvertSettlePeriodDate((domain.account.SettlePeriodType)cb_SettlePeriod.SelectedItem);
 
             if (decimal.TryParse(txt_Interest.Text, out _))
             {
@@ -328,21 +328,21 @@ namespace TESTAPP
         {
             Button bt = new Button
             {
-                Text = AddDateType.개월.ToString()
+                Text = SettlePeriodType.개월.ToString()
             };
             bt.Click += (sender, o) =>
             {
-                if (bt.Text.Equals(AddDateType.개월.ToString()))
+                if (bt.Text.Equals(SettlePeriodType.개월.ToString()))
                 {
-                    bt.Text = AddDateType.년.ToString();
+                    bt.Text = SettlePeriodType.년.ToString();
                 }
-                else if(bt.Text.Equals(AddDateType.년.ToString()))
+                else if(bt.Text.Equals(SettlePeriodType.년.ToString()))
                 {
-                    bt.Text = AddDateType.일.ToString();
+                    bt.Text = SettlePeriodType.일.ToString();
                 }
                 else
                 {
-                    bt.Text = AddDateType.개월.ToString();
+                    bt.Text = SettlePeriodType.개월.ToString();
                 }
             };
             return bt;
@@ -436,7 +436,7 @@ namespace TESTAPP
                 Name_AccountId = $"{txt_AccountName.Text}_{txt_AccountNumber.Text}",
                 Interest = decimal.Parse(txt_Interest.Text) / 100,
                 SettlePeriod = int.Parse(txt_SettlePeriod.Text),
-                SettlePeriodType = (SettlePeriodType)cb_SettlePeriod.SelectedItem,
+                SettlePeriodType = (domain.account.SettlePeriodType)cb_SettlePeriod.SelectedItem,
                 SettleType = (SettleType)cb_SettleType.SelectedItem,
                 UserCode = 1L, // 임시로 이렇게 할 예정,
                 CheckUpperLimitWellInterest = ch_CheckPreferent.Checked && decimal.Parse(txt_Preferent.Text.Replace(",", "")) > 0,
@@ -532,9 +532,9 @@ namespace TESTAPP
                 PeriodConditionOfInterest condition = new PeriodConditionOfInterest()
                 {
                     StartValue = startValue,
-                    StartDateType = (AddDateType)Enum.Parse(typeof(AddDateType), dto.StartPeriod),
+                    StartDateType = (SettlePeriodType)Enum.Parse(typeof(SettlePeriodType), dto.StartPeriod),
                     EndValue = endValue,
-                    EndDateType = (AddDateType)Enum.Parse(typeof(AddDateType), dto.EndPeriod),
+                    EndDateType = (SettlePeriodType)Enum.Parse(typeof(SettlePeriodType), dto.EndPeriod),
                     ChangedValue = (interestValue / 100) * dto.Sign,
                 };
                 periodConditions.Add(condition);

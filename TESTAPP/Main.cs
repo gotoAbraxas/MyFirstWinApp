@@ -711,7 +711,7 @@ namespace TESTAPP
             }
 
 
-            InvestPlanning fm = new InvestPlanning
+            var fm = new InvestPlanning
             {
                 Amounts = Amountresult,
                 Period = PeriodResult,

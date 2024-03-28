@@ -14,15 +14,23 @@ using TESTAPP.domain.account.sub;
 
 namespace TESTAPP
 {
-
     public struct AccountDetailData
-    {   public long AccountId { get; set; }
+    {  
+        public long AccountId { get; set; }
         public int AmountConditionNumber { get; set; }
         public int PeriodConditionNumber { get; set; }
         public decimal Amount { get; set; }
-        public int Score { get; set; }
+        public decimal Score { get; set; }
 
     }
+
+    // 쓰레기 코드 .. 유지보수 너무 힘들거같음.
+    // 내 생각엔 account 의 속성에 절대 의존하면 안됨.
+    // 지금 이거 약간 맘에 안듬.. 전반적으로 재구성하고싶은 욕심이 생기는데 .../
+    // 가장 먼저 해야할일은 비즈니스 코드를 한곳에 몰아 넣고 그것을 외부로 어떻게 빼줄지에 대한 고민임.
+    // 지금은 너무 구체적인 모델에 의존하고 있음.
+    // 이렇게 구성하면 어카운트에 뭘 추가하고 싶어도 할 수 가 없음 ..
+
     public partial class InvestPlanning : Form
     {
         private Dictionary<long, List<AccountDetailData>> AccountDataDictionary = new Dictionary<long, List<AccountDetailData>>();
@@ -49,6 +57,8 @@ namespace TESTAPP
                                         // 여기선 이후 동적 계획법.
                                         // 테이블 세팅
                                         // 인쇄.
+
+            MessageBox.Show("1");
         }
 
         private void ServiceInit()
@@ -87,11 +97,11 @@ namespace TESTAPP
 
         private void DesideInvestPlan()
         {
-
+            accounts.ForEach(account => SetAccountScores(account));
         }
 
 
-        private void Tttt(Account account)
+        private void SetAccountScores(Account account)
         {
             account.AmountConditions = account.AmountConditions.OrderBy((item)=>item.StartValue).ToList();
             account.PeriodConditions = account.PeriodConditions.OrderBy((item) => item.StartValue* Multiply(item.StartDateType)).ToList();
@@ -99,36 +109,93 @@ namespace TESTAPP
             int amountCount = account.AmountConditions.Count;
             int PeriodCount = account.PeriodConditions.Count;
 
-            for (int amountCondition = 0; amountCondition < amountCount; amountCondition++)
+           
+            for (int amountCondition = -1; amountCondition < amountCount; amountCondition++)
             {
-                for (int periodCondition = 0; periodCondition < PeriodCount; periodCondition++)
+                for (int periodCondition = -1; periodCondition < PeriodCount; periodCondition++)
                 {
-
-                    CalculateScore(account, amountCondition, periodCondition);
+                    SetScores(account, amountCondition, periodCondition,Amounts,Period);
 
                 }
-
             }
            
         }
 
         
-        private int Multiply(AddDateType startDateType)
+        private int Multiply(SettlePeriodType startDateType)
         {
             switch (startDateType)
             {
-                case AddDateType.일: return 1;
-                case AddDateType.개월: return 30;
-                case AddDateType.년: return 365;
+                case SettlePeriodType.일: return 1;
+                case SettlePeriodType.개월: return 30;
+                case SettlePeriodType.년: return 365;
                 default: return 30;
             }
         }
 
-        private void CalculateScore(Account account, int amountCondition,int peridCondition)
+        private void SetScores(Account account, int amountCondition, int peridCondition, decimal restAmount, int restDate)
         {
+            AccountDetailData data = CalulateScore(account, amountCondition, peridCondition,restAmount,restDate);
+            
+            InsertScore(account, data);
 
-            decimal interest = 0;
+        }
 
+
+        private AccountDetailData CalulateScore(Account account, int amountCondition, int peridCondition,decimal restAmount,int restDate)
+        {
+            decimal score = account.Interest;
+            if (amountCondition != -1)
+            {
+                var condition  = account.AmountConditions.ElementAt(amountCondition);
+
+                if(condition.StartValue < restAmount)
+                {
+                    score += account.AmountConditions.ElementAt(amountCondition).ChangedValue;
+                }
+            };
+
+            if (peridCondition != -1)
+            {   int total = (restDate * Multiply(SettlePeriodType.개월));
+                int section = account.SettlePeriod * Multiply(account.SettlePeriodType);
+
+                var condition = account.PeriodConditions.ElementAt(peridCondition);
+               
+                if (section < total)
+                {
+                    int count = section / total;
+
+                    score  += condition.ChangedValue * (total - condition.StartValue * Multiply(condition.StartDateType)) / total;
+                }
+            }
+
+            // 여기까진 포멀한 조건이었음 . 이제는 정말 얘가 이자를 몇번 받을 수 있는지를 알아야함.
+
+
+            var data = new AccountDetailData()
+            {
+                AccountId = account.AccountId,
+                AmountConditionNumber = amountCondition,
+                PeriodConditionNumber = peridCondition,
+                Score = score
+            };
+            return data;
+        }
+
+        private void InsertScore(Account account, AccountDetailData data)
+        {
+            if (AccountDataDictionary.TryGetValue(account.AccountId, out List<AccountDetailData> date))
+            {
+                date.Add(data);
+            }
+            else
+            {
+                var tmp = new List<AccountDetailData>
+                {
+                    data
+                };
+                AccountDataDictionary.Add(account.AccountId, tmp);
+            }
         }
 
 
@@ -164,19 +231,22 @@ namespace TESTAPP
         private void ExtractInterestDays(Account account, DateTime start, DateTime end)
         {
             DateTime loop = start;
-
+            List<DateTime> tmp = new List<DateTime>();
             while (loop.CompareTo(end) <= 0)
-            {
+            { 
                 loop = account.GetNextInterestDate(loop);
                 DateTime result = VoidWeekend(loop);
-
-                if (InterestDays.Contains(result)) continue;
-
-                lock(this) // 근데 이렇게 할 바에야 ... 그냥 돌려버리는게 ....???????
+                tmp.Add(result);
+            }
+            lock(this)
+            {
+                foreach (DateTime item in tmp)
                 {
-                    InterestDays.Add(result);
+                    if (InterestDays.Contains(item)) continue;
+                    InterestDays.Add(item);
                 }
             }
+
         }
 
         private DateTime VoidWeekend(DateTime time)

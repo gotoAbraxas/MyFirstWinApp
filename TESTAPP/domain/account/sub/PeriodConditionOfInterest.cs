@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 using TESTAPP;
 namespace TESTAPP.domain.account.sub
 {
-    public enum AddDateType
-    {
-        일,
-        개월,
-        년
-    }
 
     internal struct PeriodConditionOfInterestDto
     {
@@ -28,9 +22,9 @@ namespace TESTAPP.domain.account.sub
     {
 
         public int StartValue { get; set; }
-        public AddDateType StartDateType { get; set; }
+        public SettlePeriodType StartDateType { get; set; }
         public int EndValue { get; set; }
-        public AddDateType EndDateType { get; set; }
+        public SettlePeriodType EndDateType { get; set; }
         public decimal ChangedValue { get; set; }
         public bool Applyed { get; set; } = true;
 
@@ -41,13 +35,13 @@ namespace TESTAPP.domain.account.sub
             bool result;
             switch (StartDateType)
             {
-                case AddDateType.일:
+                case SettlePeriodType.일:
                    result = start.CompareTo(when.AddDays(StartValue)) >= 0;
                     break;
-                case AddDateType.개월:
+                case SettlePeriodType.개월:
                     result = start.CompareTo(when.AddMonths(StartValue)) >= 0;
                     break;
-                case AddDateType.년:
+                case SettlePeriodType.년:
                     result = start.CompareTo(when.AddYears(StartValue)) >= 0;
                     break;
                 default:
@@ -62,13 +56,13 @@ namespace TESTAPP.domain.account.sub
             bool result;
             switch (EndDateType)
             {
-                case AddDateType.일:
+                case SettlePeriodType.일:
                     result = start.CompareTo(when.AddDays(EndValue)) <= 0;
                     break;
-                case AddDateType.개월:
+                case SettlePeriodType.개월:
                     result = start.CompareTo(when.AddMonths(EndValue)) <= 0;
                     break;
-                case AddDateType.년:
+                case SettlePeriodType.년:
                     result = start.CompareTo(when.AddYears(EndValue)) <= 0;
                     break;
                 default:
